@@ -1369,3 +1369,19 @@ footer {
 .contact-section {
   min-height: calc(100vh - 54px);
 }
+
+.pc-img img {
+  width: 78%;
+  height: 78%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+.product-card:hover .pc-img img {
+  transform: scale(1.08);
+}
+
+.pc-img {
+  background: var(--blue-pale);
+}

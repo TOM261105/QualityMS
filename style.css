@@ -1137,56 +1137,33 @@ footer {
 .footer-inner {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 60px;
+  padding: 0 60px 40px;
   display: grid;
   grid-template-columns: 1.4fr 1fr 1.2fr;
   gap: 48px;
-  padding-bottom: 40px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-brand {
   display: flex;
   align-items: center;
-  gap: 12px;
   margin-bottom: 18px;
 }
 
-.footer-logo-icon {
-  width: 44px;
-  height: 44px;
-  background: white;
-  border-radius: 50%;
+/* LOGO DE QUALITY MS EN EL FOOTER */
+.footer-logo-main {
+  width: 220px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
 }
 
-.footer-logo-icon svg {
-  width: 26px;
-  height: 26px;
+.footer-logo-main img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
-.footer-brand-text .b {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 17px;
-  font-weight: 800;
-  color: white;
-  letter-spacing: 2px;
-}
-
-.footer-brand-text .b span {
-  font-weight: 400;
-  opacity: 0.7;
-}
-
-.footer-brand-text .s {
-  font-size: 9px;
-  letter-spacing: 3px;
-  color: rgba(255, 255, 255, 0.5);
-}
-
+/* CORREO */
 .footer-email {
   display: flex;
   align-items: center;
@@ -1210,6 +1187,7 @@ footer {
   stroke-width: 2;
 }
 
+/* COLUMNAS DEL FOOTER */
 .footer-col h4 {
   font-size: 12px;
   font-weight: 700;
@@ -1252,6 +1230,7 @@ footer {
   stroke-linejoin: round;
 }
 
+/* TELÉFONOS */
 .phones-list {
   display: flex;
   flex-direction: column;
@@ -1269,6 +1248,7 @@ footer {
   color: white;
 }
 
+/* PARTE INFERIOR DEL FOOTER */
 .footer-bottom {
   max-width: 1200px;
   margin: 0 auto;
@@ -1276,13 +1256,37 @@ footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 20px;
   flex-wrap: wrap;
-  gap: 10px;
 }
 
 .footer-bottom p {
   font-size: 12px;
   color: rgba(255, 255, 255, 0.35);
+  margin: 0;
+}
+
+/* TEXTO + LOGO DE TU EMPRESA ABAJO A LA DERECHA */
+.footer-bottom-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-left: auto;
+}
+
+/* LOGO DE TU EMPRESA */
+.footer-logo-secondary {
+  width: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-logo-secondary img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }
 
 /* ── REVEAL ANIMATION ──────────────────────────────────────── */
@@ -1323,36 +1327,33 @@ footer {
   }
 }
 
-@media (max-width: 640px) {
-  .container {
-    padding: 0 20px;
+@media(max-width:640px){
+  .container{padding:0 20px}
+  .services-grid,.products-grid{grid-template-columns:1fr}
+  .valores-grid{grid-template-columns:1fr 1fr}
+  .form-grid{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr;gap:28px;padding:0 20px 36px}
+  .hero-panel{padding:28px 24px}
+  .nav-links a{padding:8px 10px;font-size:12px}
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 18px 20px;
   }
 
-  .services-grid,
-  .products-grid {
-    grid-template-columns: 1fr;
+  .footer-bottom-right {
+    width: 100%;
+    justify-content: space-between;
+    margin-left: 0;
   }
 
-  .valores-grid {
-    grid-template-columns: 1fr 1fr;
+  .footer-logo-main {
+    width: 180px;
   }
 
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .footer-inner {
-    grid-template-columns: 1fr;
-    gap: 28px;
-  }
-
-  .hero-panel {
-    padding: 28px 24px;
-  }
-
-  .nav-links a {
-    padding: 8px 10px;
-    font-size: 12px;
+  .footer-logo-secondary {
+    width: 70px;
   }
 }
 

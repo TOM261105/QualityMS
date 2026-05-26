@@ -19,13 +19,24 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   font-family: 'Barlow', sans-serif;
   color: var(--text);
   background: #fff;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
+}
+
+img,
+svg,
+iframe {
+  max-width: 100%;
 }
 
 /* ── NAV ─────────────────────────────────────────────────── */
@@ -45,7 +56,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 54px;
+  min-height: 54px;
+  width: 100%;
 }
 
 .nav-links {
@@ -133,18 +145,25 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 20px;
   padding: 44px 48px 48px;
-  max-width: 560px;
+  max-width: 620px;
+  width: calc(100% - 160px);
   margin-left: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .hero-logo {
   display: flex;
   align-items: center;
-  margin-bottom: 32px;
+  justify-content: flex-start;
+  margin-bottom: 28px;
+  max-width: 100%;
 }
 
 .hero-logo-img {
   width: 230px;
+  max-width: 100%;
   display: flex;
   align-items: center;
 }
@@ -153,14 +172,16 @@ body {
   width: 100%;
   height: auto;
   display: block;
+  object-fit: contain;
 }
 
 .hero h1 {
   font-family: 'Barlow', sans-serif;
-  font-size: clamp(28px, 3.5vw, 46px);
+  font-size: clamp(28px, 3vw, 42px);
   color: white;
   line-height: 1.2;
   margin-bottom: 28px;
+  max-width: 100%;
 }
 
 .hero h1 strong {
@@ -1297,25 +1318,153 @@ footer {
   }
 
   .hero-panel {
+    width: calc(100% - 64px);
     margin-left: 32px;
     margin-right: 32px;
     max-width: 100%;
   }
 }
 
-@media(max-width:640px){
-  .container{padding:0 20px}
-  .services-grid,.products-grid{grid-template-columns:1fr}
-  .valores-grid{grid-template-columns:1fr 1fr}
-  .form-grid{grid-template-columns:1fr}
-  .footer-inner{grid-template-columns:1fr;gap:28px;padding:0 20px 36px}
-  .hero-panel{padding:28px 24px}
-  .nav-links a{padding:8px 10px;font-size:12px}
+@media (max-width: 640px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  .topbar {
+    padding: 0;
+  }
+
+  .topbar-inner {
+    height: auto;
+    min-height: auto;
+    padding: 8px 12px;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .nav-links {
+    width: 100%;
+    max-width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    min-width: 0;
+  }
+
+  .nav-links a {
+    padding: 7px 10px;
+    font-size: 11.5px;
+    line-height: 1.1;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .nav-links a.cta {
+    margin-left: 0;
+  }
+
+  .lang-btn {
+    align-self: center;
+    margin-left: 0;
+    padding: 4px 12px;
+  }
+
+  .container {
+    padding: 0 20px;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 70px 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-panel {
+    width: calc(100% - 32px);
+    max-width: 100%;
+    margin: 0 16px;
+    padding: 28px 22px;
+  }
 
   .hero-logo-img {
-    width: 190px;
+    width: 185px;
   }
-  
+
+  .hero h1 {
+    font-size: clamp(25px, 8vw, 34px);
+  }
+
+  .hero-btn {
+    padding: 12px 26px;
+    font-size: 14px;
+  }
+
+  .about-section,
+  .soporte-section,
+  .equipo-section,
+  .dist-section,
+  .contact-section {
+    padding: 64px 0;
+  }
+
+  .about-row {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .about-text p {
+    text-align: left;
+  }
+
+  .arch-grid {
+    padding: 0 20px;
+  }
+
+  .services-grid,
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .valores-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .store-toolbar {
+    align-items: flex-start;
+  }
+
+  .filter-pills {
+    width: 100%;
+  }
+
+  .contact-grid,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .map-frame {
+    height: 280px;
+  }
+
+  .stats-row {
+    gap: 22px;
+  }
+
+  .stat-div {
+    display: none;
+  }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    padding: 0 20px 36px;
+  }
+
   .footer-bottom {
     flex-direction: column;
     align-items: flex-start;
@@ -1334,6 +1483,31 @@ footer {
 
   .footer-logo-secondary {
     width: 70px;
+  }
+}
+
+@media (max-width: 380px) {
+  .topbar-inner {
+    padding: 8px 8px;
+  }
+
+  .nav-links {
+    gap: 5px;
+  }
+
+  .nav-links a {
+    font-size: 10.5px;
+    padding: 7px 8px;
+  }
+
+  .hero-panel {
+    width: calc(100% - 24px);
+    margin: 0 12px;
+    padding: 24px 18px;
+  }
+
+  .hero-logo-img {
+    width: 165px;
   }
 }
 

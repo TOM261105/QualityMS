@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quality Medical Service – Propuesta de Página Web</title>
+  <title>Quality Medical Service</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -11,21 +11,22 @@
 
 <body>
 
-  <!-- ═══ NAV ════════════════════════════════════════════════ -->
+  <!-- NAV -->
   <div class="topbar">
     <div class="topbar-inner">
       <nav class="nav-links">
-        <a href="#about">Conócenos</a>
-        <a href="#distribuidores">Distribuidores</a>
-        <a href="#soporte">Soporte</a>
-        <a href="#contacto">Contactanos</a>
-        <a href="#equipo" class="cta">Tienda en línea</a>
+        <a href="index.html" data-es="Conócenos" data-en="About us">Conócenos</a>
+        <a href="distribuidores.html" data-es="Distribuidores" data-en="Distributors">Distribuidores</a>
+        <a href="soporte.html" data-es="Soporte" data-en="Support">Soporte</a>
+        <a href="contacto.html" data-es="Contáctanos" data-en="Contact us">Contáctanos</a>
+        <a href="tienda.html" class="cta" data-es="Tienda en línea" data-en="Online Store">Tienda en línea</a>
       </nav>
-      <button class="lang-btn">ES / EN</button>
+
+      <button class="lang-btn" id="langToggle">ES / EN</button>
     </div>
   </div>
 
-  <!-- ═══ HERO ════════════════════════════════════════════════ -->
+  <!-- HERO -->
   <section class="hero">
     <div class="hero-panel">
       <div class="hero-logo">
@@ -44,7 +45,11 @@
         </div>
       </div>
 
-      <h1>Tenemos el <strong>equipo Ideal</strong> para diagnosticar a tus pacientes</h1>
+      <h1 
+        data-es-html="Tenemos el <strong>equipo ideal</strong> para diagnosticar a tus pacientes"
+        data-en-html="We have the <strong>ideal equipment</strong> to diagnose your patients">
+        Tenemos el <strong>equipo ideal</strong> para diagnosticar a tus pacientes
+      </h1>
 
       <div class="hero-dots">
         <span class="active"></span>
@@ -54,14 +59,17 @@
         <span></span>
       </div>
 
-      <a href="#about" class="hero-btn">Conócenos</a>
+      <a href="#about" class="hero-btn" data-es="Conócenos" data-en="About us">Conócenos</a>
     </div>
   </section>
 
-  <!-- ═══ ABOUT ═══════════════════════════════════════════════ -->
+  <!-- ABOUT -->
   <section class="about-section" id="about">
     <div class="container">
-      <h2 class="about-heading reveal"><span class="hash">#</span>CalidadEnTusManos</h2>
+      <h2 class="about-heading reveal">
+        <span class="hash">#</span><span data-es="CalidadEnTusManos" data-en="QualityInYourHands">CalidadEnTusManos</span>
+      </h2>
+
       <div class="about-divider"></div>
 
       <div class="about-row reveal">
@@ -70,41 +78,53 @@
         </div>
 
         <div class="about-text">
-          <p>Somos una compañía con una trayectoria que inicia en 1978. A lo largo de los años, cada paso que hemos dado nos ha permitido consolidarnos y convertirnos en lo que hoy somos: <strong>Quality MS</strong>. Nos especializamos en la importación, distribución y comercialización de equipos y sistemas médicos de alta tecnología para profesionales de la salud.</p>
+          <p 
+            data-es-html="Somos una compañía con una trayectoria que inicia en 1978. A lo largo de los años, cada paso que hemos dado nos ha permitido consolidarnos y convertirnos en lo que hoy somos: <strong>Quality MS</strong>. Nos especializamos en la importación, distribución y comercialización de equipos y sistemas médicos de alta tecnología para profesionales de la salud."
+            data-en-html="We are a company with a history that began in 1978. Over the years, every step we have taken has allowed us to grow and become what we are today: <strong>Quality MS</strong>. We specialize in the import, distribution and commercialization of high-tech medical equipment and systems for healthcare professionals.">
+            Somos una compañía con una trayectoria que inicia en 1978. A lo largo de los años, cada paso que hemos dado nos ha permitido consolidarnos y convertirnos en lo que hoy somos: <strong>Quality MS</strong>. Nos especializamos en la importación, distribución y comercialización de equipos y sistemas médicos de alta tecnología para profesionales de la salud.
+          </p>
 
-          <p>Contamos con marcas reconocidas a nivel nacional e internacional, así como con un equipo de asesores y técnicos especializados, comprometidos en ofrecer productos de calidad, atención personalizada y soluciones adaptadas a cada necesidad. Somos una opción confiable para <strong>hospitales públicos y privados, sanatorios, clínicas, médicos particulares y estudiantes.</strong></p>
+          <p 
+            data-es-html="Contamos con marcas reconocidas a nivel nacional e internacional, así como con un equipo de asesores y técnicos especializados, comprometidos en ofrecer productos de calidad, atención personalizada y soluciones adaptadas a cada necesidad. Somos una opción confiable para <strong>hospitales públicos y privados, sanatorios, clínicas, médicos particulares y estudiantes.</strong>"
+            data-en-html="We work with nationally and internationally recognized brands, supported by a team of specialized advisors and technicians committed to providing quality products, personalized attention and solutions adapted to every need. We are a reliable option for <strong>public and private hospitals, clinics, healthcare centers, private doctors and students.</strong>">
+            Contamos con marcas reconocidas a nivel nacional e internacional, así como con un equipo de asesores y técnicos especializados, comprometidos en ofrecer productos de calidad, atención personalizada y soluciones adaptadas a cada necesidad. Somos una opción confiable para <strong>hospitales públicos y privados, sanatorios, clínicas, médicos particulares y estudiantes.</strong>
+          </p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ MISIÓN / VISIÓN / OBJETIVOS ════════════════════════ -->
+  <!-- MISIÓN / VISIÓN / OBJETIVOS -->
   <section class="arch-section">
     <div class="arch-grid reveal">
 
       <div class="arch-card">
         <img src="https://images.unsplash.com/photo-1581595219315-a187dd40c322?w=600&auto=format&fit=crop&q=80" alt="Misión">
-        <div class="arch-label">Misión</div>
+        <div class="arch-label" data-es="Misión" data-en="Mission">Misión</div>
       </div>
 
       <div class="arch-card">
         <img src="https://images.unsplash.com/photo-1584820927498-cfe5211fd8bf?w=600&auto=format&fit=crop&q=80" alt="Visión">
-        <div class="arch-label">Visión</div>
+        <div class="arch-label" data-es="Visión" data-en="Vision">Visión</div>
       </div>
 
       <div class="arch-card">
         <img src="https://images.unsplash.com/photo-1530026186672-2cd00ffc50fe?w=600&auto=format&fit=crop&q=80" alt="Objetivos">
-        <div class="arch-label">Objetivos</div>
+        <div class="arch-label" data-es="Objetivos" data-en="Goals">Objetivos</div>
       </div>
 
     </div>
   </section>
 
-  <!-- ═══ VALORES ══════════════════════════════════════════════ -->
+  <!-- VALORES -->
   <section class="valores-section">
     <div class="container">
       <div class="valores-header reveal">
-        <h2>Nuestros <span>Valores</span></h2>
+        <h2 
+          data-es-html="Nuestros <span>Valores</span>"
+          data-en-html="Our <span>Values</span>">
+          Nuestros <span>Valores</span>
+        </h2>
       </div>
 
       <div class="valores-grid reveal">
@@ -115,8 +135,12 @@
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
             </svg>
           </div>
-          <h3>Responsabilidad</h3>
-          <p>Cumplimos nuestros compromisos con cada cliente, asegurándonos de que cada entrega cumpla los más altos estándares.</p>
+          <h3 data-es="Responsabilidad" data-en="Responsibility">Responsabilidad</h3>
+          <p 
+            data-es="Cumplimos nuestros compromisos con cada cliente, asegurándonos de que cada entrega cumpla los más altos estándares."
+            data-en="We fulfill our commitments to every client, ensuring that each delivery meets the highest standards.">
+            Cumplimos nuestros compromisos con cada cliente, asegurándonos de que cada entrega cumpla los más altos estándares.
+          </p>
         </div>
 
         <div class="valor-card">
@@ -128,8 +152,12 @@
               <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
             </svg>
           </div>
-          <h3>Trabajo en Equipo</h3>
-          <p>Colaboramos de forma sinérgica para ofrecer soluciones integrales a cada profesional de la salud que confía en nosotros.</p>
+          <h3 data-es="Trabajo en Equipo" data-en="Teamwork">Trabajo en Equipo</h3>
+          <p 
+            data-es="Colaboramos de forma sinérgica para ofrecer soluciones integrales a cada profesional de la salud que confía en nosotros."
+            data-en="We collaborate in synergy to provide comprehensive solutions to every healthcare professional who trusts us.">
+            Colaboramos de forma sinérgica para ofrecer soluciones integrales a cada profesional de la salud que confía en nosotros.
+          </p>
         </div>
 
         <div class="valor-card">
@@ -138,8 +166,12 @@
               <polyline points="20 6 9 17 4 12"/>
             </svg>
           </div>
-          <h3>Calidad</h3>
-          <p>Trabajamos exclusivamente con marcas reconocidas internacionalmente para garantizar equipos confiables y de precisión.</p>
+          <h3 data-es="Calidad" data-en="Quality">Calidad</h3>
+          <p 
+            data-es="Trabajamos exclusivamente con marcas reconocidas internacionalmente para garantizar equipos confiables y de precisión."
+            data-en="We work exclusively with internationally recognized brands to ensure reliable and precise equipment.">
+            Trabajamos exclusivamente con marcas reconocidas internacionalmente para garantizar equipos confiables y de precisión.
+          </p>
         </div>
 
         <div class="valor-card">
@@ -148,401 +180,19 @@
               <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
           </div>
-          <h3>Confianza</h3>
-          <p>Más de 47 años de experiencia respaldan cada producto y servicio que ofrecemos a nuestros clientes.</p>
+          <h3 data-es="Confianza" data-en="Trust">Confianza</h3>
+          <p 
+            data-es="Más de 47 años de experiencia respaldan cada producto y servicio que ofrecemos a nuestros clientes."
+            data-en="More than 47 years of experience support every product and service we offer to our clients.">
+            Más de 47 años de experiencia respaldan cada producto y servicio que ofrecemos a nuestros clientes.
+          </p>
         </div>
 
       </div>
     </div>
   </section>
 
-  <!-- ═══ SOPORTE TÉCNICO ══════════════════════════════════════ -->
-  <section class="soporte-section" id="soporte">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="eyebrow">¿En qué podemos ayudarte?</span>
-        <h2>Soporte <span>Técnico</span></h2>
-        <p>Atención especializada para garantizar el funcionamiento óptimo de tu equipo médico en todo momento.</p>
-      </div>
-
-      <div class="services-grid reveal">
-
-        <div class="service-card">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-            </svg>
-          </div>
-          <h3>Mantenimiento Preventivo y Correctivo</h3>
-          <p>Revisiones periódicas y correctivas para mantener tus equipos en condiciones óptimas de operación.</p>
-          <a class="card-link" href="#contacto">Ver más →</a>
-        </div>
-
-        <div class="service-card">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="3"/>
-              <path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
-            </svg>
-          </div>
-          <h3>Reparación de Equipos</h3>
-          <p>Diagnóstico y reparación profesional con refacciones originales y tiempos de respuesta rápidos.</p>
-          <a class="card-link" href="#contacto">Ver más →</a>
-        </div>
-
-        <div class="service-card">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
-              <path d="M6 12v5c3 3 9 3 12 0v-5"/>
-            </svg>
-          </div>
-          <h3>Capacitación de Equipos</h3>
-          <p>Entrenamiento a tu personal para el uso correcto, seguro y eficiente de toda la tecnología médica instalada.</p>
-          <a class="card-link" href="#contacto">Ver más →</a>
-        </div>
-
-        <div class="service-card">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-              <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-              <line x1="12" y1="22.08" x2="12" y2="12"/>
-            </svg>
-          </div>
-          <h3>Instalación de Equipos</h3>
-          <p>Configuración, puesta en marcha y validación técnica por especialistas certificados.</p>
-          <a class="card-link" href="#contacto">Ver más →</a>
-        </div>
-
-      </div>
-
-      <div class="section-cta reveal">
-        <a href="#contacto" class="btn-primary">Para más información escríbenos →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ EQUIPO MÉDICO ════════════════════════════════════════ -->
-  <section class="equipo-section" id="equipo">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="eyebrow">Catálogo de productos</span>
-        <h2>Todo el equipo médico <span>que necesitas</span></h2>
-        <p>Explora nuestras categorías. Equipos de alta tecnología para cada especialidad.</p>
-      </div>
-
-      <div class="store-toolbar reveal">
-        <p>Mostrando <strong>8 categorías</strong> disponibles</p>
-
-        <div class="filter-pills">
-          <span class="pill active">Todos</span>
-          <span class="pill">Diagnóstico</span>
-          <span class="pill">Emergencias</span>
-          <span class="pill">Especialidades</span>
-        </div>
-      </div>
-
-      <div class="products-grid reveal">
-
-        <div class="product-card">
-          <div class="pc-img">
-            <span class="pc-badge">Más vendido</span>
-            <svg viewBox="0 0 24 24">
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-            </svg>
-          </div>
-          <div class="pc-body">
-            <p class="pc-cat">Diagnóstico</p>
-            <h3>Diagnóstico General</h3>
-            <p>Estetoscopios, otoscopios, tensiómetros y equipos para evaluación clínica completa.</p>
-          </div>
-          <div class="pc-footer">
-            <span class="pc-count">+40 productos</span>
-            <button class="btn-card">Ver catálogo →</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="pc-img">
-            <svg viewBox="0 0 24 24">
-              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-            </svg>
-          </div>
-          <div class="pc-body">
-            <p class="pc-cat">Urgencias</p>
-            <h3>Emergencias y Triaje</h3>
-            <p>Desfibriladores, camillas, monitores de paciente y equipos de reanimación.</p>
-          </div>
-          <div class="pc-footer">
-            <span class="pc-count">+28 productos</span>
-            <button class="btn-card">Ver catálogo →</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="pc-img">
-            <span class="pc-badge">Nuevo</span>
-            <svg viewBox="0 0 24 24">
-              <rect x="2" y="7" width="20" height="14" rx="2"/>
-              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
-            </svg>
-          </div>
-          <div class="pc-body">
-            <p class="pc-cat">Infraestructura</p>
-            <h3>Mobiliario y Equipamiento</h3>
-            <p>Camillas, mesas de examen, sillones de procedimiento y mobiliario clínico.</p>
-          </div>
-          <div class="pc-footer">
-            <span class="pc-count">+55 productos</span>
-            <button class="btn-card">Ver catálogo →</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="pc-img">
-            <svg viewBox="0 0 24 24">
-              <path d="M3 3v18h18"/>
-              <path d="m19 9-5 5-4-4-3 3"/>
-            </svg>
-          </div>
-          <div class="pc-body">
-            <p class="pc-cat">Monitoreo</p>
-            <h3>Signos Vitales y Monitoreo</h3>
-            <p>Monitores multiparamétricos, pulsioxímetros, capnógrafos y telemetría.</p>
-          </div>
-          <div class="pc-footer">
-            <span class="pc-count">+32 productos</span>
-            <button class="btn-card">Ver catálogo →</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="pc-img">
-            <svg viewBox="0 0 24 24">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-            </svg>
-          </div>
-          <div class="pc-body">
-            <p class="pc-cat">Especialidad</p>
-            <h3>Salud de la Mujer</h3>
-            <p>Colposcopios, ultrasonidos ginecológicos y equipos de monitoreo fetal.</p>
-          </div>
-          <div class="pc-footer">
-            <span class="pc-count">+22 productos</span>
-            <button class="btn-card">Ver catálogo →</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="pc-img">
-            <svg viewBox="0 0 24 24">
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-              <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-            </svg>
-          </div>
-          <div class="pc-body">
-            <p class="pc-cat">Clínica</p>
-            <h3>Especialidades Médicas</h3>
-            <p>Equipos para cardiología, neurología, endoscopia, urología y más especialidades.</p>
-          </div>
-          <div class="pc-footer">
-            <span class="pc-count">+60 productos</span>
-            <button class="btn-card">Ver catálogo →</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="pc-img">
-            <svg viewBox="0 0 24 24">
-              <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 4a3 3 0 1 1-3 3 3 3 0 0 1 3-3zm0 14.2a7.2 7.2 0 0 1-6-3.22c.03-2 4-3.1 6-3.1s5.97 1.1 6 3.1a7.2 7.2 0 0 1-6 3.22z"/>
-            </svg>
-          </div>
-          <div class="pc-body">
-            <p class="pc-cat">Bienestar</p>
-            <h3>Nutrición y Bienestar</h3>
-            <p>Básculas clínicas, bioimpedanciómetros, tallímetros y composición corporal.</p>
-          </div>
-          <div class="pc-footer">
-            <span class="pc-count">+18 productos</span>
-            <button class="btn-card">Ver catálogo →</button>
-          </div>
-        </div>
-
-        <div class="product-card">
-          <div class="pc-img">
-            <svg viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="2"/>
-              <path d="M12 2a10 10 0 1 0 10 10"/>
-              <path d="M12 6a6 6 0 0 0-6 6"/>
-              <path d="m15 9 3-3"/>
-              <path d="M18 3h3v3"/>
-            </svg>
-          </div>
-          <div class="pc-body">
-            <p class="pc-cat">Especialidad</p>
-            <h3>Oftalmología y ORL</h3>
-            <p>Lámparas de hendidura, tonómetros, audiómetros y equipos de exploración.</p>
-          </div>
-          <div class="pc-footer">
-            <span class="pc-count">+25 productos</span>
-            <button class="btn-card">Ver catálogo →</button>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="section-cta reveal">
-        <a href="#" class="btn-primary">Ver todos los productos →</a>
-        <a href="#contacto" class="btn-outline">Solicitar cotización</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ DISTRIBUIDORES ═══════════════════════════════════════ -->
-  <section class="dist-section" id="distribuidores">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="eyebrow">Nuestros socios</span>
-        <h2><span>Distribuidores</span> autorizados</h2>
-        <p>Trabajamos con las marcas líderes a nivel mundial para garantizarte la más alta calidad.</p>
-      </div>
-
-      <div class="logos-wrap">
-        <div class="logos-track">
-          <div class="logo-item"><span>Bovie</span></div>
-          <div class="logo-item"><span>Hillrom</span></div>
-          <div class="logo-item"><span>Huntleigh</span></div>
-          <div class="logo-item"><span>Seca</span></div>
-          <div class="logo-item"><span>Mortara</span></div>
-          <div class="logo-item"><span>Nonin</span></div>
-          <div class="logo-item"><span>Midvac</span></div>
-          <div class="logo-item"><span>Wallach</span></div>
-          <div class="logo-item"><span>Midmark</span></div>
-
-          <div class="logo-item"><span>Bovie</span></div>
-          <div class="logo-item"><span>Hillrom</span></div>
-          <div class="logo-item"><span>Huntleigh</span></div>
-          <div class="logo-item"><span>Seca</span></div>
-          <div class="logo-item"><span>Mortara</span></div>
-          <div class="logo-item"><span>Nonin</span></div>
-          <div class="logo-item"><span>Midvac</span></div>
-          <div class="logo-item"><span>Wallach</span></div>
-          <div class="logo-item"><span>Midmark</span></div>
-        </div>
-      </div>
-
-      <div class="stats-row reveal">
-        <div class="stat-item">
-          <strong>9</strong>
-          <span>Distribuidores globales</span>
-        </div>
-
-        <div class="stat-div"></div>
-
-        <div class="stat-item">
-          <strong>+200</strong>
-          <span>Productos disponibles</span>
-        </div>
-
-        <div class="stat-div"></div>
-
-        <div class="stat-item">
-          <strong>47</strong>
-          <span>Años de trayectoria</span>
-        </div>
-
-        <div class="stat-div"></div>
-
-        <div class="stat-item">
-          <strong>100%</strong>
-          <span>Productos originales</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ CONTACTO ═════════════════════════════════════════════ -->
-  <section class="contact-section" id="contacto">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="eyebrow">Estamos aquí</span>
-        <h2>Encuéntranos <span>aquí</span></h2>
-      </div>
-
-      <div class="contact-grid reveal">
-        <div class="map-block">
-          <h3>Nuestra ubicación</h3>
-
-          <div class="map-frame">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3763.7!2d-99.085!3d19.386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDIzJzA5LjYiTiA5OcKwMDUnMDYuMCJX!5e0!3m2!1ses!2smx!4v1620000000000!5m2!1ses!2smx"
-              allowfullscreen
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade">
-            </iframe>
-          </div>
-
-          <div class="address-box">
-            <svg viewBox="0 0 24 24">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-              <circle cx="12" cy="10" r="3"/>
-            </svg>
-
-            <p>
-              <strong>Quality Medical Service</strong>
-              Playa Villa del Mar 75, Militar Marte,<br>
-              Iztacalco, 08850 Ciudad de México, CDMX
-            </p>
-          </div>
-        </div>
-
-        <div class="form-block">
-          <h3>Contáctanos</h3>
-
-          <div class="form-grid">
-            <div class="form-group">
-              <label>Nombre</label>
-              <input type="text" placeholder="Tu nombre">
-            </div>
-
-            <div class="form-group">
-              <label>Apellido</label>
-              <input type="text" placeholder="Tu apellido">
-            </div>
-
-            <div class="form-group">
-              <label>Correo electrónico</label>
-              <input type="email" placeholder="correo@ejemplo.com">
-            </div>
-
-            <div class="form-group">
-              <label>Número de teléfono</label>
-              <input type="tel" placeholder="55 0000 0000">
-            </div>
-
-            <div class="form-group full">
-              <label>Compañía <span class="optional-label">(opcional)</span></label>
-              <input type="text" placeholder="Nombre de tu empresa o clínica">
-            </div>
-
-            <div class="form-group full">
-              <label>¿Cómo te podemos ayudar?</label>
-              <textarea placeholder="Describe tu consulta o el equipo que necesitas..."></textarea>
-            </div>
-          </div>
-
-          <button class="form-submit">Enviar mensaje</button>
-
-          <p class="form-note">Al enviar aceptas nuestro aviso de privacidad. No compartiremos tu información con terceros.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ FOOTER ═══════════════════════════════════════════════ -->
+  <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
       <div>
@@ -572,7 +222,7 @@
       </div>
 
       <div class="footer-col">
-        <h4>Redes sociales</h4>
+        <h4 data-es="Redes sociales" data-en="Social media">Redes sociales</h4>
 
         <div class="social-row">
           <a href="#" class="social-btn" aria-label="Instagram">
@@ -605,7 +255,7 @@
       </div>
 
       <div class="footer-col">
-        <h4>Teléfonos</h4>
+        <h4 data-es="Teléfonos" data-en="Phone numbers">Teléfonos</h4>
 
         <div class="phones-list">
           <a href="tel:5555147815">55-55-14-78-15</a>
@@ -618,32 +268,10 @@
 
     <div class="footer-bottom">
       <p>© Copyright QualityMedicalService. All Rights Reserved</p>
-      <p>Diseño web profesional</p>
+      <p data-es="Diseño web profesional" data-en="Professional web design">Diseño web profesional</p>
     </div>
   </footer>
 
-  <script>
-    const io = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          io.unobserve(e.target);
-        }
-      });
-    }, {
-      threshold: 0.08,
-      rootMargin: '0px 0px -30px 0px'
-    });
-
-    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-    document.querySelectorAll('.pill').forEach(pill => {
-      pill.addEventListener('click', () => {
-        document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-      });
-    });
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>

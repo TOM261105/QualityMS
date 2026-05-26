@@ -59,7 +59,44 @@
           <span class="pill" data-es="Especialidades" data-en="Specialties">Especialidades</span>
         </div>
       </div>
+      <!-- PRODUCTOS DEMO / SHOPIFY HEADLESS READY -->
+      <section class="shopify-products-section reveal" id="productos">
+        <div class="store-toolbar shopify-toolbar">
+          <div>
+            <p class="eyebrow" data-es="Productos disponibles" data-en="Available products">
+              Productos disponibles
+            </p>
 
+            <h3 
+              class="shopify-products-title"
+              data-es="Catálogo conectado a Shopify"
+              data-en="Catalog connected to Shopify">
+              Catálogo conectado a Shopify
+            </h3>
+
+            <p 
+              class="shopify-products-subtitle"
+              data-es="Esta sección está preparada para conectarse con Shopify Headless. Por ahora muestra productos de ejemplo para la propuesta."
+              data-en="This section is ready to connect with Shopify Headless. For now, it displays sample products for the proposal.">
+              Esta sección está preparada para conectarse con Shopify Headless. Por ahora muestra productos de ejemplo para la propuesta.
+            </p>
+          </div>
+
+          <select id="categoryFilter" class="category-select">
+            <option value="todos">Todos</option>
+            <option value="diagnostico">Diagnóstico</option>
+            <option value="emergencias">Emergencias</option>
+            <option value="mobiliario">Mobiliario</option>
+            <option value="monitoreo">Monitoreo</option>
+            <option value="mujer">Salud de la Mujer</option>
+            <option value="especialidades">Especialidades Médicas</option>
+            <option value="bienestar">Nutrición y Bienestar</option>
+            <option value="orl">Oftalmología y ORL</option>
+          </select>
+        </div>
+
+        <div id="productsContainer" class="shopify-products-grid"></div>
+      </section>
       <div class="products-grid reveal">
 
         <!-- CARD 1 -->
@@ -365,6 +402,9 @@
       </div>
     </div>
   </footer>
-  <script src="script.js"></script>
+<script src="productos-demo.js"></script>
+<script src="shopify-config.js"></script>
+<script src="tienda-demo.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

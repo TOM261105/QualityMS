@@ -1355,3 +1355,17 @@ footer {
     font-size: 12px;
   }
 }
+
+/* Para que el texto de "(opcional)" conserve el diseño al cambiar de idioma */
+.optional-label {
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* Para que las páginas separadas no se vean tan pegadas al menú */
+.soporte-section,
+.dist-section,
+.equipo-section,
+.contact-section {
+  min-height: calc(100vh - 54px);
+}

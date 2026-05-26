@@ -1,1 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto | Quality Medical Service</title>
 
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <nav class="nav-links">
+        <a href="index.html" data-es="Conócenos" data-en="About us">Conócenos</a>
+        <a href="distribuidores.html" data-es="Distribuidores" data-en="Distributors">Distribuidores</a>
+        <a href="soporte.html" data-es="Soporte" data-en="Support">Soporte</a>
+        <a href="contacto.html" data-es="Contáctanos" data-en="Contact us">Contáctanos</a>
+        <a href="tienda.html" class="cta" data-es="Tienda en línea" data-en="Online Store">Tienda en línea</a>
+      </nav>
+
+      <button class="lang-btn" id="langToggle">ES / EN</button>
+    </div>
+  </div>
+
+  <section class="contact-section" id="contacto">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="eyebrow" data-es="Estamos aquí" data-en="We are here">Estamos aquí</span>
+
+        <h2 
+          data-es-html="Encuéntranos <span>aquí</span>"
+          data-en-html="Find us <span>here</span>">
+          Encuéntranos <span>aquí</span>
+        </h2>
+      </div>
+
+      <div class="contact-grid reveal">
+        <div class="map-block">
+          <h3 data-es="Nuestra ubicación" data-en="Our location">Nuestra ubicación</h3>
+
+          <div class="map-frame">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3763.7!2d-99.085!3d19.386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDIzJzA5LjYiTiA5OcKwMDUnMDYuMCJX!5e0!3m2!1ses!2smx!4v1620000000000!5m2!1ses!2smx"
+              allowfullscreen
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+
+          <div class="address-box">
+            <svg viewBox="0 0 24 24">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+
+            <p>
+              <strong>Quality Medical Service</strong>
+              Playa Villa del Mar 75, Militar Marte,<br>
+              Iztacalco, 08850 Ciudad de México, CDMX
+            </p>
+          </div>
+        </div>
+
+        <div class="form-block">
+          <h3 data-es="Contáctanos" data-en="Contact us">Contáctanos</h3>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label data-es="Nombre" data-en="First name">Nombre</label>
+              <input type="text" data-es-placeholder="Tu nombre" data-en-placeholder="Your first name" placeholder="Tu nombre">
+            </div>
+
+            <div class="form-group">
+              <label data-es="Apellido" data-en="Last name">Apellido</label>
+              <input type="text" data-es-placeholder="Tu apellido" data-en-placeholder="Your last name" placeholder="Tu apellido">
+            </div>
+
+            <div class="form-group">
+              <label data-es="Correo electrónico" data-en="Email address">Correo electrónico</label>
+              <input type="email" data-es-placeholder="correo@ejemplo.com" data-en-placeholder="email@example.com" placeholder="correo@ejemplo.com">
+            </div>
+
+            <div class="form-group">
+              <label data-es="Número de teléfono" data-en="Phone number">Número de teléfono</label>
+              <input type="tel" placeholder="55 0000 0000">
+            </div>
+
+            <div class="form-group full">
+              <label 
+                data-es-html='Compañía <span class="optional-label">(opcional)</span>'
+                data-en-html='Company <span class="optional-label">(optional)</span>'>
+                Compañía <span class="optional-label">(opcional)</span>
+              </label>
+
+              <input type="text" data-es-placeholder="Nombre de tu empresa o clínica" data-en-placeholder="Your company or clinic name" placeholder="Nombre de tu empresa o clínica">
+            </div>
+
+            <div class="form-group full">
+              <label data-es="¿Cómo te podemos ayudar?" data-en="How can we help you?">¿Cómo te podemos ayudar?</label>
+
+              <textarea data-es-placeholder="Describe tu consulta o el equipo que necesitas..." data-en-placeholder="Describe your request or the equipment you need..." placeholder="Describe tu consulta o el equipo que necesitas..."></textarea>
+            </div>
+          </div>
+
+          <button class="form-submit" data-es="Enviar mensaje" data-en="Send message">Enviar mensaje</button>
+
+          <p 
+            class="form-note"
+            data-es="Al enviar aceptas nuestro aviso de privacidad. No compartiremos tu información con terceros."
+            data-en="By submitting, you accept our privacy notice. We will not share your information with third parties.">
+            Al enviar aceptas nuestro aviso de privacidad. No compartiremos tu información con terceros.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script src="script.js"></script>
+</body>
+</html>

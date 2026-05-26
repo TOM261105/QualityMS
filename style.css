@@ -140,43 +140,19 @@ body {
 .hero-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
   margin-bottom: 32px;
 }
 
-.hero-logo-icon {
-  width: 52px;
-  height: 52px;
-  background: white;
-  border-radius: 50%;
+.hero-logo-img {
+  width: 230px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
 }
 
-.hero-logo-icon svg {
-  width: 32px;
-  height: 32px;
-}
-
-.hero-logo-text .brand {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 22px;
-  font-weight: 800;
-  color: white;
-  letter-spacing: 2px;
-}
-
-.hero-logo-text .brand span {
-  font-weight: 400;
-  opacity: 0.8;
-}
-
-.hero-logo-text .sub {
-  font-size: 10px;
-  letter-spacing: 3px;
-  color: rgba(255, 255, 255, 0.6);
+.hero-logo-img img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .hero h1 {
@@ -1336,6 +1312,10 @@ footer {
   .hero-panel{padding:28px 24px}
   .nav-links a{padding:8px 10px;font-size:12px}
 
+  .hero-logo-img {
+    width: 190px;
+  }
+  
   .footer-bottom {
     flex-direction: column;
     align-items: flex-start;

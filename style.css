@@ -372,14 +372,14 @@ iframe {
 
 .arch-section {
   background: #fff;
-  padding: 20px 0 80px;
+  padding: 20px 0 90px;
 }
 
 .arch-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  max-width: 900px;
+  gap: 28px;
+  max-width: 980px;
   margin: 0 auto;
   padding: 0 60px;
 }
@@ -391,11 +391,13 @@ iframe {
   cursor: pointer;
   transition: transform 0.3s, box-shadow 0.3s;
   aspect-ratio: 0.72 / 1;
+  background: #f2f2f2;
+  border: none;
 }
 
 .arch-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 48px rgba(13, 43, 78, 0.2);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px rgba(13, 43, 78, 0.18);
 }
 
 .arch-card img {
@@ -403,11 +405,89 @@ iframe {
   height: 100%;
   object-fit: cover;
   display: block;
-  transition: transform 0.4s;
+  transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 .arch-card:hover img {
-  transform: scale(1.05);
+  transform: scale(1.03);
+}
+
+/* Capa blanca/transparente para que el texto se lea */
+.arch-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.72);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+/* Texto que sube de abajo hacia arriba */
+.arch-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 72px;
+  height: calc(100% - 72px);
+  padding: 42px 28px 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(100%);
+  opacity: 0;
+  transition: transform 0.38s ease, opacity 0.28s ease;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.arch-content p {
+  font-size: clamp(15px, 1.45vw, 20px);
+  line-height: 1.55;
+  color: #111;
+  text-align: center;
+  margin: 0;
+  font-weight: 500;
+}
+
+.arch-content-list {
+  align-items: center;
+  justify-content: center;
+}
+
+.arch-content-list ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.arch-content-list li {
+  font-size: clamp(15px, 1.45vw, 20px);
+  line-height: 1.55;
+  color: #111;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.arch-content-list li::before {
+  content: "-";
+  margin-right: 2px;
+}
+
+/* Estado abierto al hacer clic */
+.arch-card.active::before {
+  opacity: 1;
+}
+
+.arch-card.active img {
+  opacity: 0.35;
+  transform: scale(1.03);
+}
+
+.arch-card.active .arch-content {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .arch-label {
@@ -422,11 +502,14 @@ iframe {
   font-weight: 800;
   letter-spacing: 2px;
   text-align: center;
-  padding: 14px;
+  padding: 18px 14px;
   text-transform: uppercase;
+  z-index: 3;
+  transition: background 0.25s;
 }
 
-.arch-card:hover .arch-label {
+.arch-card:hover .arch-label,
+.arch-card.active .arch-label {
   background: var(--blue-mid);
 }
 

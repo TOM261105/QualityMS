@@ -341,9 +341,8 @@ iframe {
   padding-top: 8px;
 }
 
-/* Hace que el segundo párrafo se vea más extendido */
 .about-layout > :nth-child(3) {
-  max-width: 620px;
+  max-width: 720px;
   width: 100%;
 }
 

@@ -2154,3 +2154,114 @@ footer {
     width: 100vw;
   }
 }
+
+/* ── TODOS LOS PRODUCTOS AGRUPADOS ───────────────────────── */
+
+.all-products-page {
+  background: var(--blue-bg);
+  padding: 70px 0 90px;
+  min-height: calc(100vh - 54px);
+}
+
+.all-products-container {
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+  margin-top: 34px;
+}
+
+.all-products-group {
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 26px;
+}
+
+.all-products-group-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
+}
+
+.all-products-group-header span {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--blue-mid);
+  margin-bottom: 6px;
+}
+
+.all-products-group-header h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(24px, 3vw, 34px);
+  color: var(--navy);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.group-link {
+  color: var(--blue-mid);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.group-link:hover {
+  color: var(--navy);
+}
+
+.all-products-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+
+/* Línea divisoria visual entre secciones */
+.all-products-group + .all-products-group {
+  position: relative;
+}
+
+.all-products-group + .all-products-group::before {
+  content: "";
+  position: absolute;
+  top: -24px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+}
+
+@media (max-width: 960px) {
+  .all-products-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .all-products-page {
+    padding: 48px 0 70px;
+  }
+
+  .all-products-group {
+    padding: 20px;
+  }
+
+  .all-products-group-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .all-products-row {
+    grid-template-columns: 1fr;
+  }
+
+  .group-link {
+    white-space: normal;
+  }
+}

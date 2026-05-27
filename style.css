@@ -424,15 +424,16 @@ iframe {
 }
 
 /* Texto que sube de abajo hacia arriba */
+
 .arch-content {
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 72px;
-  padding: 34px 26px 24px;
+  padding: 46px 24px 20px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   transform: translateY(100%);
   opacity: 0;
@@ -443,38 +444,40 @@ iframe {
 }
 
 .arch-content p {
-  font-size: clamp(13px, 1.05vw, 16px);
-  line-height: 1.42;
+  font-size: clamp(10.5px, 0.82vw, 13px);
+  line-height: 1.32;
   color: #111;
   text-align: center;
   margin: 0;
   font-weight: 500;
 }
 
-.arch-content-list {
-  align-items: center;
+arch-content-list {
+  align-items: flex-start;
   justify-content: center;
+  padding-top: 52px;
+}
+
+.arch-content-list ul {
+  list-style: none !important;
+  padding: 0;
+  margin: 0;
+  width: 100%;
 }
 
 .arch-content-list li {
-  font-size: clamp(13px, 1.05vw, 16px);
-  line-height: 1.45;
+  list-style: none !important;
+  font-size: clamp(10.5px, 0.82vw, 13px);
+  line-height: 1.32;
   color: #111;
   font-weight: 500;
-  margin-bottom: 5px;
-}
-
-.arch-content-list li {
-  font-size: clamp(15px, 1.45vw, 20px);
-  line-height: 1.55;
-  color: #111;
-  font-weight: 500;
-  margin-bottom: 5px;
+  margin-bottom: 7px;
+  text-align: left;
 }
 
 .arch-content-list li::before {
-  content: "-";
-  margin-right: 2px;
+  content: "- ";
+  margin-right: 0;
 }
 
 /* Estado abierto al hacer clic */

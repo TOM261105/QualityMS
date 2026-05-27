@@ -16,18 +16,6 @@ document.querySelectorAll('.reveal').forEach(element => {
 });
 
 
-// Filtros visuales de la tienda
-document.querySelectorAll('.pill').forEach(pill => {
-  pill.addEventListener('click', () => {
-    document.querySelectorAll('.pill').forEach(item => {
-      item.classList.remove('active');
-    });
-
-    pill.classList.add('active');
-  });
-});
-
-
 // Cambio de idioma ES / EN
 const langToggle = document.getElementById('langToggle');
 

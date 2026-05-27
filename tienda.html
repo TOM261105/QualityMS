@@ -51,6 +51,11 @@
           data-en-html="Select one of our <strong>8 categories</strong> to explore available products.">
           Selecciona una de nuestras <strong>8 categorías</strong> para explorar los productos disponibles.
         </p>
+
+        <button id="cartOpenBtn" class="cart-open-btn">
+          <span data-es="Carrito" data-en="Cart">Carrito</span>
+          <strong id="cartCount">0</strong>
+        </button>
       </div>
 
       <div class="products-grid reveal">
@@ -372,8 +377,37 @@
       </div>
     </div>
   </footer>
-<script src="productos-demo.js"></script>
+  <!-- CARRITO LATERAL -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3 data-es="Tu carrito" data-en="Your cart">Tu carrito</h3>
+      <button id="cartCloseBtn" class="cart-close-btn">×</button>
+    </div>
+
+    <div id="cartItems" class="cart-items"></div>
+
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span data-es="Total estimado" data-en="Estimated total">Total estimado</span>
+        <strong id="cartTotal">$0 MXN</strong>
+      </div>
+
+      <button id="checkoutBtn" class="checkout-btn" data-es="Ir a pagar" data-en="Checkout">
+        Ir a pagar
+      </button>
+
+      <p 
+        class="cart-note"
+        data-es="En la versión final, este botón enviará al checkout seguro de Shopify."
+        data-en="In the final version, this button will redirect to Shopify secure checkout.">
+        En la versión final, este botón enviará al checkout seguro de Shopify.
+      </p>
+    </div>
+  </aside>
 <script src="shopify-config.js"></script>
+<script src="cart.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

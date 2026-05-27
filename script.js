@@ -67,3 +67,33 @@ if (langToggle) {
     setLanguage(newLang);
   });
 }
+
+// Abrir/cerrar tarjetas de Misión, Visión y Objetivos
+document.addEventListener("DOMContentLoaded", () => {
+  const archCards = document.querySelectorAll(".arch-card");
+
+  archCards.forEach((card) => {
+    const toggleCard = () => {
+      const isActive = card.classList.contains("active");
+
+      archCards.forEach((item) => {
+        item.classList.remove("active");
+        item.setAttribute("aria-expanded", "false");
+      });
+
+      if (!isActive) {
+        card.classList.add("active");
+        card.setAttribute("aria-expanded", "true");
+      }
+    };
+
+    card.addEventListener("click", toggleCard);
+
+    card.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        toggleCard();
+      }
+    });
+  });
+});

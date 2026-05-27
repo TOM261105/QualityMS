@@ -341,9 +341,10 @@ iframe {
   padding-top: 8px;
 }
 
+/* Hace que el segundo párrafo se vea más extendido */
 .about-layout > :nth-child(3) {
-  align-self: start;
-  padding-top: 12px;
+  max-width: 620px;
+  width: 100%;
 }
 
 /* ── ARCO CARDS ────────────────────────────────────────────── */

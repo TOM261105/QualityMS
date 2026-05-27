@@ -417,7 +417,7 @@ iframe {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(255, 255, 255, 0.72);
+  background: rgba(255, 255, 255, 0.82);
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: 1;
@@ -446,13 +446,19 @@ iframe {
 .arch-content p {
   font-size: clamp(10.5px, 0.82vw, 13px);
   line-height: 1.32;
-  color: #111;
+  color: var(--navy);
   text-align: center;
   margin: 0;
   font-weight: 500;
 }
 
-arch-content-list {
+.arch-content strong,
+.arch-content-list strong {
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.arch-content-list {
   align-items: flex-start;
   justify-content: center;
   padding-top: 52px;
@@ -469,7 +475,7 @@ arch-content-list {
   list-style: none !important;
   font-size: clamp(10.5px, 0.82vw, 13px);
   line-height: 1.32;
-  color: #111;
+  color: var(--navy);
   font-weight: 500;
   margin-bottom: 7px;
   text-align: left;

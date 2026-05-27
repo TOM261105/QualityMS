@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todos los productos | Quality Medical Service</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <nav class="nav-links">
+        <a href="index.html" data-es="Conócenos" data-en="About us">Conócenos</a>
+        <a href="distribuidores.html" data-es="Distribuidores" data-en="Distributors">Distribuidores</a>
+        <a href="soporte.html" data-es="Soporte" data-en="Support">Soporte</a>
+        <a href="contacto.html" data-es="Contáctanos" data-en="Contact us">Contáctanos</a>
+        <a href="tienda.html" class="cta" data-es="Tienda en línea" data-en="Online Store">Tienda en línea</a>
+      </nav>
+
+      <button class="lang-btn" id="langToggle">ES / EN</button>
+    </div>
+  </div>
+
+  <section class="all-products-page">
+    <div class="container">
+
+      <a href="tienda.html" class="back-link" data-es="← Volver a categorías" data-en="← Back to categories">
+        ← Volver a categorías
+      </a>
+
+      <div class="section-header reveal">
+        <span class="eyebrow" data-es="Catálogo completo" data-en="Full catalog">
+          Catálogo completo
+        </span>
+
+        <h2 
+          data-es-html="Todos los <span>productos</span>"
+          data-en-html="All <span>products</span>">
+          Todos los <span>productos</span>
+        </h2>
+
+        <p 
+          data-es="Explora todos los productos disponibles organizados por categoría."
+          data-en="Explore all available products organized by category.">
+          Explora todos los productos disponibles organizados por categoría.
+        </p>
+      </div>
+
+      <div class="category-tools reveal">
+        <input 
+          type="search" 
+          id="allProductsSearch" 
+          class="product-search"
+          placeholder="Buscar producto..."
+          data-es-placeholder="Buscar producto..."
+          data-en-placeholder="Search product...">
+
+        <button id="cartOpenBtn" class="cart-open-btn">
+          <span data-es="Carrito" data-en="Cart">Carrito</span>
+          <strong id="cartCount">0</strong>
+        </button>
+      </div>
+
+      <div id="allProductsContainer" class="all-products-container reveal"></div>
+
+    </div>
+  </section>
+
+  <!-- CARRITO LATERAL -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3 data-es="Tu carrito" data-en="Your cart">Tu carrito</h3>
+      <button id="cartCloseBtn" class="cart-close-btn">×</button>
+    </div>
+
+    <div id="cartItems" class="cart-items"></div>
+
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span data-es="Total estimado" data-en="Estimated total">Total estimado</span>
+        <strong id="cartTotal">$0 MXN</strong>
+      </div>
+
+      <button id="checkoutBtn" class="checkout-btn" data-es="Ir a pagar" data-en="Checkout">
+        Ir a pagar
+      </button>
+
+      <p 
+        class="cart-note"
+        data-es="En la versión final, este botón enviará al checkout seguro de Shopify."
+        data-en="In the final version, this button will redirect to Shopify secure checkout.">
+        En la versión final, este botón enviará al checkout seguro de Shopify.
+      </p>
+    </div>
+  </aside>
+
+  <script src="productos-demo.js"></script>
+  <script src="shopify-config.js"></script>
+  <script src="cart.js"></script>
+  <script src="productos.js"></script>
+  <script src="script.js"></script>
+
+</body>
+</html>

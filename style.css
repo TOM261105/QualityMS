@@ -2328,3 +2328,89 @@ footer {
     white-space: normal;
   }
 }
+/* ── ABOUT CELULAR  ─────────────────────────────── */
+
+@media (max-width: 640px) {
+  .about-section {
+    padding: 52px 0 70px;
+  }
+
+  .about-heading {
+    font-size: clamp(32px, 10vw, 44px);
+    line-height: 1;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .about-divider {
+    width: 86%;
+    height: 4px;
+    margin: 0 auto 36px;
+  }
+
+  .about-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 28px !important;
+    max-width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  /* Muy importante: borra las posiciones de grid en celular */
+  .about-layout > * {
+    grid-column: auto !important;
+    grid-row: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Orden celular: foto 1, texto 1, foto 2, texto 2 */
+  .about-layout > :nth-child(1) {
+    order: 1;
+  }
+
+  .about-layout > :nth-child(2) {
+    order: 2;
+  }
+
+  .about-layout > :nth-child(4) {
+    order: 3;
+    margin-top: 12px;
+  }
+
+  .about-layout > :nth-child(3) {
+    order: 4;
+  }
+
+  .about-image-card,
+  .about-image-card-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .about-photo-left,
+  .about-photo-right {
+    width: min(78vw, 300px) !important;
+    height: min(78vw, 300px) !important;
+    aspect-ratio: 1 / 1;
+    border-radius: 50% !important;
+    margin: 0 auto;
+  }
+
+  .about-text-card {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .about-text-card p {
+    width: 100%;
+    max-width: 330px;
+    font-size: 17px;
+    line-height: 1.65;
+    text-align: center;
+    margin: 0 auto;
+  }
+}

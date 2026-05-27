@@ -428,9 +428,9 @@ iframe {
   position: absolute;
   left: 0;
   right: 0;
+  top: 0;
   bottom: 72px;
-  height: calc(100% - 72px);
-  padding: 42px 28px 26px;
+  padding: 34px 26px 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -439,11 +439,12 @@ iframe {
   transition: transform 0.38s ease, opacity 0.28s ease;
   z-index: 2;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .arch-content p {
-  font-size: clamp(15px, 1.45vw, 20px);
-  line-height: 1.55;
+  font-size: clamp(13px, 1.05vw, 16px);
+  line-height: 1.42;
   color: #111;
   text-align: center;
   margin: 0;
@@ -455,11 +456,12 @@ iframe {
   justify-content: center;
 }
 
-.arch-content-list ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  width: 100%;
+.arch-content-list li {
+  font-size: clamp(13px, 1.05vw, 16px);
+  line-height: 1.45;
+  color: #111;
+  font-weight: 500;
+  margin-bottom: 5px;
 }
 
 .arch-content-list li {

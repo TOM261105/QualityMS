@@ -234,75 +234,138 @@ iframe {
 /* ── ABOUT ─────────────────────────────────────────────────── */
 
 .about-section {
-  background: #fff;
-  padding: 80px 0 0;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 60px;
+  background: #f3f3f3;
+  padding: 72px 0 90px;
 }
 
 .about-heading {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(28px, 3.5vw, 44px);
+  font-family: 'Barlow', sans-serif;
+  font-size: clamp(34px, 5vw, 64px);
   font-weight: 800;
   text-align: center;
-  margin-bottom: 12px;
-  color: var(--navy);
+  line-height: 1.05;
+  letter-spacing: -1px;
+  color: #3f3f3f;
+  margin-bottom: 16px;
 }
 
 .about-heading .hash {
   color: var(--blue-mid);
 }
 
+.about-heading span:last-child {
+  color: #555;
+}
+
 .about-divider {
-  width: 80px;
-  height: 3px;
-  background: var(--navy);
-  margin: 0 auto 40px;
+  width: min(100%, 860px);
+  height: 4px;
+  background: var(--blue-mid);
+  margin: 0 auto 42px;
+  border-radius: 999px;
 }
 
-.about-row {
+.about-layout {
   display: grid;
-  grid-template-columns: 1fr 1.6fr;
-  gap: 48px;
+  grid-template-columns: 1fr 1.55fr;
+  gap: 42px 58px;
   align-items: center;
-  margin-bottom: 40px;
 }
 
-.about-row.reverse {
-  grid-template-columns: 1.6fr 1fr;
+.about-card {
+  min-width: 0;
 }
 
-.about-img {
-  width: 100%;
-  aspect-ratio: 1;
-  max-width: 300px;
-  margin: 0 auto;
-  border-radius: 50%;
+.about-text-card p {
+  font-size: clamp(16px, 2vw, 23px);
+  line-height: 1.55;
+  color: #222;
+  margin: 0;
+  text-align: left;
+  font-weight: 400;
+}
+
+.about-text-card p strong {
+  color: var(--navy);
+  font-weight: 800;
+}
+
+.about-image-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.about-image-card-right {
+  align-items: flex-end;
+}
+
+.about-photo {
   overflow: hidden;
-  border: 5px solid var(--blue-pale);
-  box-shadow: 0 8px 32px rgba(13, 43, 78, 0.12);
+  background: #ddd;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
 }
 
-.about-img img {
+.about-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-.about-text p {
-  font-size: 16px;
-  line-height: 1.8;
-  color: var(--text);
-  margin-bottom: 16px;
-  text-align: justify;
+/* imagen superior izquierda */
+.about-photo-left {
+  width: min(100%, 370px);
+  aspect-ratio: 1 / 1;
+  border-radius: 48px;
 }
 
-.about-text p strong {
-  color: var(--navy);
+/* imagen inferior derecha */
+.about-photo-right {
+  width: min(100%, 360px);
+  aspect-ratio: 1 / 1;
+  border-radius: 72px;
+}
+
+.about-slider-dots {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(185, 180, 180, 0.95);
+  border-radius: 999px;
+  padding: 12px 18px;
+  margin-top: -18px;
+  margin-left: 118px;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.about-image-card-right .about-slider-dots {
+  margin-left: 0;
+  margin-right: 48px;
+}
+
+.about-slider-dots span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.about-slider-dots span.active {
+  background: #ffffff;
+}
+
+/* Ajuste fino para que se parezca más al acomodo de la referencia */
+.about-layout > :nth-child(2) {
+  align-self: start;
+  padding-top: 8px;
+}
+
+.about-layout > :nth-child(3) {
+  align-self: start;
+  padding-top: 12px;
 }
 
 /* ── ARCO CARDS ────────────────────────────────────────────── */

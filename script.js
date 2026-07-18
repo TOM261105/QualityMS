@@ -120,6 +120,22 @@ function isStorePage() {
   return protectedStorePages.includes(getCurrentPageName());
 }
 
+/* Detecta si fue hard refresh o recarga */
+function wasPageReloaded() {
+  const navEntries = performance.getEntriesByType('navigation');
+
+  if (navEntries.length > 0) {
+    return navEntries[0].type === 'reload';
+  }
+
+  return performance.navigation && performance.navigation.type === 1;
+}
+
+/* Si hace hard refresh, vuelve a pedir confirmación */
+if (wasPageReloaded()) {
+  sessionStorage.removeItem('medicalSpecialist');
+}
+
 function blockStoreAccess() {
   const mainContent = document.querySelector('main') || document.body;
 
@@ -138,7 +154,7 @@ function blockStoreAccess() {
 }
 
 function checkMedicalAccess() {
-  const medicalAccess = localStorage.getItem('medicalSpecialist');
+  const medicalAccess = sessionStorage.getItem('medicalSpecialist');
 
   if (!medicalAccess && medicalPopup) {
     medicalPopup.classList.add('active');
@@ -153,7 +169,7 @@ function checkMedicalAccess() {
 
 if (medicalYes) {
   medicalYes.addEventListener('click', () => {
-    localStorage.setItem('medicalSpecialist', 'yes');
+    sessionStorage.setItem('medicalSpecialist', 'yes');
 
     if (medicalPopup) {
       medicalPopup.classList.remove('active');
@@ -164,7 +180,7 @@ if (medicalYes) {
 
 if (medicalNo) {
   medicalNo.addEventListener('click', () => {
-    localStorage.setItem('medicalSpecialist', 'no');
+    sessionStorage.setItem('medicalSpecialist', 'no');
 
     if (medicalPopup) {
       medicalPopup.classList.remove('active');
@@ -177,10 +193,10 @@ if (medicalNo) {
   });
 }
 
-/* Evita entrar a la tienda si respondió que NO */
+/* Evita entrar a tienda si respondió que NO */
 document.querySelectorAll('a[href*="tienda.html"], a[href*="categoria.html"], a[href*="productos.html"]').forEach(link => {
   link.addEventListener('click', event => {
-    const medicalAccess = localStorage.getItem('medicalSpecialist');
+    const medicalAccess = sessionStorage.getItem('medicalSpecialist');
 
     if (medicalAccess === 'no') {
       event.preventDefault();

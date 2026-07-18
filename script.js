@@ -97,3 +97,96 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+/* ── POP-UP ESPECIALISTA MÉDICO ───────────────────────────── */
+
+const medicalPopup = document.getElementById('medicalPopup');
+const medicalYes = document.getElementById('medicalYes');
+const medicalNo = document.getElementById('medicalNo');
+
+const protectedStorePages = [
+  'tienda.html',
+  'categoria.html',
+  'productos.html'
+];
+
+function getCurrentPageName() {
+  const path = window.location.pathname;
+  const page = path.substring(path.lastIndexOf('/') + 1);
+  return page || 'index.html';
+}
+
+function isStorePage() {
+  return protectedStorePages.includes(getCurrentPageName());
+}
+
+function blockStoreAccess() {
+  const mainContent = document.querySelector('main') || document.body;
+
+  mainContent.innerHTML = `
+    <section class="store-locked">
+      <div class="store-locked-card">
+        <h1>Acceso restringido</h1>
+        <p>
+          La tienda en línea está disponible únicamente para especialistas médicos
+          o profesionales de la salud.
+        </p>
+        <a href="contacto.html" class="btn-primary">Contactar a Quality MS</a>
+      </div>
+    </section>
+  `;
+}
+
+function checkMedicalAccess() {
+  const medicalAccess = localStorage.getItem('medicalSpecialist');
+
+  if (!medicalAccess && medicalPopup) {
+    medicalPopup.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    return;
+  }
+
+  if (medicalAccess === 'no' && isStorePage()) {
+    blockStoreAccess();
+  }
+}
+
+if (medicalYes) {
+  medicalYes.addEventListener('click', () => {
+    localStorage.setItem('medicalSpecialist', 'yes');
+
+    if (medicalPopup) {
+      medicalPopup.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+}
+
+if (medicalNo) {
+  medicalNo.addEventListener('click', () => {
+    localStorage.setItem('medicalSpecialist', 'no');
+
+    if (medicalPopup) {
+      medicalPopup.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    if (isStorePage()) {
+      blockStoreAccess();
+    }
+  });
+}
+
+/* Evita entrar a la tienda si respondió que NO */
+document.querySelectorAll('a[href*="tienda.html"], a[href*="categoria.html"], a[href*="productos.html"]').forEach(link => {
+  link.addEventListener('click', event => {
+    const medicalAccess = localStorage.getItem('medicalSpecialist');
+
+    if (medicalAccess === 'no') {
+      event.preventDefault();
+      alert('La tienda en línea está disponible únicamente para especialistas médicos o profesionales de la salud.');
+    }
+  });
+});
+
+checkMedicalAccess();

@@ -75,15 +75,33 @@ function renderSingleProduct() {
 
   if (singleAddToCart) {
     singleAddToCart.addEventListener('click', () => {
-      if (typeof addToCart === 'function') {
-        addToCart(product);
-      }
+    if (typeof addToCart === 'function') {
+      addToCart(product);
+    }
 
-      if (typeof openCart === 'function') {
-        openCart();
-      }
-    });
-  }
+    // Refresca el carrito en esta misma página
+    if (typeof renderCart === 'function') {
+      renderCart();
+    }
+
+    if (typeof updateCartCount === 'function') {
+      updateCartCount();
+    }
+
+    // Abre visualmente el carrito aunque openCart no esté disponible
+    const cartDrawer = document.getElementById('cartDrawer');
+    const cartOverlay = document.getElementById('cartOverlay');
+
+    if (cartDrawer) {
+      cartDrawer.classList.add('active');
+    }
+
+    if (cartOverlay) {
+      cartOverlay.classList.add('active');
+    }
+
+    document.body.style.overflow = 'hidden';
+  });
 }
 
 renderSingleProduct();

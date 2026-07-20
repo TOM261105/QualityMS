@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Productos | Quality Medical Service</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- POP-UP ESPECIALISTA MÉDICO -->
+  <div class="medical-popup" id="medicalPopup">
+    <div class="medical-popup-card">
+      <div class="medical-popup-logo">
+        <img src="assets/logo-qualityms.png" alt="Quality Medical Service">
+      </div>
+
+      <h2 data-es="Aviso importante" data-en="Important notice">Aviso importante</h2>
+
+      <p 
+        data-es="Para continuar, confirma si eres especialista médico o profesional de la salud."
+        data-en="To continue, please confirm whether you are a medical specialist or healthcare professional.">
+        Para continuar, confirma si eres especialista médico o profesional de la salud.
+      </p>
+
+      <div class="medical-popup-actions">
+        <button id="medicalYes" class="medical-btn medical-btn-primary"
+          data-es="Sí, soy especialista"
+          data-en="Yes, I am a specialist">
+          Sí, soy especialista
+        </button>
+
+        <button id="medicalNo" class="medical-btn medical-btn-outline"
+          data-es="No"
+          data-en="No">
+          No
+        </button>
+      </div>
+
+      <small
+        data-es="Al seleccionar “Sí”, confirmas que puedes consultar información relacionada con equipo médico."
+        data-en="By selecting “Yes”, you confirm that you may access information related to medical equipment.">
+        Al seleccionar “Sí”, confirmas que puedes consultar información relacionada con equipo médico.
+      </small>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <nav class="nav-links">
+        <a href="index.html" data-es="Conócenos" data-en="About us">Conócenos</a>
+        <a href="distribuidores.html" data-es="Distribuidores" data-en="Distributors">Distribuidores</a>
+        <a href="soporte.html" data-es="Soporte" data-en="Support">Soporte</a>
+        <a href="contacto.html" data-es="Contáctanos" data-en="Contact us">Contáctanos</a>
+        <a href="tienda.html" class="cta" data-es="Tienda en línea" data-en="Online Store">Tienda en línea</a>
+      </nav>
+
+      <button class="lang-btn" id="langToggle">ES / EN</button>
+    </div>
+  </div>
+
+  <main class="product-list-page">
+    <div class="container">
+
+      <a href="tienda.html" class="back-link" data-es="← Volver a tienda" data-en="← Back to store">
+        ← Volver a tienda
+      </a>
+
+      <div class="product-list-header">
+        <div>
+          <span class="eyebrow" data-es="Catálogo completo" data-en="Full catalog">
+            Catálogo completo
+          </span>
+
+          <h1 data-es="Lista de productos" data-en="Product list">
+            Lista de productos
+          </h1>
+
+          <p 
+            data-es="Consulta todos los productos disponibles con tipo, nombre, descripción, precio general y precio para distribuidor."
+            data-en="View all available products with type, name, description, general price and distributor price.">
+            Consulta todos los productos disponibles con tipo, nombre, descripción, precio general y precio para distribuidor.
+          </p>
+        </div>
+
+        <button id="cartOpenBtn" class="cart-open-btn">
+          <span data-es="Carrito" data-en="Cart">Carrito</span>
+          <strong id="cartCount">0</strong>
+        </button>
+      </div>
+
+      <input 
+        type="text" 
+        id="productListSearch" 
+        class="product-list-search"
+        placeholder="Buscar producto..."
+        data-es-placeholder="Buscar producto..."
+        data-en-placeholder="Search product...">
+
+      <div class="product-table-wrap">
+        <table class="product-list-table">
+          <thead>
+            <tr>
+              <th data-es="Tipo" data-en="Type">Tipo</th>
+              <th data-es="Nombre" data-en="Name">Nombre</th>
+              <th data-es="Descripción" data-en="Description">Descripción</th>
+              <th data-es="Precio general" data-en="General price">Precio general</th>
+              <th data-es="Precio distribuidor" data-en="Distributor price">Precio distribuidor</th>
+              <th data-es="Acciones" data-en="Actions">Acciones</th>
+            </tr>
+          </thead>
+
+          <tbody id="productListBody">
+            <!-- Productos cargados con JS -->
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- CARRITO LATERAL -->
+  <div class="cart-overlay" id="cartOverlay"></div>
+
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3 data-es="Tu carrito" data-en="Your cart">Tu carrito</h3>
+      <button id="cartCloseBtn" class="cart-close-btn">×</button>
+    </div>
+
+    <div id="cartItems" class="cart-items"></div>
+
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span data-es="Total estimado" data-en="Estimated total">Total estimado</span>
+        <strong id="cartTotal">$0 MXN</strong>
+      </div>
+
+      <button id="checkoutBtn" class="checkout-btn" data-es="Ir a pagar" data-en="Checkout">
+        Ir a pagar
+      </button>
+
+      <p 
+        class="cart-note"
+        data-es="En la versión final, este botón enviará al checkout seguro de Shopify."
+        data-en="In the final version, this button will redirect to Shopify secure checkout.">
+        En la versión final, este botón enviará al checkout seguro de Shopify.
+      </p>
+    </div>
+  </aside>
+
+  <script src="productos-demo.js"></script>
+  <script src="shopify-config.js"></script>
+  <script src="cart.js"></script>
+  <script src="lista-productos.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

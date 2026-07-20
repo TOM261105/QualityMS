@@ -1,198 +1,117 @@
-/* ── PÁGINA INDIVIDUAL DE PRODUCTO ───────────────────────── */
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Producto | Quality Medical Service</title>
 
-const singleProductContainer = document.getElementById('singleProductContainer');
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
 
-function getSelectedProductId() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('id');
-}
+<body>
 
-function getNumericPrice(product) {
-  if (typeof product.price === 'number') return product.price;
-
-  const priceText = product.priceGeneral || product.priceText || '';
-  const cleanPrice = priceText.replace(/[^0-9.]/g, '');
-
-  return Number(cleanPrice) || 0;
-}
-
-function getCart() {
-  return JSON.parse(localStorage.getItem('qualityCart')) || [];
-}
-
-function saveCart(cart) {
-  localStorage.setItem('qualityCart', JSON.stringify(cart));
-}
-
-function addProductToCartFromProductPage(product) {
-  const cart = getCart();
-  const existingProduct = cart.find(item => item.id === product.id);
-
-  if (existingProduct) {
-    existingProduct.quantity += 1;
-  } else {
-    cart.push({
-      id: product.id,
-      title: product.title,
-      image: product.image,
-      price: getNumericPrice(product),
-      priceText: product.priceText || product.priceGeneral || 'Solicitar cotización',
-      priceGeneral: product.priceGeneral || product.priceText || 'Solicitar cotización',
-      priceDistributor: product.priceDistributor || 'Cotizar con ejecutivo',
-      categoryName: product.categoryName || product.category || 'General',
-      quantity: 1
-    });
-  }
-
-  saveCart(cart);
-}
-
-function renderCartFromProductPage() {
-  const cart = getCart();
-
-  const cartItems = document.getElementById('cartItems');
-  const cartCount = document.getElementById('cartCount');
-  const cartTotal = document.getElementById('cartTotal');
-
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-
-  if (cartCount) {
-    cartCount.textContent = totalItems;
-  }
-
-  if (cartTotal) {
-    cartTotal.textContent = `$${totalPrice.toLocaleString('es-MX')} MXN`;
-  }
-
-  if (!cartItems) return;
-
-  if (cart.length === 0) {
-    cartItems.innerHTML = `
-      <p class="cart-empty">Tu carrito está vacío.</p>
-    `;
-    return;
-  }
-
-  cartItems.innerHTML = cart.map(item => `
-    <div class="cart-item">
-      <img src="${item.image}" alt="${item.title}">
-
-      <div class="cart-item-info">
-        <h4>${item.title}</h4>
-        <p>${item.priceText}</p>
-
-        <div class="cart-quantity">
-          <span>Cantidad: ${item.quantity}</span>
-        </div>
+  <!-- POP-UP ESPECIALISTA MÉDICO -->
+  <div class="medical-popup" id="medicalPopup">
+    <div class="medical-popup-card">
+      <div class="medical-popup-logo">
+        <img src="assets/logo-qualityms.png" alt="Quality Medical Service">
       </div>
 
-      <button class="cart-remove" type="button" data-remove-id="${item.id}">
-        ×
-      </button>
+      <h2 data-es="Aviso importante" data-en="Important notice">Aviso importante</h2>
+
+      <p 
+        data-es="Para continuar, confirma si eres especialista médico o profesional de la salud."
+        data-en="To continue, please confirm whether you are a medical specialist or healthcare professional.">
+        Para continuar, confirma si eres especialista médico o profesional de la salud.
+      </p>
+
+      <div class="medical-popup-actions">
+        <button id="medicalYes" class="medical-btn medical-btn-primary"
+          data-es="Sí, soy especialista"
+          data-en="Yes, I am a specialist">
+          Sí, soy especialista
+        </button>
+
+        <button id="medicalNo" class="medical-btn medical-btn-outline"
+          data-es="No"
+          data-en="No">
+          No
+        </button>
+      </div>
+
+      <small
+        data-es="Al seleccionar “Sí”, confirmas que puedes consultar información relacionada con equipo médico."
+        data-en="By selecting “Yes”, you confirm that you may access information related to medical equipment.">
+        Al seleccionar “Sí”, confirmas que puedes consultar información relacionada con equipo médico.
+      </small>
     </div>
-  `).join('');
+  </div>
 
-  document.querySelectorAll('[data-remove-id]').forEach(button => {
-    button.addEventListener('click', () => {
-      const productId = button.getAttribute('data-remove-id');
-      const updatedCart = getCart().filter(item => item.id !== productId);
+  <!-- NAV -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <nav class="nav-links">
+        <a href="index.html" data-es="Conócenos" data-en="About us">Conócenos</a>
+        <a href="distribuidores.html" data-es="Distribuidores" data-en="Distributors">Distribuidores</a>
+        <a href="soporte.html" data-es="Soporte" data-en="Support">Soporte</a>
+        <a href="contacto.html" data-es="Contáctanos" data-en="Contact us">Contáctanos</a>
+        <a href="tienda.html" class="cta" data-es="Tienda en línea" data-en="Online Store">Tienda en línea</a>
+      </nav>
 
-      saveCart(updatedCart);
-      renderCartFromProductPage();
-    });
-  });
-}
+      <button class="lang-btn" id="langToggle">ES / EN</button>
+    </div>
+  </div>
 
-function openCartFromProductPage() {
-  const cartDrawer = document.getElementById('cartDrawer');
-  const cartOverlay = document.getElementById('cartOverlay');
+  <!-- PRODUCTO INDIVIDUAL -->
+  <main class="single-product-page">
+    <div class="container">
 
-  if (cartDrawer) {
-    cartDrawer.classList.add('active');
-  }
+      <a href="lista-productos.html" class="back-link" data-es="← Volver a lista de productos" data-en="← Back to product list">
+        ← Volver a lista de productos
+      </a>
 
-  if (cartOverlay) {
-    cartOverlay.classList.add('active');
-  }
-
-  document.body.style.overflow = 'hidden';
-}
-
-function renderSingleProduct() {
-  const productId = getSelectedProductId();
-  const product = DEMO_PRODUCTS.find(item => item.id === productId);
-
-  if (!singleProductContainer) return;
-
-  if (!product) {
-    singleProductContainer.innerHTML = `
-      <div class="single-product-empty">
-        <h1>Producto no encontrado</h1>
-        <p>El producto que buscas no está disponible o fue eliminado.</p>
-        <a href="lista-productos.html" class="btn-primary">Volver a productos</a>
-      </div>
-    `;
-    return;
-  }
-
-  const actionButton = product.type === 'venta'
-    ? `<button id="singleAddToCart" class="btn-primary">Agregar al carrito</button>`
-    : `<a href="contacto.html?producto=${encodeURIComponent(product.title)}" class="btn-primary">Solicitar cotización</a>`;
-
-  singleProductContainer.innerHTML = `
-    <section class="single-product-card">
-      <div class="single-product-image">
-        <img src="${product.image}" alt="${product.title}">
+      <div id="singleProductContainer">
+        <!-- Aquí se carga el producto con producto.js -->
       </div>
 
-      <div class="single-product-info">
-        <span class="eyebrow">${product.categoryName || product.category}</span>
+    </div>
+  </main>
 
-        <h1>${product.title}</h1>
+  <!-- CARRITO LATERAL -->
+  <div class="cart-overlay" id="cartOverlay"></div>
 
-        <p class="single-product-description">
-          ${product.description || 'Sin descripción disponible.'}
-        </p>
+  <aside class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3 data-es="Tu carrito" data-en="Your cart">Tu carrito</h3>
+      <button id="cartCloseBtn" class="cart-close-btn">×</button>
+    </div>
 
-        <div class="single-product-data">
-          <div>
-            <span>Disponibilidad</span>
-            <strong>${product.availability || 'Consultar disponibilidad'}</strong>
-          </div>
+    <div id="cartItems" class="cart-items"></div>
 
-          <div>
-            <span>Precio general</span>
-            <strong>${product.priceGeneral || product.priceText || 'Solicitar cotización'}</strong>
-          </div>
-
-          <div>
-            <span>Precio distribuidor</span>
-            <strong>${product.priceDistributor || 'Cotizar con ejecutivo'}</strong>
-          </div>
-        </div>
-
-        <div class="single-product-actions">
-          ${actionButton}
-
-          <a href="contacto.html?producto=${encodeURIComponent(product.title)}" class="btn-outline">
-            Hablar con un asesor
-          </a>
-        </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span data-es="Total estimado" data-en="Estimated total">Total estimado</span>
+        <strong id="cartTotal">$0 MXN</strong>
       </div>
-    </section>
-  `;
 
-  const singleAddToCart = document.getElementById('singleAddToCart');
+      <button id="checkoutBtn" class="checkout-btn" data-es="Ir a pagar" data-en="Checkout">
+        Ir a pagar
+      </button>
 
-  if (singleAddToCart) {
-    singleAddToCart.addEventListener('click', () => {
-      addProductToCartFromProductPage(product);
-      renderCartFromProductPage();
-      openCartFromProductPage();
-    });
-  }
-}
+      <p 
+        class="cart-note"
+        data-es="En la versión final, este botón enviará al checkout seguro de Shopify."
+        data-en="In the final version, this button will redirect to Shopify secure checkout.">
+        En la versión final, este botón enviará al checkout seguro de Shopify.
+      </p>
+    </div>
+  </aside>
 
-renderSingleProduct();
-renderCartFromProductPage();
+  <script src="productos-demo.js"></script>
+  <script src="shopify-config.js"></script>
+  <script src="cart.js"></script>
+  <script src="producto.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

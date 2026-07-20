@@ -327,12 +327,72 @@
         <a href="productos.html" class="btn-primary" data-es="Ver todos los productos →" data-en="View all products →">
           Ver todos los productos →
         </a>
+
+        <button id="toggleProductList" class="btn-outline product-list-toggle" type="button"
+          data-es="Ver lista de productos"
+          data-en="View product list">
+          Ver lista de productos
+        </button>
+
         <a href="contacto.html" class="btn-outline" data-es="Solicitar cotización" data-en="Request a quote">
           Solicitar cotización
         </a>
       </div>
+  </section>
+
+  <!-- LISTA COMPLETA DE PRODUCTOS -->
+  <section class="product-list-section" id="productListSection">
+    <div class="container">
+
+      <div class="product-list-header">
+        <div>
+          <span class="eyebrow" data-es="Catálogo completo" data-en="Full catalog">
+            Catálogo completo
+          </span>
+
+          <h2 data-es="Lista de productos" data-en="Product list">
+            Lista de productos
+          </h2>
+
+          <p 
+            data-es="Consulta todos los productos disponibles con tipo, descripción, precio general y precio para distribuidor."
+            data-en="View all available products with type, description, general price and distributor price.">
+            Consulta todos los productos disponibles con tipo, descripción, precio general y precio para distribuidor.
+          </p>
+        </div>
+
+        <button id="closeProductList" class="product-list-close" type="button">×</button>
+      </div>
+
+      <input 
+        type="text" 
+        id="productListSearch" 
+        class="product-list-search"
+        placeholder="Buscar producto..."
+        data-es-placeholder="Buscar producto..."
+        data-en-placeholder="Search product...">
+
+      <div class="product-table-wrap">
+        <table class="product-list-table">
+          <thead>
+            <tr>
+              <th data-es="Tipo" data-en="Type">Tipo</th>
+              <th data-es="Nombre" data-en="Name">Nombre</th>
+              <th data-es="Descripción" data-en="Description">Descripción</th>
+              <th data-es="Precio general" data-en="General price">Precio general</th>
+              <th data-es="Precio distribuidor" data-en="Distributor price">Precio distribuidor</th>
+            </tr>
+          </thead>
+
+          <tbody id="productListBody">
+          <!-- Aquí se cargan los productos con JS -->
+          </tbody>
+        </table>
+      </div>
+
     </div>
   </section>
+  
    <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
@@ -442,8 +502,10 @@
       </p>
     </div>
   </aside>
+<script src="productos-demo.js"></script>
 <script src="shopify-config.js"></script>
 <script src="cart.js"></script>
+<script src="tienda-lista.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

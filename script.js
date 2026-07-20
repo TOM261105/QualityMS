@@ -107,7 +107,9 @@ const medicalNo = document.getElementById('medicalNo');
 const protectedStorePages = [
   'tienda.html',
   'categoria.html',
-  'productos.html'
+  'productos.html',
+  'lista-productos.html',
+  'producto.html'
 ];
 
 function getCurrentPageName() {

@@ -55,7 +55,7 @@ function renderProductList(products) {
 
         <td>
           <div class="product-list-actions">
-            <a href="producto.html?id=${product.id}" class="product-action light">
+            <a href="producto.html?id=${product.id}&back=${encodeURIComponent('lista-productos.html' + window.location.search)}" class="product-action light">
               Ver más información
             </a>
 

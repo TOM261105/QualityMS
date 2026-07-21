@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -88,10 +88,20 @@
           Selecciona una de nuestras <strong>8 categorías</strong> para explorar los productos disponibles.
         </p>
 
-        <button id="cartOpenBtn" class="cart-open-btn">
-          <span data-es="Carrito" data-en="Cart">Carrito</span>
-          <strong id="cartCount">0</strong>
-        </button>
+        <div class="store-toolbar-actions">
+          <a href="lista-productos.html" class="store-toolbar-btn primary" data-es="Lista de productos" data-en="Product list">
+            Lista de productos
+          </a>
+
+          <a href="productos.html" class="store-toolbar-btn outline" data-es="Catálogo visual" data-en="Visual catalog">
+            Catálogo visual
+          </a>
+
+          <button id="cartOpenBtn" class="cart-open-btn">
+            <span data-es="Carrito" data-en="Cart">Carrito</span>
+            <strong id="cartCount">0</strong>
+          </button>
+        </div>
       </div>
 
       <div class="products-grid reveal">
@@ -324,14 +334,6 @@
       </div>
 
       <div class="section-cta reveal">
-        <a href="lista-productos.html" class="btn-primary" data-es="Ver lista de productos →" data-en="View product list →">
-          Ver lista de productos →
-        </a>
-
-        <a href="productos.html" class="btn-outline" data-es="Ver catálogo visual" data-en="View visual catalog">
-          Ver catálogo visual
-        </a>
-
         <a href="contacto.html" class="btn-outline" data-es="Solicitar cotización" data-en="Request a quote">
           Solicitar cotización
         </a>

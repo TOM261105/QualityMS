@@ -7,8 +7,178 @@ function getSelectedProductId() {
   return params.get('id');
 }
 
+function getNumericPrice(product) {
+  if (typeof product.price === 'number') return product.price;
+
+  const priceText = product.priceGeneral || product.priceText || '';
+  const cleanPrice = priceText.replace(/[^0-9.]/g, '');
+
+  return Number(cleanPrice) || 0;
+}
+
+function getCartFromStorage() {
+  return JSON.parse(localStorage.getItem('qualityCart')) || [];
+}
+
+function saveCartToStorage(cart) {
+  localStorage.setItem('qualityCart', JSON.stringify(cart));
+}
+
+function addProductToCartFromProductPage(product) {
+  const cart = getCartFromStorage();
+  const existingProduct = cart.find(item => item.id === product.id);
+
+  if (existingProduct) {
+    existingProduct.quantity += 1;
+  } else {
+    cart.push({
+      id: product.id,
+      title: product.title,
+      image: product.image,
+      price: getNumericPrice(product),
+      priceText: product.priceText || product.priceGeneral || 'Solicitar cotización',
+      priceGeneral: product.priceGeneral || product.priceText || 'Solicitar cotización',
+      priceDistributor: product.priceDistributor || 'Cotizar con ejecutivo',
+      categoryName: product.categoryName || product.category || 'General',
+      quantity: 1
+    });
+  }
+
+  saveCartToStorage(cart);
+}
+
+function renderCartFromProductPage() {
+  const cart = getCartFromStorage();
+
+  const cartItems = document.getElementById('cartItems');
+  const cartCount = document.getElementById('cartCount');
+  const cartTotal = document.getElementById('cartTotal');
+
+  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+  if (cartCount) {
+    cartCount.textContent = totalItems;
+  }
+
+  if (cartTotal) {
+    cartTotal.textContent = `$${totalPrice.toLocaleString('es-MX')} MXN`;
+  }
+
+  if (!cartItems) return;
+
+  if (cart.length === 0) {
+    cartItems.innerHTML = `
+      <p class="cart-empty">Tu carrito está vacío.</p>
+    `;
+    return;
+  }
+
+  cartItems.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <img src="${item.image}" alt="${item.title}">
+
+      <div class="cart-item-info">
+        <h4>${item.title}</h4>
+        <p>${item.priceText}</p>
+
+        <div class="cart-quantity">
+          <button type="button" data-decrease-id="${item.id}">−</button>
+          <span>${item.quantity}</span>
+          <button type="button" data-increase-id="${item.id}">+</button>
+        </div>
+      </div>
+
+      <button class="cart-remove" type="button" data-remove-id="${item.id}">
+        ×
+      </button>
+    </div>
+  `).join('');
+
+  document.querySelectorAll('[data-remove-id]').forEach(button => {
+    button.addEventListener('click', () => {
+      const productId = button.getAttribute('data-remove-id');
+      const updatedCart = getCartFromStorage().filter(item => item.id !== productId);
+
+      saveCartToStorage(updatedCart);
+      renderCartFromProductPage();
+    });
+  });
+
+  document.querySelectorAll('[data-increase-id]').forEach(button => {
+    button.addEventListener('click', () => {
+      const productId = button.getAttribute('data-increase-id');
+      const updatedCart = getCartFromStorage().map(item => {
+        if (item.id === productId) {
+          return {
+            ...item,
+            quantity: item.quantity + 1
+          };
+        }
+
+        return item;
+      });
+
+      saveCartToStorage(updatedCart);
+      renderCartFromProductPage();
+    });
+  });
+
+  document.querySelectorAll('[data-decrease-id]').forEach(button => {
+    button.addEventListener('click', () => {
+      const productId = button.getAttribute('data-decrease-id');
+
+      const updatedCart = getCartFromStorage()
+        .map(item => {
+          if (item.id === productId) {
+            return {
+              ...item,
+              quantity: item.quantity - 1
+            };
+          }
+
+          return item;
+        })
+        .filter(item => item.quantity > 0);
+
+      saveCartToStorage(updatedCart);
+      renderCartFromProductPage();
+    });
+  });
+}
+
+function openCartFromProductPage() {
+  const cartDrawer = document.getElementById('cartDrawer');
+  const cartOverlay = document.getElementById('cartOverlay');
+
+  if (cartDrawer) {
+    cartDrawer.classList.add('active');
+  }
+
+  if (cartOverlay) {
+    cartOverlay.classList.add('active');
+  }
+
+  document.body.style.overflow = 'hidden';
+}
+
 function renderSingleProduct() {
   const productId = getSelectedProductId();
+
+  if (typeof DEMO_PRODUCTS === 'undefined') {
+    if (singleProductContainer) {
+      singleProductContainer.innerHTML = `
+        <div class="single-product-empty">
+          <h1>Error al cargar productos</h1>
+          <p>No se encontró el archivo productos-demo.js.</p>
+          <a href="lista-productos.html" class="btn-primary">Volver a productos</a>
+        </div>
+      `;
+    }
+
+    return;
+  }
+
   const product = DEMO_PRODUCTS.find(item => item.id === productId);
 
   if (!singleProductContainer) return;
@@ -25,7 +195,7 @@ function renderSingleProduct() {
   }
 
   const actionButton = product.type === 'venta'
-    ? `<button id="singleAddToCart" class="btn-primary">Agregar al carrito</button>`
+    ? `<button id="singleAddToCart" class="btn-primary" type="button">Agregar al carrito</button>`
     : `<a href="contacto.html?producto=${encodeURIComponent(product.title)}" class="btn-primary">Solicitar cotización</a>`;
 
   singleProductContainer.innerHTML = `
@@ -75,32 +245,12 @@ function renderSingleProduct() {
 
   if (singleAddToCart) {
     singleAddToCart.addEventListener('click', () => {
-      if (typeof addToCart === 'function') {
-        addToCart(product);
-      }
-
-      if (typeof renderCart === 'function') {
-        renderCart();
-      }
-
-      if (typeof updateCartCount === 'function') {
-        updateCartCount();
-      }
-
-      const cartDrawer = document.getElementById('cartDrawer');
-      const cartOverlay = document.getElementById('cartOverlay');
-
-      if (cartDrawer) {
-        cartDrawer.classList.add('active');
-      }
-
-      if (cartOverlay) {
-        cartOverlay.classList.add('active');
-      }
-
-      document.body.style.overflow = 'hidden';
+      addProductToCartFromProductPage(product);
+      renderCartFromProductPage();
+      openCartFromProductPage();
     });
   }
 }
 
 renderSingleProduct();
+renderCartFromProductPage();

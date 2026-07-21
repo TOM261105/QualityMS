@@ -3221,3 +3221,40 @@ footer {
     justify-content: center;
   }
 }
+
+/* ── BOTONES EN CARDS DE PRODUCTOS ───────────────────────── */
+
+.shopify-product-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.shopify-product-actions .product-action {
+  flex: 1;
+  min-width: 130px;
+  text-align: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.product-action.light {
+  background: var(--blue-pale);
+  color: var(--navy);
+}
+
+.product-action.light:hover {
+  background: var(--blue-mid);
+  color: white;
+}
+
+@media (max-width: 640px) {
+  .shopify-product-actions {
+    flex-direction: column;
+  }
+
+  .shopify-product-actions .product-action {
+    width: 100%;
+  }
+}

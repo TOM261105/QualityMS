@@ -88,7 +88,7 @@ function renderCategoryProducts(products) {
           </div>
 
           <div class="shopify-product-actions">
-            <a href="producto.html?id=${product.id}" class="product-action light">
+            <a href="producto.html?id=${product.id}&back=${encodeURIComponent('categoria.html?cat=' + getSelectedCategory())}" class="product-action light">
               Ver más información
             </a>
 

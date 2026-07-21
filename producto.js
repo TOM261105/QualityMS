@@ -2,6 +2,63 @@
 
 const singleProductContainer = document.getElementById('singleProductContainer');
 
+const productBackLink = document.getElementById('productBackLink');
+
+function setupProductBackLink() {
+  if (!productBackLink) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const backUrl = params.get('back');
+
+  let fallbackUrl = 'lista-productos.html';
+  let backText = '← Volver a lista de productos';
+
+  if (backUrl) {
+    const decodedBackUrl = decodeURIComponent(backUrl);
+
+    const allowedPages = [
+      'categoria.html',
+      'lista-productos.html',
+      'productos.html',
+      'tienda.html'
+    ];
+
+    const cleanPage = decodedBackUrl.split('?')[0];
+
+    if (allowedPages.includes(cleanPage)) {
+      fallbackUrl = decodedBackUrl;
+    }
+  }
+
+  if (fallbackUrl.startsWith('categoria.html')) {
+    backText = '← Volver a categoría';
+  }
+
+  if (fallbackUrl.startsWith('lista-productos.html')) {
+    backText = '← Volver a lista de productos';
+  }
+
+  if (fallbackUrl.startsWith('productos.html')) {
+    backText = '← Volver al catálogo';
+  }
+
+  if (fallbackUrl.startsWith('tienda.html')) {
+    backText = '← Volver a tienda';
+  }
+
+  productBackLink.href = fallbackUrl;
+  productBackLink.textContent = backText;
+
+  productBackLink.addEventListener('click', event => {
+    const cameFromSameSite = document.referrer && document.referrer.includes(window.location.origin);
+
+    if (cameFromSameSite && window.history.length > 1) {
+      event.preventDefault();
+      window.history.back();
+    }
+  });
+}
+
 function getSelectedProductId() {
   const params = new URLSearchParams(window.location.search);
   return params.get('id');
@@ -252,5 +309,6 @@ function renderSingleProduct() {
   }
 }
 
+setupProductBackLink();
 renderSingleProduct();
 renderCartFromProductPage();

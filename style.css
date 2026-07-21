@@ -2656,3 +2656,83 @@ footer {
     width: 165px;
   }
 }
+
+/* ── BOTONES SUPERIORES EN TIENDA ─────────────────────────── */
+
+.store-toolbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.store-toolbar-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+.store-toolbar-btn.primary {
+  background: var(--navy);
+  color: white;
+  border: 2px solid var(--navy);
+}
+
+.store-toolbar-btn.primary:hover {
+  background: var(--blue-mid);
+  border-color: var(--blue-mid);
+  transform: translateY(-2px);
+}
+
+.store-toolbar-btn.outline {
+  background: transparent;
+  color: var(--navy);
+  border: 2px solid var(--navy);
+}
+
+.store-toolbar-btn.outline:hover {
+  background: var(--navy);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.store-toolbar-actions .cart-open-btn {
+  min-height: 48px;
+}
+
+@media (max-width: 780px) {
+  .store-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .store-toolbar-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .store-toolbar-btn,
+  .store-toolbar-actions .cart-open-btn {
+    flex: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .store-toolbar-actions {
+    flex-direction: column;
+  }
+
+  .store-toolbar-btn,
+  .store-toolbar-actions .cart-open-btn {
+    width: 100%;
+  }
+}

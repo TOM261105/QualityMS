@@ -440,6 +440,7 @@ iframe {
   transform: scale(1.03);
 }
 
+.arch-card:hover img,
 .arch-card.active img {
   opacity: 0.35;
 }
@@ -454,6 +455,7 @@ iframe {
   z-index: 1;
 }
 
+.arch-card:hover::before,
 .arch-card.active::before {
   opacity: 1;
 }
@@ -476,6 +478,7 @@ iframe {
   overflow: hidden;
 }
 
+.arch-card:hover .arch-content,
 .arch-card.active .arch-content {
   transform: translateY(0);
   opacity: 1;

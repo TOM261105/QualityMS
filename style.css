@@ -2918,3 +2918,39 @@ footer {
     align-items: center;
   }
 }
+
+
+/* ── AJUSTES PARA TIENDA DINÁMICA SHOPIFY ─────────────────── */
+
+#dynamicCategoriesGrid {
+  min-height: 180px;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card:focus {
+  outline: 3px solid rgba(46, 127, 193, 0.35);
+  outline-offset: 4px;
+}
+
+.product-card .pc-body {
+  flex: 1;
+  min-height: 142px;
+}
+
+.product-card .pc-footer {
+  margin-top: auto;
+}
+
+.empty-products {
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  .product-card .pc-body {
+    min-height: auto;
+  }
+}

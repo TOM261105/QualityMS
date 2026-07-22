@@ -2875,3 +2875,48 @@ footer {
     justify-content: center;
   }
 }
+
+/* ── SEPARAR TELÉFONOS DE REDES SOCIALES ─────────────────── */
+
+.footer-inner {
+  grid-template-columns: 1.2fr 0.85fr 1.15fr !important;
+  column-gap: 80px !important;
+}
+
+/* Columna de teléfonos más hacia la derecha */
+.footer-inner .footer-col:last-child {
+  justify-self: end;
+  min-width: 260px;
+}
+
+/* Redes un poquito más contenidas */
+.footer-inner .footer-col:nth-child(2) {
+  justify-self: start;
+}
+
+/* Números más limpios y con más presencia */
+.phones-list a {
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+}
+
+/* Responsive: en celular sí se centra todo */
+@media (max-width: 760px) {
+  .footer-inner {
+    grid-template-columns: 1fr !important;
+    column-gap: 0 !important;
+  }
+
+  .footer-inner .footer-col:last-child,
+  .footer-inner .footer-col:nth-child(2) {
+    justify-self: center;
+    min-width: auto;
+    text-align: center;
+  }
+
+  .phones-list {
+    align-items: center;
+  }
+}

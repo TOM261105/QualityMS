@@ -261,5 +261,23 @@ document.querySelectorAll(".social-btn").forEach(link => {
     link.setAttribute("rel", "noopener");
   }
 });
+// Preguntas frecuentes (acordeón, solo una abierta a la vez)
+document.querySelectorAll(".faq-question").forEach(button => {
+  button.addEventListener("click", () => {
+    const item = button.closest(".faq-item");
+    const answer = item.querySelector(".faq-answer");
+    const isOpen = item.classList.contains("active");
+
+    document.querySelectorAll(".faq-item").forEach(other => {
+      other.classList.remove("active");
+      other.querySelector(".faq-answer").style.maxHeight = null;
+    });
+
+    if (!isOpen) {
+      item.classList.add("active");
+      answer.style.maxHeight = answer.scrollHeight + "px";
+    }
+  });
+});
 
 setActiveNavLink();

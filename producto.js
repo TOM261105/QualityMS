@@ -3,8 +3,6 @@
 const singleProductContainer = document.getElementById("singleProductContainer");
 const productBackLink = document.getElementById("productBackLink");
 
-let currentSingleProduct = null;
-
 function setupProductBackLink() {
   if (!productBackLink) return;
 
@@ -49,15 +47,6 @@ function setupProductBackLink() {
 
   productBackLink.href = fallbackUrl;
   productBackLink.textContent = backText;
-
-  productBackLink.addEventListener("click", event => {
-    const cameFromSameSite = document.referrer && document.referrer.includes(window.location.origin);
-
-    if (cameFromSameSite && window.history.length > 1) {
-      event.preventDefault();
-      window.history.back();
-    }
-  });
 }
 
 function getSelectedProductReference() {
@@ -67,6 +56,28 @@ function getSelectedProductReference() {
     id: params.get("id"),
     handle: params.get("handle")
   };
+}
+
+function getDemoProductByReference(id, handle) {
+  if (typeof DEMO_PRODUCTS === "undefined") return null;
+
+  return DEMO_PRODUCTS.find(product => {
+    return product.id === id || product.handle === handle;
+  }) || null;
+}
+
+async function getCurrentProduct() {
+  const { id, handle } = getSelectedProductReference();
+
+  if (
+    typeof isShopifyReady === "function" &&
+    isShopifyReady() &&
+    typeof getStoreProductByHandle === "function"
+  ) {
+    return await getStoreProductByHandle(handle || id);
+  }
+
+  return getDemoProductByReference(id, handle);
 }
 
 function renderSingleProduct(product) {
@@ -136,6 +147,8 @@ function renderSingleProduct(product) {
     singleAddToCart.addEventListener("click", () => {
       if (typeof addToCart === "function") {
         addToCart(product);
+      } else {
+        alert("No se cargó correctamente el carrito.");
       }
     });
   }
@@ -151,15 +164,8 @@ async function loadSingleProductPage() {
   }
 
   try {
-    const { id, handle } = getSelectedProductReference();
-
-    if (isShopifyReady()) {
-      currentSingleProduct = await getStoreProductByHandle(handle || id);
-    } else {
-      currentSingleProduct = getDemoProducts().find(product => product.id === id || product.handle === handle) || null;
-    }
-
-    renderSingleProduct(currentSingleProduct);
+    const product = await getCurrentProduct();
+    renderSingleProduct(product);
   } catch (error) {
     console.error(error);
     renderSingleProduct(null);

@@ -208,3 +208,51 @@ document.querySelectorAll('a[href*="tienda.html"], a[href*="categoria.html"], a[
 });
 
 checkMedicalAccess();
+
+/* ── MARCAR PÁGINA ACTIVA EN EL MENÚ ─────────────────────── */
+
+function setActiveNavLink() {
+  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  const navLinks = document.querySelectorAll('.nav-links a');
+
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+
+    const linkPage = link.getAttribute('href');
+
+    // Inicio / Conócenos
+    if (currentPage === 'index.html' && linkPage === 'index.html') {
+      link.classList.add('active');
+    }
+
+    // Distribuidores
+    if (currentPage === 'distribuidores.html' && linkPage === 'distribuidores.html') {
+      link.classList.add('active');
+    }
+
+    // Soporte
+    if (currentPage === 'soporte.html' && linkPage === 'soporte.html') {
+      link.classList.add('active');
+    }
+
+    // Contacto
+    if (currentPage === 'contacto.html' && linkPage === 'contacto.html') {
+      link.classList.add('active');
+    }
+
+    // Todas las páginas de tienda deben marcar "Tienda en línea"
+    const storePages = [
+      'tienda.html',
+      'categoria.html',
+      'productos.html',
+      'lista-productos.html',
+      'producto.html'
+    ];
+
+    if (storePages.includes(currentPage) && linkPage === 'tienda.html') {
+      link.classList.add('active');
+    }
+  });
+}
+
+setActiveNavLink();

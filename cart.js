@@ -44,7 +44,7 @@ function getProductPriceNumber(product) {
 function addToCart(product) {
   loadCart();
 
-  if (!product || product.type !== "venta") return;
+  if (!product) return;
 
   const existingProduct = cart.find(item => item.id === product.id);
 

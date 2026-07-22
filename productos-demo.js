@@ -1,6 +1,7 @@
 const DEMO_PRODUCTS = [
   {
     id: "prod-001",
+    handle: "estetoscopio-profesional",
     title: "Estetoscopio Profesional",
     category: "diagnostico",
     categoryName: "Diagnóstico General",
@@ -11,10 +12,12 @@ const DEMO_PRODUCTS = [
     image: "assets/diagnostico.png",
     description: "Equipo ideal para evaluación clínica general y auscultación médica.",
     availability: "Disponible",
-    type: "venta"
+    type: "venta",
+    variantId: null
   },
   {
     id: "prod-002",
+    handle: "otoscopio-led",
     title: "Otoscopio LED",
     category: "diagnostico",
     categoryName: "Diagnóstico General",
@@ -25,10 +28,12 @@ const DEMO_PRODUCTS = [
     image: "assets/diagnostico.png",
     description: "Herramienta médica para exploración de oído con iluminación LED.",
     availability: "Disponible",
-    type: "venta"
+    type: "venta",
+    variantId: null
   },
   {
     id: "prod-003",
+    handle: "desfibrilador-externo-automatico",
     title: "Desfibrilador Externo Automático",
     category: "emergencias",
     categoryName: "Emergencias y Triaje",
@@ -39,10 +44,12 @@ const DEMO_PRODUCTS = [
     image: "assets/emergencias.png",
     description: "Equipo para atención de emergencias y soporte vital básico.",
     availability: "Bajo cotización",
-    type: "cotizacion"
+    type: "cotizacion",
+    variantId: null
   },
   {
     id: "prod-004",
+    handle: "camilla-clinica-ajustable",
     title: "Camilla Clínica Ajustable",
     category: "mobiliario",
     categoryName: "Mobiliario y Equipamiento",
@@ -53,10 +60,12 @@ const DEMO_PRODUCTS = [
     image: "assets/mobiliario.png",
     description: "Camilla para exploración médica con estructura resistente y ajuste cómodo.",
     availability: "Bajo cotización",
-    type: "cotizacion"
+    type: "cotizacion",
+    variantId: null
   },
   {
     id: "prod-005",
+    handle: "monitor-multiparametrico",
     title: "Monitor Multiparamétrico",
     category: "monitoreo",
     categoryName: "Signos Vitales y Monitoreo",
@@ -67,10 +76,12 @@ const DEMO_PRODUCTS = [
     image: "assets/monitoreo.png",
     description: "Equipo para monitoreo de signos vitales en clínicas y hospitales.",
     availability: "Bajo cotización",
-    type: "cotizacion"
+    type: "cotizacion",
+    variantId: null
   },
   {
     id: "prod-006",
+    handle: "monitor-fetal",
     title: "Monitor Fetal",
     category: "mujer",
     categoryName: "Salud de la Mujer",
@@ -81,10 +92,12 @@ const DEMO_PRODUCTS = [
     image: "assets/mujer.png",
     description: "Equipo especializado para monitoreo fetal y atención ginecológica.",
     availability: "Bajo cotización",
-    type: "cotizacion"
+    type: "cotizacion",
+    variantId: null
   },
   {
     id: "prod-007",
+    handle: "equipo-para-cardiologia",
     title: "Equipo para Cardiología",
     category: "especialidades",
     categoryName: "Especialidades Médicas",
@@ -95,10 +108,12 @@ const DEMO_PRODUCTS = [
     image: "assets/especialidades.png",
     description: "Soluciones especializadas para diagnóstico y seguimiento cardiológico.",
     availability: "Bajo cotización",
-    type: "cotizacion"
+    type: "cotizacion",
+    variantId: null
   },
   {
     id: "prod-008",
+    handle: "bascula-clinica-profesional",
     title: "Báscula Clínica Profesional",
     category: "bienestar",
     categoryName: "Nutrición y Bienestar",
@@ -109,10 +124,12 @@ const DEMO_PRODUCTS = [
     image: "assets/nutricion.png",
     description: "Báscula clínica para medición precisa en consultorios y centros de salud.",
     availability: "Disponible",
-    type: "venta"
+    type: "venta",
+    variantId: null
   },
   {
     id: "prod-009",
+    handle: "audiometro-clinico",
     title: "Audiómetro Clínico",
     category: "orl",
     categoryName: "Oftalmología y ORL",
@@ -123,7 +140,8 @@ const DEMO_PRODUCTS = [
     image: "assets/estetoscopio.png",
     description: "Equipo de evaluación auditiva para uso clínico especializado.",
     availability: "Bajo cotización",
-    type: "cotizacion"
+    type: "cotizacion",
+    variantId: null
   }
 ];
 

@@ -1,45 +1,28 @@
 /* ── PÁGINA DE CATEGORÍA ───────────────────────── */
 
-const categoryEyebrow = document.getElementById('categoryEyebrow');
-const categoryTitle = document.getElementById('categoryTitle');
-const categoryDescription = document.getElementById('categoryDescription');
-const categoryProducts = document.getElementById('categoryProducts');
-const productSearch = document.getElementById('productSearch');
+const categoryEyebrow = document.getElementById("categoryEyebrow");
+const categoryTitle = document.getElementById("categoryTitle");
+const categoryDescription = document.getElementById("categoryDescription");
+const categoryProducts = document.getElementById("categoryProducts");
+const productSearch = document.getElementById("productSearch");
+
+let currentCategoryProducts = [];
 
 function getSelectedCategory() {
   const params = new URLSearchParams(window.location.search);
-  return params.get('cat') || 'diagnostico';
-}
-
-function getSelectedCategoryInfo(category) {
-  return CATEGORY_INFO[category] || {
-    title: 'Productos',
-    eyebrow: 'Catálogo',
-    description: 'Explora los productos disponibles en esta categoría.'
-  };
-}
-
-function getCategoryProducts() {
-  const selectedCategory = getSelectedCategory();
-
-  if (typeof DEMO_PRODUCTS === 'undefined') {
-    return [];
-  }
-
-  return DEMO_PRODUCTS.filter(product => product.category === selectedCategory);
+  return params.get("cat") || "diagnostico";
 }
 
 function getProductGeneralPrice(product) {
-  return product.priceGeneral || product.priceText || 'Solicitar cotización';
+  return product.priceGeneral || product.priceText || "Solicitar cotización";
 }
 
-function renderCategoryHeader() {
-  const selectedCategory = getSelectedCategory();
-  const info = getSelectedCategoryInfo(selectedCategory);
-
-  if (categoryEyebrow) categoryEyebrow.textContent = info.eyebrow;
-  if (categoryTitle) categoryTitle.textContent = info.title;
-  if (categoryDescription) categoryDescription.textContent = info.description;
+function renderCategoryHeader(collection) {
+  if (categoryEyebrow) categoryEyebrow.textContent = "Catálogo";
+  if (categoryTitle) categoryTitle.textContent = collection?.title || "Productos";
+  if (categoryDescription) {
+    categoryDescription.textContent = collection?.description || "Explora los productos disponibles en esta categoría.";
+  }
 }
 
 function renderCategoryProducts(products) {
@@ -55,7 +38,9 @@ function renderCategoryProducts(products) {
   }
 
   categoryProducts.innerHTML = products.map(product => {
-    const actionButton = product.type === 'venta'
+    const backUrl = `categoria.html?cat=${getSelectedCategory()}`;
+
+    const actionButton = product.type === "venta"
       ? `
         <button class="product-action" type="button" data-add-id="${product.id}">
           Agregar al carrito
@@ -70,25 +55,25 @@ function renderCategoryProducts(products) {
     return `
       <article class="shopify-product-card">
         <div class="shopify-product-img">
-          <span class="shopify-product-status">${product.availability || 'Disponible'}</span>
-          <img src="${product.image}" alt="${product.title}">
+          <span class="shopify-product-status">${product.availability || "Disponible"}</span>
+          <img src="${product.image}" alt="${product.imageAlt || product.title}">
         </div>
 
         <div class="shopify-product-body">
           <p class="shopify-product-category">
-            ${product.categoryName || product.category || 'General'}
+            ${product.categoryName || product.category || "General"}
           </p>
 
           <h4>${product.title}</h4>
 
-          <p>${product.description || 'Sin descripción disponible.'}</p>
+          <p>${product.description || "Sin descripción disponible."}</p>
 
           <div class="shopify-product-footer">
             <strong>${getProductGeneralPrice(product)}</strong>
           </div>
 
           <div class="shopify-product-actions">
-            <a href="producto.html?id=${product.id}&back=${encodeURIComponent('categoria.html?cat=' + getSelectedCategory())}" class="product-action light">
+            <a href="${getProductDetailUrl(product, backUrl)}" class="product-action light">
               Ver más información
             </a>
 
@@ -97,21 +82,22 @@ function renderCategoryProducts(products) {
         </div>
       </article>
     `;
-  }).join('');
+  }).join("");
 }
 
 function filterCategoryProducts() {
-  const searchTerm = productSearch.value.toLowerCase().trim();
-  const products = getCategoryProducts();
+  if (!productSearch) return;
 
-  const filteredProducts = products.filter(product => {
+  const searchTerm = productSearch.value.toLowerCase().trim();
+
+  const filteredProducts = currentCategoryProducts.filter(product => {
     const searchableText = `
-      ${product.title || ''}
-      ${product.description || ''}
-      ${product.categoryName || ''}
-      ${product.priceGeneral || ''}
-      ${product.priceDistributor || ''}
-      ${product.priceText || ''}
+      ${product.title || ""}
+      ${product.description || ""}
+      ${product.categoryName || ""}
+      ${product.priceGeneral || ""}
+      ${product.priceDistributor || ""}
+      ${product.priceText || ""}
     `.toLowerCase();
 
     return searchableText.includes(searchTerm);
@@ -121,40 +107,52 @@ function filterCategoryProducts() {
 }
 
 if (productSearch) {
-  productSearch.addEventListener('input', filterCategoryProducts);
+  productSearch.addEventListener("input", filterCategoryProducts);
 }
 
 if (categoryProducts) {
-  categoryProducts.addEventListener('click', event => {
-    const addButton = event.target.closest('[data-add-id]');
+  categoryProducts.addEventListener("click", event => {
+    const addButton = event.target.closest("[data-add-id]");
     if (!addButton) return;
 
-    const productId = addButton.getAttribute('data-add-id');
-    const product = DEMO_PRODUCTS.find(item => item.id === productId);
+    const productId = addButton.getAttribute("data-add-id");
+    const product = currentCategoryProducts.find(item => item.id === productId);
 
     if (!product) return;
 
-    if (typeof addToCart === 'function') {
+    if (typeof addToCart === "function") {
       addToCart(product);
-    }
-
-    if (typeof renderCart === 'function') {
-      renderCart();
-    }
-
-    if (typeof openCart === 'function') {
-      openCart();
-    } else {
-      const cartDrawer = document.getElementById('cartDrawer');
-      const cartOverlay = document.getElementById('cartOverlay');
-
-      if (cartDrawer) cartDrawer.classList.add('active');
-      if (cartOverlay) cartOverlay.classList.add('active');
-
-      document.body.style.overflow = 'hidden';
     }
   });
 }
 
-renderCategoryHeader();
-renderCategoryProducts(getCategoryProducts());
+async function loadCategoryPage() {
+  if (categoryProducts) {
+    categoryProducts.innerHTML = `
+      <div class="empty-products">
+        Cargando productos...
+      </div>
+    `;
+  }
+
+  try {
+    const selectedCategory = getSelectedCategory();
+    const { collection, products } = await getStoreCollectionWithProducts(selectedCategory);
+
+    renderCategoryHeader(collection);
+    currentCategoryProducts = products;
+    renderCategoryProducts(currentCategoryProducts);
+  } catch (error) {
+    console.error(error);
+
+    const selectedCategory = getSelectedCategory();
+    const fallbackCollection = getDemoCollections().find(item => item.handle === selectedCategory);
+    const fallbackProducts = getDemoProducts().filter(product => product.category === selectedCategory);
+
+    renderCategoryHeader(fallbackCollection);
+    currentCategoryProducts = fallbackProducts;
+    renderCategoryProducts(currentCategoryProducts);
+  }
+}
+
+loadCategoryPage();

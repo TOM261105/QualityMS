@@ -3,5 +3,5 @@ const SHOPIFY_CONFIG = {
 
   shopDomain: "tu-tienda.myshopify.com",
   storefrontAccessToken: "TU_STOREFRONT_ACCESS_TOKEN",
-  apiVersion: "2026-01"
+  apiVersion: "2026-07"
 };

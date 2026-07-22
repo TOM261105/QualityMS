@@ -683,7 +683,7 @@ iframe {
   padding: 80px 0;
 }
 .soporte-wide .container {
-  width: min(100% - 48px, 1320px);
+  width: min(100% - 48px, 1380px);
 }
 .dist-section {
   background: white;

@@ -2,29 +2,28 @@
 const io = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
+      entry.target.classList.add("visible");
       io.unobserve(entry.target);
     }
   });
 }, {
   threshold: 0.08,
-  rootMargin: '0px 0px -30px 0px'
+  rootMargin: "0px 0px -30px 0px"
 });
 
-document.querySelectorAll('.reveal').forEach(element => {
+document.querySelectorAll(".reveal").forEach(element => {
   io.observe(element);
 });
 
 
 // Cambio de idioma ES / EN
-const langToggle = document.getElementById('langToggle');
+const langToggle = document.getElementById("langToggle");
 
 function setLanguage(lang) {
-  localStorage.setItem('siteLang', lang);
+  localStorage.setItem("siteLang", lang);
   document.documentElement.lang = lang;
 
-  // Textos simples
-  document.querySelectorAll('[data-es], [data-en]').forEach(element => {
+  document.querySelectorAll("[data-es], [data-en]").forEach(element => {
     const text = element.getAttribute(`data-${lang}`);
 
     if (text) {
@@ -32,8 +31,7 @@ function setLanguage(lang) {
     }
   });
 
-  // Textos con HTML interno
-  document.querySelectorAll('[data-es-html], [data-en-html]').forEach(element => {
+  document.querySelectorAll("[data-es-html], [data-en-html]").forEach(element => {
     const html = element.getAttribute(`data-${lang}-html`);
 
     if (html) {
@@ -41,28 +39,26 @@ function setLanguage(lang) {
     }
   });
 
-  // Placeholders de inputs y textareas
-  document.querySelectorAll('[data-es-placeholder], [data-en-placeholder]').forEach(element => {
+  document.querySelectorAll("[data-es-placeholder], [data-en-placeholder]").forEach(element => {
     const placeholder = element.getAttribute(`data-${lang}-placeholder`);
 
     if (placeholder) {
-      element.setAttribute('placeholder', placeholder);
+      element.setAttribute("placeholder", placeholder);
     }
   });
 
-  // Texto del botón
   if (langToggle) {
-    langToggle.textContent = lang === 'es' ? 'ES / EN' : 'EN / ES';
+    langToggle.textContent = lang === "es" ? "ES / EN" : "EN / ES";
   }
 }
 
-const savedLang = localStorage.getItem('siteLang') || 'es';
+const savedLang = localStorage.getItem("siteLang") || "es";
 setLanguage(savedLang);
 
 if (langToggle) {
-  langToggle.addEventListener('click', () => {
-    const currentLang = localStorage.getItem('siteLang') || 'es';
-    const newLang = currentLang === 'es' ? 'en' : 'es';
+  langToggle.addEventListener("click", () => {
+    const currentLang = localStorage.getItem("siteLang") || "es";
+    const newLang = currentLang === "es" ? "en" : "es";
 
     setLanguage(newLang);
   });
@@ -72,11 +68,11 @@ if (langToggle) {
 document.addEventListener("DOMContentLoaded", () => {
   const archCards = document.querySelectorAll(".arch-card");
 
-  archCards.forEach((card) => {
+  archCards.forEach(card => {
     const toggleCard = () => {
       const isActive = card.classList.contains("active");
 
-      archCards.forEach((item) => {
+      archCards.forEach(item => {
         item.classList.remove("active");
         item.setAttribute("aria-expanded", "false");
       });
@@ -89,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     card.addEventListener("click", toggleCard);
 
-    card.addEventListener("keydown", (event) => {
+    card.addEventListener("keydown", event => {
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         toggleCard();
@@ -100,46 +96,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /* ── POP-UP ESPECIALISTA MÉDICO ───────────────────────────── */
 
-const medicalPopup = document.getElementById('medicalPopup');
-const medicalYes = document.getElementById('medicalYes');
-const medicalNo = document.getElementById('medicalNo');
+const medicalPopup = document.getElementById("medicalPopup");
+const medicalYes = document.getElementById("medicalYes");
+const medicalNo = document.getElementById("medicalNo");
 
 const protectedStorePages = [
-  'tienda.html',
-  'categoria.html',
-  'productos.html',
-  'lista-productos.html',
-  'producto.html'
+  "tienda.html",
+  "categoria.html",
+  "productos.html",
+  "lista-productos.html",
+  "producto.html"
 ];
 
 function getCurrentPageName() {
   const path = window.location.pathname;
-  const page = path.substring(path.lastIndexOf('/') + 1);
-  return page || 'index.html';
+  const page = path.substring(path.lastIndexOf("/") + 1);
+  return page || "index.html";
 }
 
 function isStorePage() {
   return protectedStorePages.includes(getCurrentPageName());
 }
 
-/* Detecta si fue hard refresh o recarga */
 function wasPageReloaded() {
-  const navEntries = performance.getEntriesByType('navigation');
+  const navEntries = performance.getEntriesByType("navigation");
 
   if (navEntries.length > 0) {
-    return navEntries[0].type === 'reload';
+    return navEntries[0].type === "reload";
   }
 
   return performance.navigation && performance.navigation.type === 1;
 }
 
-/* Si hace hard refresh, vuelve a pedir confirmación */
 if (wasPageReloaded()) {
-  sessionStorage.removeItem('medicalSpecialist');
+  sessionStorage.removeItem("medicalSpecialist");
 }
 
 function blockStoreAccess() {
-  const mainContent = document.querySelector('main') || document.body;
+  const mainContent = document.querySelector("main") || document.querySelector("section") || document.body;
 
   mainContent.innerHTML = `
     <section class="store-locked">
@@ -156,37 +150,37 @@ function blockStoreAccess() {
 }
 
 function checkMedicalAccess() {
-  const medicalAccess = sessionStorage.getItem('medicalSpecialist');
+  const medicalAccess = sessionStorage.getItem("medicalSpecialist");
 
   if (!medicalAccess && medicalPopup) {
-    medicalPopup.classList.add('active');
-    document.body.style.overflow = 'hidden';
+    medicalPopup.classList.add("active");
+    document.body.style.overflow = "hidden";
     return;
   }
 
-  if (medicalAccess === 'no' && isStorePage()) {
+  if (medicalAccess === "no" && isStorePage()) {
     blockStoreAccess();
   }
 }
 
 if (medicalYes) {
-  medicalYes.addEventListener('click', () => {
-    sessionStorage.setItem('medicalSpecialist', 'yes');
+  medicalYes.addEventListener("click", () => {
+    sessionStorage.setItem("medicalSpecialist", "yes");
 
     if (medicalPopup) {
-      medicalPopup.classList.remove('active');
-      document.body.style.overflow = '';
+      medicalPopup.classList.remove("active");
+      document.body.style.overflow = "";
     }
   });
 }
 
 if (medicalNo) {
-  medicalNo.addEventListener('click', () => {
-    sessionStorage.setItem('medicalSpecialist', 'no');
+  medicalNo.addEventListener("click", () => {
+    sessionStorage.setItem("medicalSpecialist", "no");
 
     if (medicalPopup) {
-      medicalPopup.classList.remove('active');
-      document.body.style.overflow = '';
+      medicalPopup.classList.remove("active");
+      document.body.style.overflow = "";
     }
 
     if (isStorePage()) {
@@ -195,14 +189,13 @@ if (medicalNo) {
   });
 }
 
-/* Evita entrar a tienda si respondió que NO */
-document.querySelectorAll('a[href*="tienda.html"], a[href*="categoria.html"], a[href*="productos.html"]').forEach(link => {
-  link.addEventListener('click', event => {
-    const medicalAccess = sessionStorage.getItem('medicalSpecialist');
+document.querySelectorAll('a[href*="tienda.html"], a[href*="categoria.html"], a[href*="productos.html"], a[href*="lista-productos.html"], a[href*="producto.html"]').forEach(link => {
+  link.addEventListener("click", event => {
+    const medicalAccess = sessionStorage.getItem("medicalSpecialist");
 
-    if (medicalAccess === 'no') {
+    if (medicalAccess === "no") {
       event.preventDefault();
-      alert('La tienda en línea está disponible únicamente para especialistas médicos o profesionales de la salud.');
+      alert("La tienda en línea está disponible únicamente para especialistas médicos o profesionales de la salud.");
     }
   });
 });
@@ -212,49 +205,46 @@ checkMedicalAccess();
 /* ── MARCAR PÁGINA ACTIVA EN EL MENÚ ─────────────────────── */
 
 function setActiveNavLink() {
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-  const navLinks = document.querySelectorAll('.nav-links a');
+  const currentPage = window.location.pathname.split("/").pop() || "index.html";
+  const navLinks = document.querySelectorAll(".nav-links a");
 
   navLinks.forEach(link => {
-    link.classList.remove('active');
+    link.classList.remove("active");
 
-    const linkPage = link.getAttribute('href');
+    const linkPage = link.getAttribute("href");
 
-    // Inicio / Conócenos
-    if (currentPage === 'index.html' && linkPage === 'index.html') {
-      link.classList.add('active');
+    if (currentPage === "index.html" && linkPage === "index.html") {
+      link.classList.add("active");
     }
 
-    // Distribuidores
-    if (currentPage === 'distribuidores.html' && linkPage === 'distribuidores.html') {
-      link.classList.add('active');
+    if (currentPage === "distribuidores.html" && linkPage === "distribuidores.html") {
+      link.classList.add("active");
     }
 
-    // Soporte
-    if (currentPage === 'soporte.html' && linkPage === 'soporte.html') {
-      link.classList.add('active');
+    if (currentPage === "soporte.html" && linkPage === "soporte.html") {
+      link.classList.add("active");
     }
 
-    // Contacto
-    if (currentPage === 'contacto.html' && linkPage === 'contacto.html') {
-      link.classList.add('active');
+    if (currentPage === "contacto.html" && linkPage === "contacto.html") {
+      link.classList.add("active");
     }
 
-    // Todas las páginas de tienda deben marcar "Tienda en línea"
     const storePages = [
-      'tienda.html',
-      'categoria.html',
-      'productos.html',
-      'lista-productos.html',
-      'producto.html'
+      "tienda.html",
+      "categoria.html",
+      "productos.html",
+      "lista-productos.html",
+      "producto.html"
     ];
 
-    if (storePages.includes(currentPage) && linkPage === 'tienda.html') {
-      link.classList.add('active');
+    if (storePages.includes(currentPage) && linkPage === "tienda.html") {
+      link.classList.add("active");
     }
   });
 }
-// Links de redes sociales (aplica en todas las páginas)
+
+/* ── LINKS DE REDES SOCIALES ─────────────────────────────── */
+
 const socialLinks = {
   Instagram: "https://www.instagram.com/qualitymedicalservice/",
   YouTube: "https://www.youtube.com/channel/UCkZFxncboEjXPPjk5UjPAvg",
@@ -271,4 +261,5 @@ document.querySelectorAll(".social-btn").forEach(link => {
     link.setAttribute("rel", "noopener");
   }
 });
+
 setActiveNavLink();

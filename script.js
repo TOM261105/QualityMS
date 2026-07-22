@@ -264,6 +264,8 @@ document.querySelectorAll(".social-btn").forEach(link => {
 
 setActiveNavLink();
 
+/* ── PROBLEMAS FRECUENTES SMOOTH ─────────────────────────── */
+
 const faqToggleBtn = document.getElementById("faqToggleBtn");
 const faqPanel = document.getElementById("faqPanel");
 
@@ -272,10 +274,12 @@ if (faqToggleBtn && faqPanel) {
     faqPanel.classList.toggle("active");
 
     if (faqPanel.classList.contains("active")) {
-      faqPanel.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
+      setTimeout(() => {
+        faqPanel.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }, 180);
     }
   });
 }
@@ -286,12 +290,20 @@ document.querySelectorAll(".faq-question").forEach(button => {
 
     if (!faqItem) return;
 
-    faqItem.classList.toggle("active");
+    const isActive = faqItem.classList.contains("active");
 
-    const icon = button.querySelector("strong");
+    document.querySelectorAll(".faq-item").forEach(item => {
+      item.classList.remove("active");
 
-    if (icon) {
-      icon.textContent = faqItem.classList.contains("active") ? "−" : "+";
+      const icon = item.querySelector(".faq-question strong");
+      if (icon) icon.textContent = "+";
+    });
+
+    if (!isActive) {
+      faqItem.classList.add("active");
+
+      const icon = button.querySelector("strong");
+      if (icon) icon.textContent = "−";
     }
   });
 });

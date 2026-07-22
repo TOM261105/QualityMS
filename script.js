@@ -254,5 +254,21 @@ function setActiveNavLink() {
     }
   });
 }
+// Links de redes sociales (aplica en todas las páginas)
+const socialLinks = {
+  Instagram: "https://www.instagram.com/qualitymedicalservice/",
+  YouTube: "https://www.youtube.com/channel/UCkZFxncboEjXPPjk5UjPAvg",
+  X: "https://x.com/QualityMedical_",
+  Facebook: "https://www.facebook.com/p/Quality-MS-100075618777480/"
+};
 
+document.querySelectorAll(".social-btn").forEach(link => {
+  const network = link.getAttribute("aria-label");
+
+  if (socialLinks[network]) {
+    link.setAttribute("href", socialLinks[network]);
+    link.setAttribute("target", "_blank");
+    link.setAttribute("rel", "noopener");
+  }
+});
 setActiveNavLink();

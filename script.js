@@ -263,3 +263,35 @@ document.querySelectorAll(".social-btn").forEach(link => {
 });
 
 setActiveNavLink();
+
+const faqToggleBtn = document.getElementById("faqToggleBtn");
+const faqPanel = document.getElementById("faqPanel");
+
+if (faqToggleBtn && faqPanel) {
+  faqToggleBtn.addEventListener("click", () => {
+    faqPanel.classList.toggle("active");
+
+    if (faqPanel.classList.contains("active")) {
+      faqPanel.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  });
+}
+
+document.querySelectorAll(".faq-question").forEach(button => {
+  button.addEventListener("click", () => {
+    const faqItem = button.closest(".faq-item");
+
+    if (!faqItem) return;
+
+    faqItem.classList.toggle("active");
+
+    const icon = button.querySelector("strong");
+
+    if (icon) {
+      icon.textContent = faqItem.classList.contains("active") ? "−" : "+";
+    }
+  });
+});

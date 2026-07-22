@@ -1663,12 +1663,12 @@ iframe {
 
 .logos-wrap::before {
   left: 0;
-  background: linear-gradient(to right, white, transparent);
+  background: linear-gradient(to right, var(--blue-bg), transparent);
 }
 
 .logos-wrap::after {
   right: 0;
-  background: linear-gradient(to left, white, transparent);
+  background: linear-gradient(to left, var(--blue-bg), transparent);
 }
 
 .logos-track {

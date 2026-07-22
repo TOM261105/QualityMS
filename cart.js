@@ -16,21 +16,44 @@ function saveCart() {
 function openCart() {
   cartDrawer?.classList.add("active");
   cartOverlay?.classList.add("active");
+  document.body.style.overflow = "hidden";
 }
 
 function closeCart() {
   cartDrawer?.classList.remove("active");
   cartOverlay?.classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+function getProductPriceNumber(product) {
+  if (typeof product.price === "number") return product.price;
+
+  const priceText = product.priceGeneral || product.priceText || "";
+  const cleanPrice = priceText.replace(/[^0-9.]/g, "");
+
+  return Number(cleanPrice) || 0;
 }
 
 function addToCart(product) {
+  if (!product || product.type !== "venta") return;
+
   const existingProduct = cart.find(item => item.id === product.id);
 
   if (existingProduct) {
     existingProduct.quantity += 1;
   } else {
     cart.push({
-      ...product,
+      id: product.id,
+      handle: product.handle,
+      title: product.title,
+      image: product.image,
+      imageAlt: product.imageAlt || product.title,
+      price: getProductPriceNumber(product),
+      priceText: product.priceText || product.priceGeneral || "Solicitar cotización",
+      priceGeneral: product.priceGeneral || product.priceText || "Solicitar cotización",
+      priceDistributor: product.priceDistributor || "Cotizar con ejecutivo",
+      categoryName: product.categoryName || product.category || "General",
+      variantId: product.variantId || null,
       quantity: 1
     });
   }
@@ -86,20 +109,20 @@ function renderCart() {
   cartItems.innerHTML = cart.map(item => {
     return `
       <div class="cart-item">
-        <img src="${item.image}" alt="${item.title}">
+        <img src="${item.image}" alt="${item.imageAlt || item.title}">
 
         <div class="cart-item-info">
           <h4>${item.title}</h4>
           <p>${item.priceText}</p>
 
           <div class="cart-quantity">
-            <button onclick="updateQuantity('${item.id}', ${item.quantity - 1})">−</button>
+            <button type="button" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">−</button>
             <span>${item.quantity}</span>
-            <button onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
+            <button type="button" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
           </div>
         </div>
 
-        <button class="cart-remove" onclick="removeFromCart('${item.id}')">×</button>
+        <button class="cart-remove" type="button" onclick="removeFromCart('${item.id}')">×</button>
       </div>
     `;
   }).join("");
@@ -111,7 +134,7 @@ async function goToCheckout() {
     return;
   }
 
-  if (!SHOPIFY_CONFIG.useShopify) {
+  if (!isShopifyReady()) {
     alert("Demo: cuando se conecte Shopify, este botón enviará al checkout seguro de Shopify.");
     return;
   }
@@ -121,62 +144,6 @@ async function goToCheckout() {
   if (checkoutUrl) {
     window.location.href = checkoutUrl;
   }
-}
-
-async function createShopifyCart(cartItems) {
-  const endpoint = `https://${SHOPIFY_CONFIG.shopDomain}/api/${SHOPIFY_CONFIG.apiVersion}/graphql.json`;
-
-  const lines = cartItems
-    .filter(item => item.variantId)
-    .map(item => {
-      return {
-        merchandiseId: item.variantId,
-        quantity: item.quantity
-      };
-    });
-
-  const mutation = `
-    mutation CartCreate($input: CartInput!) {
-      cartCreate(input: $input) {
-        cart {
-          id
-          checkoutUrl
-        }
-        userErrors {
-          field
-          message
-        }
-      }
-    }
-  `;
-
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Shopify-Storefront-Access-Token": SHOPIFY_CONFIG.storefrontAccessToken
-    },
-    body: JSON.stringify({
-      query: mutation,
-      variables: {
-        input: {
-          lines
-        }
-      }
-    })
-  });
-
-  const result = await response.json();
-
-  const errors = result.data.cartCreate.userErrors;
-
-  if (errors.length) {
-    console.error(errors);
-    alert("Hubo un error al crear el carrito.");
-    return null;
-  }
-
-  return result.data.cartCreate.cart.checkoutUrl;
 }
 
 cartOpenBtn?.addEventListener("click", openCart);

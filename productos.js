@@ -1,29 +1,17 @@
 /* ── TODOS LOS PRODUCTOS AGRUPADOS ───────────────────────── */
 
-const allProductsContainer = document.getElementById('allProductsContainer');
-const allProductsSearch = document.getElementById('allProductsSearch');
+const allProductsContainer = document.getElementById("allProductsContainer");
+const allProductsSearch = document.getElementById("allProductsSearch");
 
-const categoryOrder = [
-  "diagnostico",
-  "emergencias",
-  "mobiliario",
-  "monitoreo",
-  "mujer",
-  "especialidades",
-  "bienestar",
-  "orl"
-];
+let allStoreProducts = [];
+let allStoreCollections = [];
 
 function getProductGeneralPrice(product) {
-  return product.priceGeneral || product.priceText || 'Solicitar cotización';
-}
-
-function getProductsByCategory(products, category) {
-  return products.filter(product => product.category === category);
+  return product.priceGeneral || product.priceText || "Solicitar cotización";
 }
 
 function renderProductCard(product) {
-  const actionButton = product.type === 'venta'
+  const actionButton = product.type === "venta"
     ? `
       <button class="product-action" type="button" data-add-id="${product.id}">
         Agregar al carrito
@@ -38,27 +26,25 @@ function renderProductCard(product) {
   return `
     <article class="shopify-product-card">
       <div class="shopify-product-img">
-        <span class="shopify-product-status">${product.availability || 'Disponible'}</span>
-        <img src="${product.image}" alt="${product.title}">
+        <span class="shopify-product-status">${product.availability || "Disponible"}</span>
+        <img src="${product.image}" alt="${product.imageAlt || product.title}">
       </div>
 
       <div class="shopify-product-body">
         <p class="shopify-product-category">
-          ${product.categoryName || product.category || 'General'}
+          ${product.categoryName || product.category || "General"}
         </p>
 
         <h4>${product.title}</h4>
 
-        <p>${product.description || 'Sin descripción disponible.'}</p>
+        <p>${product.description || "Sin descripción disponible."}</p>
 
         <div class="shopify-product-footer">
           <strong>${getProductGeneralPrice(product)}</strong>
         </div>
 
         <div class="shopify-product-actions">
-          <a 
-            href="producto.html?id=${product.id}&back=${encodeURIComponent('productos.html')}" 
-            class="product-action light">
+          <a href="${getProductDetailUrl(product, "productos.html")}" class="product-action light">
             Ver más información
           </a>
 
@@ -67,6 +53,28 @@ function renderProductCard(product) {
       </div>
     </article>
   `;
+}
+
+function getCollectionInfo(handle) {
+  return allStoreCollections.find(collection => collection.handle === handle) || {
+    handle,
+    title: handle === "general" ? "General" : handle,
+    description: "",
+    eyebrow: "Catálogo"
+  };
+}
+
+function getOrderedCategoryHandles(products) {
+  const productHandles = [...new Set(products.map(product => product.category || "general"))];
+
+  const collectionHandles = allStoreCollections.map(collection => collection.handle);
+  const orderedHandles = collectionHandles.filter(handle => productHandles.includes(handle));
+
+  productHandles.forEach(handle => {
+    if (!orderedHandles.includes(handle)) orderedHandles.push(handle);
+  });
+
+  return orderedHandles;
 }
 
 function renderAllProducts(products) {
@@ -81,51 +89,52 @@ function renderAllProducts(products) {
     return;
   }
 
-  const groupsHtml = categoryOrder.map(category => {
-    const categoryProducts = getProductsByCategory(products, category);
+  const categoryHandles = getOrderedCategoryHandles(products);
 
-    if (categoryProducts.length === 0) return '';
+  const groupsHtml = categoryHandles.map(categoryHandle => {
+    const categoryProducts = products.filter(product => (product.category || "general") === categoryHandle);
 
-    const info = CATEGORY_INFO[category] || {
-      title: 'Productos',
-      eyebrow: 'Catálogo'
-    };
+    if (categoryProducts.length === 0) return "";
+
+    const info = getCollectionInfo(categoryHandle);
 
     return `
       <section class="all-products-group">
         <div class="all-products-group-header">
           <div>
-            <span>${info.eyebrow}</span>
+            <span>Catálogo</span>
             <h3>${info.title}</h3>
           </div>
 
-          <a href="categoria.html?cat=${category}" class="group-link">
+          <a href="categoria.html?cat=${encodeURIComponent(categoryHandle)}" class="group-link">
             Ver sección →
           </a>
         </div>
 
         <div class="all-products-row">
-          ${categoryProducts.map(product => renderProductCard(product)).join('')}
+          ${categoryProducts.map(product => renderProductCard(product)).join("")}
         </div>
       </section>
     `;
-  }).join('');
+  }).join("");
 
   allProductsContainer.innerHTML = groupsHtml;
 }
 
 function filterAllProducts() {
+  if (!allProductsSearch) return;
+
   const searchTerm = allProductsSearch.value.toLowerCase().trim();
 
-  const filteredProducts = DEMO_PRODUCTS.filter(product => {
+  const filteredProducts = allStoreProducts.filter(product => {
     const searchableText = `
-      ${product.title || ''}
-      ${product.description || ''}
-      ${product.categoryName || ''}
-      ${product.category || ''}
-      ${product.priceGeneral || ''}
-      ${product.priceDistributor || ''}
-      ${product.priceText || ''}
+      ${product.title || ""}
+      ${product.description || ""}
+      ${product.categoryName || ""}
+      ${product.category || ""}
+      ${product.priceGeneral || ""}
+      ${product.priceDistributor || ""}
+      ${product.priceText || ""}
     `.toLowerCase();
 
     return searchableText.includes(searchTerm);
@@ -135,39 +144,45 @@ function filterAllProducts() {
 }
 
 if (allProductsSearch) {
-  allProductsSearch.addEventListener('input', filterAllProducts);
+  allProductsSearch.addEventListener("input", filterAllProducts);
 }
 
 if (allProductsContainer) {
-  allProductsContainer.addEventListener('click', event => {
-    const addButton = event.target.closest('[data-add-id]');
+  allProductsContainer.addEventListener("click", event => {
+    const addButton = event.target.closest("[data-add-id]");
     if (!addButton) return;
 
-    const productId = addButton.getAttribute('data-add-id');
-    const product = DEMO_PRODUCTS.find(item => item.id === productId);
+    const productId = addButton.getAttribute("data-add-id");
+    const product = allStoreProducts.find(item => item.id === productId);
 
     if (!product) return;
 
-    if (typeof addToCart === 'function') {
+    if (typeof addToCart === "function") {
       addToCart(product);
-    }
-
-    if (typeof renderCart === 'function') {
-      renderCart();
-    }
-
-    if (typeof openCart === 'function') {
-      openCart();
-    } else {
-      const cartDrawer = document.getElementById('cartDrawer');
-      const cartOverlay = document.getElementById('cartOverlay');
-
-      if (cartDrawer) cartDrawer.classList.add('active');
-      if (cartOverlay) cartOverlay.classList.add('active');
-
-      document.body.style.overflow = 'hidden';
     }
   });
 }
 
-renderAllProducts(DEMO_PRODUCTS);
+async function loadAllProductsPage() {
+  if (allProductsContainer) {
+    allProductsContainer.innerHTML = `
+      <div class="empty-products">
+        Cargando productos...
+      </div>
+    `;
+  }
+
+  try {
+    allStoreCollections = await getStoreCollections();
+    allStoreProducts = await getStoreProducts();
+    renderAllProducts(allStoreProducts);
+  } catch (error) {
+    console.error(error);
+
+    allStoreCollections = getDemoCollections();
+    allStoreProducts = getDemoProducts();
+    renderAllProducts(allStoreProducts);
+  }
+}
+
+loadAllProductsPage();

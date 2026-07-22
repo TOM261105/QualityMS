@@ -2741,3 +2741,15 @@ footer {
     width: 100%;
   }
 }
+
+/* ── PESTAÑA ACTIVA EN EL MENÚ ───────────────────────────── */
+
+.nav-links a.active {
+  color: white;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.nav-links a.cta.active {
+  background: var(--blue-light);
+  color: white;
+}

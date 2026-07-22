@@ -2955,3 +2955,83 @@ footer {
     min-height: auto;
   }
 }
+/* ── GALERÍA + PROBLEMAS FRECUENTES (SOPORTE) ────────────── */
+
+.soporte-gallery {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 56px;
+  flex-wrap: wrap;
+}
+
+.soporte-photos {
+  display: flex;
+  gap: 20px;
+}
+
+.soporte-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid white;
+  box-shadow: 0 10px 26px rgba(13, 43, 78, 0.14);
+  flex-shrink: 0;
+}
+
+.soporte-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.soporte-faq-card {
+  width: 220px;
+  height: 150px;
+  background: var(--blue);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+  padding: 20px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.soporte-faq-card:hover {
+  background: var(--navy);
+  transform: translateY(-4px);
+}
+
+.soporte-faq-card span {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+  line-height: 1.15;
+}
+
+@media (max-width: 640px) {
+  .soporte-photos {
+    gap: 12px;
+  }
+
+  .soporte-photo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .soporte-faq-card {
+    width: 180px;
+    height: 120px;
+  }
+
+  .soporte-faq-card span {
+    font-size: 19px;
+  }
+}

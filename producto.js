@@ -3,6 +3,8 @@
 const singleProductContainer = document.getElementById("singleProductContainer");
 const productBackLink = document.getElementById("productBackLink");
 
+let selectedSingleProduct = null;
+
 function setupProductBackLink() {
   if (!productBackLink) return;
 
@@ -29,21 +31,10 @@ function setupProductBackLink() {
     }
   }
 
-  if (fallbackUrl.startsWith("categoria.html")) {
-    backText = "← Volver a categoría";
-  }
-
-  if (fallbackUrl.startsWith("lista-productos.html")) {
-    backText = "← Volver a lista de productos";
-  }
-
-  if (fallbackUrl.startsWith("productos.html")) {
-    backText = "← Volver al catálogo";
-  }
-
-  if (fallbackUrl.startsWith("tienda.html")) {
-    backText = "← Volver a tienda";
-  }
+  if (fallbackUrl.startsWith("categoria.html")) backText = "← Volver a categoría";
+  if (fallbackUrl.startsWith("lista-productos.html")) backText = "← Volver a lista de productos";
+  if (fallbackUrl.startsWith("productos.html")) backText = "← Volver al catálogo";
+  if (fallbackUrl.startsWith("tienda.html")) backText = "← Volver a tienda";
 
   productBackLink.href = fallbackUrl;
   productBackLink.textContent = backText;
@@ -94,9 +85,7 @@ function renderSingleProduct(product) {
     return;
   }
 
-  const actionButton = product.type === "venta"
-    ? `<button id="singleAddToCart" class="btn-primary" type="button">Agregar al carrito</button>`
-    : `<a href="contacto.html?producto=${encodeURIComponent(product.title)}" class="btn-primary">Solicitar cotización</a>`;
+  selectedSingleProduct = product;
 
   singleProductContainer.innerHTML = `
     <section class="single-product-card">
@@ -131,7 +120,9 @@ function renderSingleProduct(product) {
         </div>
 
         <div class="single-product-actions">
-          ${actionButton}
+          <button class="btn-primary" type="button" data-single-add-cart>
+            Agregar al carrito
+          </button>
 
           <a href="contacto.html?producto=${encodeURIComponent(product.title)}" class="btn-outline">
             Hablar con un asesor
@@ -140,19 +131,25 @@ function renderSingleProduct(product) {
       </div>
     </section>
   `;
-
-  const singleAddToCart = document.getElementById("singleAddToCart");
-
-  if (singleAddToCart) {
-    singleAddToCart.addEventListener("click", () => {
-      if (typeof addToCart === "function") {
-        addToCart(product);
-      } else {
-        alert("No se cargó correctamente el carrito.");
-      }
-    });
-  }
 }
+
+/* Listener seguro aunque el botón se cree después */
+document.addEventListener("click", event => {
+  const addButton = event.target.closest("[data-single-add-cart]");
+
+  if (!addButton) return;
+
+  if (!selectedSingleProduct) {
+    alert("No se encontró el producto.");
+    return;
+  }
+
+  if (typeof addToCart === "function") {
+    addToCart(selectedSingleProduct);
+  } else {
+    alert("No se cargó correctamente el carrito.");
+  }
+});
 
 async function loadSingleProductPage() {
   if (singleProductContainer) {

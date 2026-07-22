@@ -1,4 +1,4 @@
-let cart = JSON.parse(localStorage.getItem("qualityCart")) || [];
+let cart = [];
 
 const cartDrawer = document.getElementById("cartDrawer");
 const cartOverlay = document.getElementById("cartOverlay");
@@ -9,11 +9,18 @@ const cartCount = document.getElementById("cartCount");
 const cartTotal = document.getElementById("cartTotal");
 const checkoutBtn = document.getElementById("checkoutBtn");
 
+function loadCart() {
+  cart = JSON.parse(localStorage.getItem("qualityCart")) || [];
+}
+
 function saveCart() {
   localStorage.setItem("qualityCart", JSON.stringify(cart));
 }
 
 function openCart() {
+  loadCart();
+  renderCart();
+
   cartDrawer?.classList.add("active");
   cartOverlay?.classList.add("active");
   document.body.style.overflow = "hidden";
@@ -35,6 +42,8 @@ function getProductPriceNumber(product) {
 }
 
 function addToCart(product) {
+  loadCart();
+
   if (!product || product.type !== "venta") return;
 
   const existingProduct = cart.find(item => item.id === product.id);
@@ -64,12 +73,17 @@ function addToCart(product) {
 }
 
 function removeFromCart(productId) {
+  loadCart();
+
   cart = cart.filter(item => item.id !== productId);
+
   saveCart();
   renderCart();
 }
 
 function updateQuantity(productId, newQuantity) {
+  loadCart();
+
   const product = cart.find(item => item.id === productId);
 
   if (!product) return;
@@ -80,11 +94,14 @@ function updateQuantity(productId, newQuantity) {
   }
 
   product.quantity = newQuantity;
+
   saveCart();
   renderCart();
 }
 
 function renderCart() {
+  loadCart();
+
   if (!cartItems || !cartCount || !cartTotal) return;
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -106,35 +123,70 @@ function renderCart() {
     return;
   }
 
-  cartItems.innerHTML = cart.map(item => {
-    return `
-      <div class="cart-item">
-        <img src="${item.image}" alt="${item.imageAlt || item.title}">
+  cartItems.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <img src="${item.image}" alt="${item.imageAlt || item.title}">
 
-        <div class="cart-item-info">
-          <h4>${item.title}</h4>
-          <p>${item.priceText}</p>
+      <div class="cart-item-info">
+        <h4>${item.title}</h4>
+        <p>${item.priceText}</p>
 
-          <div class="cart-quantity">
-            <button type="button" onclick="updateQuantity('${item.id}', ${item.quantity - 1})">−</button>
-            <span>${item.quantity}</span>
-            <button type="button" onclick="updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
-          </div>
+        <div class="cart-quantity">
+          <button type="button" data-decrease-id="${item.id}">−</button>
+          <span>${item.quantity}</span>
+          <button type="button" data-increase-id="${item.id}">+</button>
         </div>
-
-        <button class="cart-remove" type="button" onclick="removeFromCart('${item.id}')">×</button>
       </div>
-    `;
-  }).join("");
+
+      <button class="cart-remove" type="button" data-remove-id="${item.id}">
+        ×
+      </button>
+    </div>
+  `).join("");
+}
+
+if (cartItems) {
+  cartItems.addEventListener("click", event => {
+    const removeBtn = event.target.closest("[data-remove-id]");
+    const increaseBtn = event.target.closest("[data-increase-id]");
+    const decreaseBtn = event.target.closest("[data-decrease-id]");
+
+    if (removeBtn) {
+      removeFromCart(removeBtn.getAttribute("data-remove-id"));
+      return;
+    }
+
+    if (increaseBtn) {
+      const productId = increaseBtn.getAttribute("data-increase-id");
+      const product = cart.find(item => item.id === productId);
+
+      if (product) {
+        updateQuantity(productId, product.quantity + 1);
+      }
+
+      return;
+    }
+
+    if (decreaseBtn) {
+      const productId = decreaseBtn.getAttribute("data-decrease-id");
+      const product = cart.find(item => item.id === productId);
+
+      if (product) {
+        updateQuantity(productId, product.quantity - 1);
+      }
+    }
+  });
 }
 
 async function goToCheckout() {
+  loadCart();
+
   if (!cart.length) {
     alert("Tu carrito está vacío.");
     return;
   }
 
-  if (!isShopifyReady()) {
+  if (typeof isShopifyReady !== "function" || !isShopifyReady()) {
     alert("Demo: cuando se conecte Shopify, este botón enviará al checkout seguro de Shopify.");
     return;
   }

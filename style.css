@@ -2999,7 +2999,7 @@ footer {
   text-align: center;
   text-decoration: none;
   padding: 20px;
-  transition: background 0.2s, transform 0.2s;
+  transition: background 0.4s, transform 0.4s;
 }
 
 .soporte-faq-card:hover {
@@ -3124,7 +3124,7 @@ footer {
 .faq-answer {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease;
+  transition: max-height 0.5s ease;
   background: white;
 }
 

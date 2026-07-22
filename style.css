@@ -88,7 +88,10 @@ iframe {
   color: #fff;
   background: rgba(255, 255, 255, 0.1);
 }
-
+.nav-links a.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
 .nav-links a.cta {
   background: var(--blue-mid);
   color: white;

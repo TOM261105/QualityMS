@@ -2955,32 +2955,45 @@ footer {
     min-height: auto;
   }
 }
-/* ── GALERÍA + PROBLEMAS FRECUENTES (SOPORTE) ────────────── */
+/* ── GALERÍA + CARRUSEL SOPORTE ──────────────────────────── */
 
 .soporte-gallery {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
-  margin-top: 56px;
+  gap: 70px;
+  margin-top: 70px;
   flex-wrap: wrap;
 }
 
+/* Contenedor del carrusel */
 .soporte-photos {
-  display: flex;
-  gap: 20px;
+  position: relative;
+  width: 620px;
+  height: 300px;
+  perspective: 1200px;
 }
 
+/* Fotos grandes tipo carrusel */
 .soporte-photo {
-  width: 150px;
-  height: 150px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
   overflow: hidden;
-  border: 4px solid white;
-  box-shadow: 0 10px 26px rgba(13, 43, 78, 0.14);
-  flex-shrink: 0;
+
+  border: 6px solid white;
+  box-shadow: 0 22px 50px rgba(13, 43, 78, 0.22);
+
+  transform-style: preserve-3d;
+  transform-origin: center;
+  animation: soporteCarousel 12s ease-in-out infinite;
 }
 
+/* Imagen dentro del círculo */
 .soporte-photo img {
   width: 100%;
   height: 100%;
@@ -2988,51 +3001,170 @@ footer {
   display: block;
 }
 
+/* Delays para que giren como carrusel */
+.soporte-photo:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.soporte-photo:nth-child(2) {
+  animation-delay: -4s;
+}
+
+.soporte-photo:nth-child(3) {
+  animation-delay: -8s;
+}
+
+/* Movimiento carrusel */
+@keyframes soporteCarousel {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateX(0) scale(1.15) rotateY(0deg);
+    opacity: 1;
+    z-index: 3;
+    filter: brightness(1);
+  }
+
+  33.33% {
+    transform: translate(-50%, -50%) translateX(210px) scale(0.82) rotateY(-28deg);
+    opacity: 0.72;
+    z-index: 2;
+    filter: brightness(0.92);
+  }
+
+  66.66% {
+    transform: translate(-50%, -50%) translateX(-210px) scale(0.82) rotateY(28deg);
+    opacity: 0.72;
+    z-index: 1;
+    filter: brightness(0.92);
+  }
+}
+
+/* Pausa el carrusel al pasar el cursor */
+.soporte-photos:hover .soporte-photo {
+  animation-play-state: paused;
+}
+
+/* Tarjeta de problemas frecuentes */
 .soporte-faq-card {
-  width: 220px;
-  height: 150px;
+  width: 260px;
+  height: 180px;
   background: var(--blue);
-  border-radius: 20px;
+  border-radius: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   text-decoration: none;
-  padding: 20px;
-  transition: background 0.4s, transform 0.4s;
+  padding: 24px;
+  border: none;
+  cursor: pointer;
+  font-family: 'Barlow Condensed', sans-serif;
+  transition:
+    background 0.35s ease,
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
 }
 
 .soporte-faq-card:hover {
   background: var(--navy);
-  transform: translateY(-4px);
+  transform: translateY(-5px);
+  box-shadow: 0 18px 42px rgba(13, 43, 78, 0.18);
 }
 
 .soporte-faq-card span {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 800;
   color: white;
   text-transform: uppercase;
-  line-height: 1.15;
+  line-height: 1.1;
 }
 
-@media (max-width: 640px) {
+/* Responsive */
+@media (max-width: 900px) {
+  .soporte-gallery {
+    gap: 40px;
+  }
+
   .soporte-photos {
-    gap: 12px;
+    width: 520px;
+    height: 270px;
   }
 
   .soporte-photo {
-    width: 100px;
-    height: 100px;
+    width: 220px;
+    height: 220px;
+  }
+
+  @keyframes soporteCarousel {
+    0%,
+    100% {
+      transform: translate(-50%, -50%) translateX(0) scale(1.12) rotateY(0deg);
+      opacity: 1;
+      z-index: 3;
+    }
+
+    33.33% {
+      transform: translate(-50%, -50%) translateX(175px) scale(0.82) rotateY(-24deg);
+      opacity: 0.72;
+      z-index: 2;
+    }
+
+    66.66% {
+      transform: translate(-50%, -50%) translateX(-175px) scale(0.82) rotateY(24deg);
+      opacity: 0.72;
+      z-index: 1;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .soporte-gallery {
+    margin-top: 46px;
+    gap: 30px;
+    flex-direction: column;
+  }
+
+  .soporte-photos {
+    width: 100%;
+    max-width: 360px;
+    height: 230px;
+  }
+
+  .soporte-photo {
+    width: 185px;
+    height: 185px;
+    border-width: 5px;
   }
 
   .soporte-faq-card {
-    width: 180px;
-    height: 120px;
+    width: 220px;
+    height: 145px;
   }
 
   .soporte-faq-card span {
-    font-size: 19px;
+    font-size: 23px;
+  }
+
+  @keyframes soporteCarousel {
+    0%,
+    100% {
+      transform: translate(-50%, -50%) translateX(0) scale(1.08) rotateY(0deg);
+      opacity: 1;
+      z-index: 3;
+    }
+
+    33.33% {
+      transform: translate(-50%, -50%) translateX(115px) scale(0.78) rotateY(-20deg);
+      opacity: 0.68;
+      z-index: 2;
+    }
+
+    66.66% {
+      transform: translate(-50%, -50%) translateX(-115px) scale(0.78) rotateY(20deg);
+      opacity: 0.68;
+      z-index: 1;
+    }
   }
 }
 

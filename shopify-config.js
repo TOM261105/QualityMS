@@ -1,7 +1,8 @@
 const SHOPIFY_CONFIG = {
-  useShopify: false,
+  useShopify: true,
 
-  shopDomain: "tu-tienda.myshopify.com",
-  storefrontAccessToken: "TU_STOREFRONT_ACCESS_TOKEN",
+  shopDomain: "feh1w0-yz.myshopify.com",
+  storefrontAccessToken: "9135854ecbb9b9a577831ffa74011892",
+
   apiVersion: "2026-07"
 };

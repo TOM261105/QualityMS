@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tienda en Línea | Quality Medical Service</title>
+  <title>Tienda en línea | Quality Medical Service</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+
   <!-- POP-UP ESPECIALISTA MÉDICO -->
   <div class="medical-popup" id="medicalPopup">
     <div class="medical-popup-card">
@@ -55,7 +56,7 @@
         <a href="distribuidores.html" data-es="Distribuidores" data-en="Distributors">Distribuidores</a>
         <a href="soporte.html" data-es="Soporte" data-en="Support">Soporte</a>
         <a href="contacto.html" data-es="Contáctanos" data-en="Contact us">Contáctanos</a>
-        <a href="tienda.html" class="cta" data-es="Tienda en línea" data-en="Online Store">Tienda en línea</a>
+        <a href="tienda.html" class="cta active" data-es="Tienda en línea" data-en="Online Store">Tienda en línea</a>
       </nav>
 
       <button class="lang-btn" id="langToggle">ES / EN</button>
@@ -63,10 +64,13 @@
   </div>
 
   <!-- TIENDA -->
-  <section class="equipo-section" id="equipo">
+  <section class="equipo-section" id="tienda">
     <div class="container">
+
       <div class="section-header reveal">
-        <span class="eyebrow" data-es="Catálogo de productos" data-en="Product catalog">Catálogo de productos</span>
+        <span class="eyebrow" data-es="Catálogo de productos" data-en="Product catalog">
+          Catálogo de productos
+        </span>
 
         <h2 
           data-es-html="Todo el equipo médico <span>que necesitas</span>"
@@ -81,10 +85,8 @@
         </p>
       </div>
 
-      <div class="store-toolbar reveal">
-        <p>
-          Selecciona una categoría para explorar los productos disponibles.
-        </p>
+      <!-- TÍTULO + BOTONES -->
+      <div class="categories-top-row reveal">
         <div class="categories-title-block">
           <span data-es="Explora por sección" data-en="Browse by section">
             Explora por sección
@@ -111,6 +113,15 @@
         </div>
       </div>
 
+      <!-- TEXTO CHIQUITO ABAJO -->
+      <p 
+        class="categories-helper-text reveal"
+        data-es="Selecciona una categoría para explorar los productos disponibles."
+        data-en="Select a category to explore the available products.">
+        Selecciona una categoría para explorar los productos disponibles.
+      </p>
+
+      <!-- GRID DE CATEGORÍAS -->
       <div id="dynamicCategoriesGrid" class="products-grid reveal">
         <!-- Las categorías se cargan desde Shopify Collections o desde productos-demo.js -->
       </div>
@@ -120,12 +131,15 @@
           Solicitar cotización
         </a>
       </div>
+
     </div>
   </section>
 
   <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
+
+      <!-- BLOQUE IZQUIERDO -->
       <div>
         <div class="footer-brand">
           <div class="footer-logo-main">
@@ -142,6 +156,7 @@
         </a>
       </div>
 
+      <!-- REDES -->
       <div class="footer-col">
         <h4 data-es="Redes sociales" data-en="Social media">Redes sociales</h4>
 
@@ -175,6 +190,7 @@
         </div>
       </div>
 
+      <!-- TELÉFONOS -->
       <div class="footer-col">
         <h4 data-es="Teléfonos" data-en="Phone numbers">Teléfonos</h4>
 
@@ -200,13 +216,13 @@
     </div>
   </footer>
 
-  <!-- CARRITO LATERAL -->
-  <div class="cart-overlay" id="cartOverlay"></div>
+  <!-- CARRITO -->
+  <div id="cartOverlay" class="cart-overlay"></div>
 
-  <aside class="cart-drawer" id="cartDrawer">
+  <aside id="cartDrawer" class="cart-drawer">
     <div class="cart-header">
-      <h3 data-es="Tu carrito" data-en="Your cart">Tu carrito</h3>
-      <button id="cartCloseBtn" class="cart-close-btn">×</button>
+      <h3 data-es="Carrito" data-en="Cart">Carrito</h3>
+      <button id="cartCloseBtn" class="cart-close-btn" type="button">×</button>
     </div>
 
     <div id="cartItems" class="cart-items"></div>
@@ -230,6 +246,7 @@
     </div>
   </aside>
 
+  <!-- SCRIPTS -->
   <script src="productos-demo.js"></script>
   <script src="shopify-config.js"></script>
   <script src="shopify-api.js"></script>

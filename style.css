@@ -3336,3 +3336,38 @@ footer {
     padding: 0 16px 18px;
   }
 }
+
+.categories-title-block {
+  margin: 42px 0 26px;
+  text-align: left;
+}
+
+.categories-title-block span {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  color: var(--blue-mid);
+  margin-bottom: 8px;
+}
+
+.categories-title-block h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(30px, 4vw, 46px);
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+@media (max-width: 640px) {
+  .categories-title-block {
+    text-align: center;
+    margin: 34px 0 24px;
+  }
+
+  .categories-title-block h3 {
+    font-size: 32px;
+  }
+}

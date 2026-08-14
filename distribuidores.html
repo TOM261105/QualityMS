@@ -7,11 +7,11 @@
   <link rel="icon" type="image/png" href="assets/faviconqms.png">
   <link rel="apple-touch-icon" href="assets/faviconqms.png">
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=3">
 </head>
 
 <body>
- <!-- POP-UP ESPECIALISTA MÉDICO -->
+  <!-- POP-UP ESPECIALISTA MÉDICO -->
   <div class="medical-popup" id="medicalPopup">
     <div class="medical-popup-card">
       <div class="medical-popup-logo">
@@ -47,7 +47,8 @@
       </small>
     </div>
   </div>
-  
+
+  <!-- NAV -->
   <div class="topbar">
     <div class="topbar-inner">
       <nav class="nav-links">
@@ -62,111 +63,288 @@
     </div>
   </div>
 
-  <section class="dist-section" id="distribuidores">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="eyebrow" data-es="Nuestros socios" data-en="Our partners">Nuestros socios</span>
+  <!-- ══ HERO CON MAPA ══════════════════════════════════════ -->
+  <section class="dist-hero">
+    <div class="dist-map" aria-hidden="true">
+      <span class="dist-pin" style="left: 22%; top: 30%;"></span>
+      <span class="dist-pin" style="left: 31%; top: 52%;"></span>
+      <span class="dist-pin" style="left: 49%; top: 26%;"></span>
+      <span class="dist-pin" style="left: 55%; top: 45%;"></span>
+      <span class="dist-pin" style="left: 78%; top: 34%;"></span>
+      <span class="dist-pin" style="left: 85%; top: 72%;"></span>
+    </div>
 
-        <h2 
-          data-es-html="<span>Distribuidores</span> autorizados"
-          data-en-html="Authorized <span>Distributors</span>">
-          <span>Distribuidores</span> autorizados
-        </h2>
+    <div class="container dist-hero-inner">
+      <span class="eyebrow" data-es="Nuestros socios" data-en="Our partners">Nuestros socios</span>
 
-        <p 
-          data-es="Trabajamos con las marcas líderes a nivel mundial para garantizarte la más alta calidad."
-          data-en="We work with leading global brands to guarantee the highest quality.">
-          Trabajamos con las marcas líderes a nivel mundial para garantizarte la más alta calidad.
-        </p>
-      </div>
+      <h1
+        data-es-html="<span>Distribuidores</span> autorizados"
+        data-en-html="Authorized <span>Distributors</span>">
+        <span>Distribuidores</span> autorizados
+      </h1>
 
-      <div class="logos-wrap">
-        <div class="logos-track">
-          <div class="logo-item"><span>Bovie</span></div>
-          <div class="logo-item"><span>Hillrom</span></div>
-          <div class="logo-item"><span>Huntleigh</span></div>
-          <div class="logo-item"><span>Seca</span></div>
-          <div class="logo-item"><span>Mortara</span></div>
-          <div class="logo-item"><span>Nonin</span></div>
-          <div class="logo-item"><span>Midvac</span></div>
-          <div class="logo-item"><span>Wallach</span></div>
-          <div class="logo-item"><span>Midmark</span></div>
+      <p
+        data-es="Representamos en México a doce fabricantes de equipo médico reconocidos a nivel mundial. Cada equipo llega con garantía de fábrica, refacciones originales y soporte técnico nuestro."
+        data-en="We represent twelve world-renowned medical equipment manufacturers in Mexico. Every unit arrives with factory warranty, original spare parts and our own technical support.">
+        Representamos en México a doce fabricantes de equipo médico reconocidos a nivel mundial. Cada equipo llega con garantía de fábrica, refacciones originales y soporte técnico nuestro.
+      </p>
 
-          <div class="logo-item"><span>Bovie</span></div>
-          <div class="logo-item"><span>Hillrom</span></div>
-          <div class="logo-item"><span>Huntleigh</span></div>
-          <div class="logo-item"><span>Seca</span></div>
-          <div class="logo-item"><span>Mortara</span></div>
-          <div class="logo-item"><span>Nonin</span></div>
-          <div class="logo-item"><span>Midvac</span></div>
-          <div class="logo-item"><span>Wallach</span></div>
-          <div class="logo-item"><span>Midmark</span></div>
-        </div>
-      </div>
-
-      <div class="stats-row reveal">
-        <div class="stat-item">
-          <strong>9</strong>
-          <span data-es="Distribuidores globales" data-en="Global distributors">Distribuidores globales</span>
+      <!-- STATS -->
+      <div class="dist-stats">
+        <div class="dist-stat">
+          <strong>12</strong>
+          <span data-es="Marcas representadas" data-en="Brands represented">Marcas representadas</span>
         </div>
 
-        <div class="stat-div"></div>
-
-        <div class="stat-item">
-          <strong>+200</strong>
-          <span data-es="Productos disponibles" data-en="Available products">Productos disponibles</span>
+        <div class="dist-stat">
+          <strong>+1000</strong>
+          <span data-es="Productos en catálogo" data-en="Products in catalog">Productos en catálogo</span>
         </div>
 
-        <div class="stat-div"></div>
-
-        <div class="stat-item">
-          <strong>47</strong>
-          <span data-es="Años de trayectoria" data-en="Years of experience">Años de trayectoria</span>
+        <div class="dist-stat">
+          <strong>+40</strong>
+          <span data-es="Años en el mercado" data-en="Years in the market">Años en el mercado</span>
         </div>
 
-        <div class="stat-div"></div>
-
-        <div class="stat-item">
+        <div class="dist-stat">
           <strong>100%</strong>
           <span data-es="Productos originales" data-en="Original products">Productos originales</span>
         </div>
       </div>
     </div>
-    <div class="stats-row reveal" style="margin-top: 40px;">
-        <div class="stat-item">
-          <strong>1,246</strong>
-          <span data-es="Clientes satisfechos" data-en="Satisfied clients">Clientes satisfechos</span>
-        </div>
-
-        <div class="stat-div"></div>
-
-        <div class="stat-item">
-          <strong>42</strong>
-          <span data-es="Años brindando servicio" data-en="Years providing service">Años brindando servicio</span>
-        </div>
-
-        <div class="stat-div"></div>
-
-        <div class="stat-item">
-          <strong>1000</strong>
-          <span data-es="Eventos realizados" data-en="Events held">Eventos realizados</span>
-        </div>
-
-        <div class="stat-div"></div>
-
-        <div class="stat-item">
-          <strong>300</strong>
-          <span data-es="+Productos disponibles" data-en="+Available products">+Productos disponibles</span>
-        </div>
-      </div>
-    
   </section>
 
-   <!-- FOOTER -->
+  <!-- ══ MARCAS ═════════════════════════════════════════════ -->
+  <section class="dist-brands-section">
+    <div class="container">
+
+      <div class="dist-rule reveal">
+        <span data-es="Marcas que representamos" data-en="Brands we represent">Marcas que representamos</span>
+      </div>
+
+      <div class="dist-brands reveal">
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Welch Allyn</span></div>
+          <p data-es="Diagnóstico general: otoscopios, oftalmoscopios y estuches de exploración."
+             data-en="General diagnostics: otoscopes, ophthalmoscopes and examination sets.">
+            Diagnóstico general: otoscopios, oftalmoscopios y estuches de exploración.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Hillrom</span></div>
+          <p data-es="Camas hospitalarias y mobiliario clínico para hospitales y sanatorios."
+             data-en="Hospital beds and clinical furniture for hospitals and health centers.">
+            Camas hospitalarias y mobiliario clínico para hospitales y sanatorios.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Seca</span></div>
+          <p data-es="Básculas, tallímetros y sistemas de medición y pesaje corporal."
+             data-en="Scales, stadiometers and body measurement and weighing systems.">
+            Básculas, tallímetros y sistemas de medición y pesaje corporal.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Midmark</span></div>
+          <p data-es="Mesas de exploración, mobiliario de consultorio e iluminación clínica."
+             data-en="Examination tables, clinic furniture and clinical lighting.">
+            Mesas de exploración, mobiliario de consultorio e iluminación clínica.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Mortara</span></div>
+          <p data-es="Electrocardiografía en reposo y esfuerzo, Holter ECG y MAPA."
+             data-en="Resting and stress electrocardiography, Holter ECG and ABPM.">
+            Electrocardiografía en reposo y esfuerzo, Holter ECG y MAPA.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Miltex</span></div>
+          <p data-es="Instrumental quirúrgico, dental, podiátrico y oftalmológico."
+             data-en="Surgical, dental, podiatric and ophthalmic instruments.">
+            Instrumental quirúrgico, dental, podiátrico y oftalmológico.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Littmann</span></div>
+          <p data-es="Estetoscopios de auscultación para consulta general y especialidad."
+             data-en="Auscultation stethoscopes for general practice and specialty use.">
+            Estetoscopios de auscultación para consulta general y especialidad.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Nonin</span></div>
+          <p data-es="Oximetría de pulso y monitoreo no invasivo de signos vitales."
+             data-en="Pulse oximetry and non-invasive vital signs monitoring.">
+            Oximetría de pulso y monitoreo no invasivo de signos vitales.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Huntleigh</span></div>
+          <p data-es="Doppler fetal y vascular para ginecología y valoración circulatoria."
+             data-en="Fetal and vascular Doppler for gynecology and circulatory assessment.">
+            Doppler fetal y vascular para ginecología y valoración circulatoria.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Wallach</span></div>
+          <p data-es="Criocirugía, colposcopía y equipo para la salud de la mujer."
+             data-en="Cryosurgery, colposcopy and women's health equipment.">
+            Criocirugía, colposcopía y equipo para la salud de la mujer.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Bovie</span></div>
+          <p data-es="Electrocirugía e iluminación para procedimientos menores."
+             data-en="Electrosurgery and lighting for minor procedures.">
+            Electrocirugía e iluminación para procedimientos menores.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+        <article class="dist-brand">
+          <div class="dist-brand-name"><span>Midvac</span></div>
+          <p data-es="Equipo de succión y aspiración para consultorio y quirófano."
+             data-en="Suction and aspiration equipment for clinics and operating rooms.">
+            Equipo de succión y aspiración para consultorio y quirófano.
+          </p>
+          <a href="tienda.html" class="dist-brand-link" data-es="Ver productos" data-en="View products">Ver productos</a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ POR QUÉ DISTRIBUIDOR AUTORIZADO ════════════════════ -->
+  <section class="dist-why-section">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="eyebrow" data-es="La diferencia" data-en="The difference">La diferencia</span>
+
+        <h2
+          data-es-html="Por qué comprar con un <span>distribuidor autorizado</span>"
+          data-en-html="Why buy from an <span>authorized distributor</span>">
+          Por qué comprar con un <span>distribuidor autorizado</span>
+        </h2>
+
+        <p
+          data-es="El mismo equipo puede costar menos en otro lado. Esto es lo que no viene incluido cuando eso pasa."
+          data-en="The same equipment may cost less elsewhere. This is what isn't included when that happens.">
+          El mismo equipo puede costar menos en otro lado. Esto es lo que no viene incluido cuando eso pasa.
+        </p>
+      </div>
+
+      <div class="dist-why reveal">
+
+        <div class="dist-why-card">
+          <div class="dist-why-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 21s7.5-4.35 7.5-10.5a7.5 7.5 0 0 0-15 0C4.5 16.65 12 21 12 21z"/>
+              <polyline points="9 11 11 13 15.5 8.5"/>
+            </svg>
+          </div>
+          <h3 data-es="Garantía de fábrica" data-en="Factory warranty">Garantía de fábrica</h3>
+          <p data-es="La respalda el fabricante, no solo el vendedor. Y nosotros la tramitamos por ti."
+             data-en="Backed by the manufacturer, not just the seller. And we file the claim for you.">
+            La respalda el fabricante, no solo el vendedor. Y nosotros la tramitamos por ti.
+          </p>
+        </div>
+
+        <div class="dist-why-card">
+          <div class="dist-why-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M14.7 6.3a4 4 0 0 0 5 5l-9.4 9.4a2.8 2.8 0 0 1-4-4z"/>
+              <line x1="16.5" y1="4.5" x2="19.5" y2="7.5"/>
+            </svg>
+          </div>
+          <h3 data-es="Refacciones originales" data-en="Original spare parts">Refacciones originales</h3>
+          <p data-es="Focos, baterías, brazaletes y sensores de fábrica. Un consumible genérico altera la lectura."
+             data-en="Factory bulbs, batteries, cuffs and sensors. A generic consumable alters the reading.">
+            Focos, baterías, brazaletes y sensores de fábrica. Un consumible genérico altera la lectura.
+          </p>
+        </div>
+
+        <div class="dist-why-card">
+          <div class="dist-why-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M4 18v-6a8 8 0 0 1 16 0v6"/>
+              <path d="M20 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3z"/>
+              <path d="M4 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H4z"/>
+            </svg>
+          </div>
+          <h3 data-es="Servicio en México" data-en="Service in Mexico">Servicio en México</h3>
+          <p data-es="Reparación y mantenimiento con técnicos propios. No mandas tu equipo al extranjero."
+             data-en="Repair and maintenance by our own technicians. You don't ship your equipment abroad.">
+            Reparación y mantenimiento con técnicos propios. No mandas tu equipo al extranjero.
+          </p>
+        </div>
+
+        <div class="dist-why-card">
+          <div class="dist-why-icon">
+            <svg viewBox="0 0 24 24">
+              <path d="M3 8l9-4 9 4-9 4-9-4z"/>
+              <path d="M7 10.2V15c0 1.5 2.2 2.6 5 2.6s5-1.1 5-2.6v-4.8"/>
+              <line x1="21" y1="8" x2="21" y2="13.5"/>
+            </svg>
+          </div>
+          <h3 data-es="Capacitación de uso" data-en="Usage training">Capacitación de uso</h3>
+          <p data-es="Te enseñamos a operar y calibrar el equipo para que rinda lo que promete la ficha técnica."
+             data-en="We train you to operate and calibrate it so it performs as the datasheet promises.">
+            Te enseñamos a operar y calibrar el equipo para que rinda lo que promete la ficha técnica.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- CTA -->
+      <div class="dist-cta reveal">
+        <div class="dist-cta-text">
+          <h3
+            data-es-html="Encuentra tu equipo en la <span>tienda en línea</span>"
+            data-en-html="Find your equipment in the <span>online store</span>">
+            Encuentra tu equipo en la <span>tienda en línea</span>
+          </h3>
+          <p
+            data-es="Catálogo completo por categoría y especialidad, con envíos a todo México."
+            data-en="Full catalog by category and specialty, with shipping throughout Mexico.">
+            Catálogo completo por categoría y especialidad, con envíos a todo México.
+          </p>
+        </div>
+
+        <div class="dist-cta-actions">
+          <a href="tienda.html" class="dist-cta-btn" data-es="Ir a la tienda" data-en="Go to the store">Ir a la tienda</a>
+          <a href="contacto.html" class="dist-cta-btn ghost" data-es="Pedir cotización" data-en="Request a quote">Pedir cotización</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
-    
-    <!-- BLOQUE IZQUIERDO -->
+
+      <!-- BLOQUE IZQUIERDO -->
       <div>
         <div class="footer-brand">
           <div class="footer-logo-main">
@@ -183,7 +361,7 @@
         </a>
       </div>
 
-    <!-- REDES -->
+      <!-- REDES -->
       <div class="footer-col">
         <h4 data-es="Redes sociales" data-en="Social media">Redes sociales</h4>
 
@@ -217,7 +395,7 @@
         </div>
       </div>
 
-    <!-- TELÉFONOS -->
+      <!-- TELÉFONOS -->
       <div class="footer-col">
         <h4 data-es="Teléfonos" data-en="Phone numbers">Teléfonos</h4>
 
@@ -228,6 +406,7 @@
           <a href="tel:5555115576">55-55-11-55-76</a>
         </div>
       </div>
+
     </div>
 
     <div class="footer-bottom">
@@ -243,6 +422,6 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=3"></script>
 </body>
 </html>

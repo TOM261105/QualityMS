@@ -3483,13 +3483,13 @@ footer {
 .dist-hero {
   position: relative;
   background: linear-gradient(180deg, var(--blue-bg) 0%, #e6f1fb 100%);
-  padding: 76px 0 0;
+  padding: 76px 0 62px;
   overflow: hidden;
 }
 
 .dist-map {
   position: absolute;
-  top: 44%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: min(1400px, 120%);
@@ -3550,24 +3550,22 @@ footer {
   color: var(--muted);
 }
 
-/* ── STATS (montadas sobre el borde del hero) ────────────── */
+/* ── STATS (dentro del hero, sin recorte) ────────────────── */
 
 .dist-stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  margin: 54px auto -44px;
-  max-width: 940px;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 18px;
-  box-shadow: 0 18px 44px rgba(13, 43, 78, 0.09);
-  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 46px;
 }
 
 .dist-stat {
+  flex: 0 1 210px;
   text-align: center;
-  padding: 28px 16px;
-  border-right: 1px solid var(--border);
+  padding: 4px 20px;
+  border-right: 1px solid rgba(46, 127, 193, 0.22);
 }
 
 .dist-stat:last-child {
@@ -3577,32 +3575,34 @@ footer {
 .dist-stat strong {
   display: block;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: clamp(32px, 4vw, 46px);
+  font-size: clamp(34px, 4vw, 46px);
   font-weight: 800;
   color: var(--navy);
   line-height: 1;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 .dist-stat span {
-  font-size: 12.5px;
+  display: block;
+  font-size: 13px;
   font-weight: 600;
   color: var(--muted);
   letter-spacing: 0.3px;
+  line-height: 1.35;
 }
 
-/* ── MARCAS ──────────────────────────────────────────────── */
+/* ── MARCAS EN MOVIMIENTO ────────────────────────────────── */
 
 .dist-brands-section {
   background: #fff;
-  padding: 92px 0 78px;
+  padding: 62px 0 58px;
 }
 
 .dist-rule {
   display: flex;
   align-items: center;
   gap: 20px;
-  margin-bottom: 34px;
+  margin-bottom: 40px;
 }
 
 .dist-rule::before,
@@ -3622,108 +3622,88 @@ footer {
   white-space: nowrap;
 }
 
-.dist-brands {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
-
-.dist-brand {
+.dist-marquee {
   position: relative;
-  background: #fff;
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 26px 24px 22px;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
-  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
 }
 
-.dist-brand::before {
+.dist-marquee::before,
+.dist-marquee::after {
   content: '';
   position: absolute;
   top: 0;
+  bottom: 0;
+  width: 130px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.dist-marquee::before {
   left: 0;
+  background: linear-gradient(to right, #fff, rgba(255, 255, 255, 0));
+}
+
+.dist-marquee::after {
   right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--blue), var(--blue-light));
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.32s ease;
+  background: linear-gradient(to left, #fff, rgba(255, 255, 255, 0));
 }
 
-.dist-brand:hover {
-  transform: translateY(-5px);
-  border-color: var(--blue-light);
-  box-shadow: 0 18px 42px rgba(13, 43, 78, 0.12);
+.dist-track {
+  display: flex;
+  width: max-content;
+  animation: distScroll 46s linear infinite;
 }
 
-.dist-brand:hover::before {
-  transform: scaleX(1);
+.dist-marquee:hover .dist-track {
+  animation-play-state: paused;
 }
 
-.dist-brand-name {
-  min-height: 46px;
+@keyframes distScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.dist-logo {
   display: flex;
   align-items: center;
-  margin-bottom: 12px;
+  justify-content: center;
+  width: 230px;
+  height: 96px;
+  flex-shrink: 0;
+  padding: 0 16px;
 }
 
-.dist-brand-name span {
+.dist-logo span {
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 30px;
+  font-size: 38px;
   font-weight: 800;
-  letter-spacing: 0.8px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--navy);
+  color: #9ab8cc;
   line-height: 1;
+  white-space: nowrap;
+  user-select: none;
+  transition: color 0.25s;
+}
+
+.dist-logo:hover span {
+  color: var(--navy);
 }
 
 /* Cuando subas los logos reales, cambia el <span> por
-   <img src="assets/marcas/seca.jpg" alt="Seca"> y esta regla los acomoda */
-.dist-brand-name img {
-  max-width: 150px;
-  max-height: 44px;
+   <img src="assets/marcas/seca.jpg" alt="Seca"> */
+.dist-logo img {
+  max-width: 170px;
+  max-height: 58px;
   object-fit: contain;
   filter: grayscale(1);
-  opacity: 0.75;
+  opacity: 0.7;
   transition: filter 0.25s, opacity 0.25s;
 }
 
-.dist-brand:hover .dist-brand-name img {
+.dist-logo:hover img {
   filter: grayscale(0);
   opacity: 1;
-}
-
-.dist-brand p {
-  font-size: 13.5px;
-  line-height: 1.65;
-  color: var(--muted);
-  flex: 1;
-  margin-bottom: 16px;
-}
-
-.dist-brand-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  align-self: flex-start;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--blue-mid);
-  text-decoration: none;
-  transition: gap 0.2s, color 0.2s;
-}
-
-.dist-brand-link::after {
-  content: '→';
-  font-size: 14px;
-}
-
-.dist-brand-link:hover {
-  color: var(--navy);
-  gap: 11px;
 }
 
 /* ── POR QUÉ DISTRIBUIDOR AUTORIZADO ─────────────────────── */
@@ -3897,17 +3877,13 @@ footer {
 /* ── RESPONSIVE ──────────────────────────────────────────── */
 
 @media (max-width: 960px) {
-  .dist-brands {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .dist-why {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .dist-stats {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 560px;
+  .dist-stat {
+    flex: 0 1 50%;
+    padding: 12px 16px;
   }
 
   .dist-stat:nth-child(2) {
@@ -3916,13 +3892,13 @@ footer {
 
   .dist-stat:nth-child(1),
   .dist-stat:nth-child(2) {
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(46, 127, 193, 0.22);
   }
 }
 
 @media (max-width: 640px) {
   .dist-hero {
-    padding: 52px 0 0;
+    padding: 52px 0 46px;
   }
 
   .dist-map {
@@ -3931,28 +3907,29 @@ footer {
   }
 
   .dist-stats {
-    margin: 40px auto -40px;
-  }
-
-  .dist-stat {
-    padding: 22px 12px;
+    margin-top: 36px;
   }
 
   .dist-brands-section {
-    padding: 78px 0 60px;
+    padding: 48px 0 44px;
   }
 
-  .dist-brands {
-    grid-template-columns: 1fr;
-    gap: 14px;
+  .dist-rule {
+    margin-bottom: 28px;
   }
 
-  .dist-brand-name {
-    min-height: 0;
+  .dist-logo {
+    width: 168px;
+    height: 76px;
   }
 
-  .dist-brand-name span {
-    font-size: 26px;
+  .dist-logo span {
+    font-size: 28px;
+  }
+
+  .dist-marquee::before,
+  .dist-marquee::after {
+    width: 56px;
   }
 
   .dist-why {
@@ -3981,6 +3958,10 @@ footer {
 
 @media (prefers-reduced-motion: reduce) {
   .dist-pin {
+    animation: none;
+  }
+
+  .dist-track {
     animation: none;
   }
 }

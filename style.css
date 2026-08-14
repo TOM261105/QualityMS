@@ -3468,3 +3468,519 @@ footer {
     width: 100%;
   }
 }
+
+/* ══════════════════════════════════════════════════════════
+   DISTRIBUIDORES — PEGAR ESTE BLOQUE AL FINAL DE style.css
+   ══════════════════════════════════════════════════════════ */
+
+/* Anula el min-height que dejaba la sección vacía */
+.dist-section {
+  min-height: 0;
+}
+
+/* ── HERO CON MAPA ───────────────────────────────────────── */
+
+.dist-hero {
+  position: relative;
+  background: linear-gradient(180deg, var(--blue-bg) 0%, #e6f1fb 100%);
+  padding: 76px 0 0;
+  overflow: hidden;
+}
+
+.dist-map {
+  position: absolute;
+  top: 44%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(1400px, 120%);
+  aspect-ratio: 1000 / 420;
+  background: url('assets/world-dots.svg') center/contain no-repeat;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+.dist-pin {
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  margin: -5.5px 0 0 -5.5px;
+  border-radius: 50%;
+  background: var(--blue-mid);
+  animation: distPin 3.2s ease-out infinite;
+}
+
+.dist-pin:nth-child(2) { animation-delay: 0.5s; }
+.dist-pin:nth-child(3) { animation-delay: 1s; }
+.dist-pin:nth-child(4) { animation-delay: 1.5s; }
+.dist-pin:nth-child(5) { animation-delay: 2s; }
+.dist-pin:nth-child(6) { animation-delay: 2.5s; }
+
+@keyframes distPin {
+  0%   { box-shadow: 0 0 0 0 rgba(46, 127, 193, 0.5); }
+  70%  { box-shadow: 0 0 0 16px rgba(46, 127, 193, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(46, 127, 193, 0); }
+}
+
+.dist-hero-inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.dist-hero h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(38px, 6vw, 68px);
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  margin: 6px 0 18px;
+}
+
+.dist-hero h1 span {
+  color: var(--blue-mid);
+}
+
+.dist-hero-inner > p {
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 16.5px;
+  line-height: 1.7;
+  color: var(--muted);
+}
+
+/* ── STATS (montadas sobre el borde del hero) ────────────── */
+
+.dist-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  margin: 54px auto -44px;
+  max-width: 940px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  box-shadow: 0 18px 44px rgba(13, 43, 78, 0.09);
+  overflow: hidden;
+}
+
+.dist-stat {
+  text-align: center;
+  padding: 28px 16px;
+  border-right: 1px solid var(--border);
+}
+
+.dist-stat:last-child {
+  border-right: none;
+}
+
+.dist-stat strong {
+  display: block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(32px, 4vw, 46px);
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1;
+  margin-bottom: 5px;
+}
+
+.dist-stat span {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+}
+
+/* ── MARCAS ──────────────────────────────────────────────── */
+
+.dist-brands-section {
+  background: #fff;
+  padding: 92px 0 78px;
+}
+
+.dist-rule {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 34px;
+}
+
+.dist-rule::before,
+.dist-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.dist-rule span {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--blue-mid);
+  white-space: nowrap;
+}
+
+.dist-brands {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.dist-brand {
+  position: relative;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 26px 24px 22px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+
+.dist-brand::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--blue-light));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.32s ease;
+}
+
+.dist-brand:hover {
+  transform: translateY(-5px);
+  border-color: var(--blue-light);
+  box-shadow: 0 18px 42px rgba(13, 43, 78, 0.12);
+}
+
+.dist-brand:hover::before {
+  transform: scaleX(1);
+}
+
+.dist-brand-name {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.dist-brand-name span {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--navy);
+  line-height: 1;
+}
+
+/* Cuando subas los logos reales, cambia el <span> por
+   <img src="assets/marcas/seca.jpg" alt="Seca"> y esta regla los acomoda */
+.dist-brand-name img {
+  max-width: 150px;
+  max-height: 44px;
+  object-fit: contain;
+  filter: grayscale(1);
+  opacity: 0.75;
+  transition: filter 0.25s, opacity 0.25s;
+}
+
+.dist-brand:hover .dist-brand-name img {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+.dist-brand p {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--muted);
+  flex: 1;
+  margin-bottom: 16px;
+}
+
+.dist-brand-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--blue-mid);
+  text-decoration: none;
+  transition: gap 0.2s, color 0.2s;
+}
+
+.dist-brand-link::after {
+  content: '→';
+  font-size: 14px;
+}
+
+.dist-brand-link:hover {
+  color: var(--navy);
+  gap: 11px;
+}
+
+/* ── POR QUÉ DISTRIBUIDOR AUTORIZADO ─────────────────────── */
+
+.dist-why-section {
+  background: var(--blue-bg);
+  padding: 78px 0 84px;
+}
+
+.dist-why {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.dist-why-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 30px 24px;
+  transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+}
+
+.dist-why-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--blue-light);
+  box-shadow: 0 16px 40px rgba(13, 43, 78, 0.12);
+}
+
+.dist-why-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 13px;
+  background: var(--blue-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  transition: background 0.25s;
+}
+
+.dist-why-card:hover .dist-why-icon {
+  background: var(--blue);
+}
+
+.dist-why-icon svg {
+  width: 26px;
+  height: 26px;
+  stroke: var(--blue);
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.25s;
+}
+
+.dist-why-card:hover .dist-why-icon svg {
+  stroke: #fff;
+}
+
+.dist-why-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 9px;
+}
+
+.dist-why-card p {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+
+/* ── CTA ─────────────────────────────────────────────────── */
+
+.dist-cta {
+  position: relative;
+  margin-top: 56px;
+  background: linear-gradient(120deg, var(--navy) 0%, #16365f 55%, #0a1e35 100%);
+  border-radius: 20px;
+  padding: 40px 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+.dist-cta::after {
+  content: '';
+  position: absolute;
+  right: -70px;
+  top: -90px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(91, 163, 217, 0.12);
+  pointer-events: none;
+}
+
+.dist-cta-text {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+}
+
+.dist-cta-text h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(26px, 3.4vw, 38px);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #fff;
+  line-height: 1.05;
+  margin-bottom: 8px;
+}
+
+.dist-cta-text h3 span {
+  color: var(--blue-light);
+}
+
+.dist-cta-text p {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.68);
+  line-height: 1.6;
+}
+
+.dist-cta-actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dist-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: var(--navy);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  padding: 15px 32px;
+  border-radius: 50px;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 2px solid #fff;
+  transition: background 0.2s, color 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+.dist-cta-btn:hover {
+  background: var(--blue-mid);
+  border-color: var(--blue-mid);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.dist-cta-btn.ghost {
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.dist-cta-btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: #fff;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+
+@media (max-width: 960px) {
+  .dist-brands {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dist-why {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dist-stats {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 560px;
+  }
+
+  .dist-stat:nth-child(2) {
+    border-right: none;
+  }
+
+  .dist-stat:nth-child(1),
+  .dist-stat:nth-child(2) {
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 640px) {
+  .dist-hero {
+    padding: 52px 0 0;
+  }
+
+  .dist-map {
+    width: 200%;
+    opacity: 0.12;
+  }
+
+  .dist-stats {
+    margin: 40px auto -40px;
+  }
+
+  .dist-stat {
+    padding: 22px 12px;
+  }
+
+  .dist-brands-section {
+    padding: 78px 0 60px;
+  }
+
+  .dist-brands {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .dist-brand-name {
+    min-height: 0;
+  }
+
+  .dist-brand-name span {
+    font-size: 26px;
+  }
+
+  .dist-why {
+    grid-template-columns: 1fr;
+  }
+
+  .dist-why-section {
+    padding: 56px 0 62px;
+  }
+
+  .dist-cta {
+    padding: 32px 24px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .dist-cta-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .dist-cta-btn {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dist-pin {
+    animation: none;
+  }
+}

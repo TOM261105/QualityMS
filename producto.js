@@ -319,15 +319,9 @@ function renderSingleProduct(product) {
           </div>
 
           <div>
-            <span>Precio general</span>
+            <span>Precio USD</span>
             <strong>${product.priceGeneral || product.priceText || "Solicitar cotización"}</strong>
           </div>
-
-          <div>
-            <span>Precio distribuidor</span>
-            <strong>${product.priceDistributor || "Cotizar con ejecutivo"}</strong>
-          </div>
-        </div>
 
         <div class="single-product-actions">
           ${actionButton}

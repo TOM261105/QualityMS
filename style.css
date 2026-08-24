@@ -4125,3 +4125,114 @@ footer {
     padding: 16px 22px 22px;
   }
 }
+
+/* ── POP-UP SEGURIDAD DE COMPRA ───────────────────────────── */
+
+.purchase-security-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: rgba(4, 18, 35, 0.74);
+  backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.purchase-security-popup.active {
+  display: flex;
+}
+
+.purchase-security-card {
+  width: min(620px, 100%);
+  background: #ffffff;
+  border-radius: 28px;
+  padding: 38px 36px;
+  text-align: center;
+  box-shadow: 0 28px 80px rgba(5, 26, 49, 0.32);
+  border: 1px solid rgba(42, 133, 199, 0.22);
+}
+
+.purchase-security-icon {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  margin: 0 auto 18px;
+  background: #0e315d;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  font-weight: 800;
+}
+
+.purchase-security-card h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(32px, 4vw, 46px);
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--navy);
+  margin-bottom: 14px;
+}
+
+.purchase-security-card > p {
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 22px;
+}
+
+.purchase-security-list {
+  text-align: left;
+  background: #eef7fc;
+  border: 1px solid rgba(42, 133, 199, 0.18);
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+}
+
+.purchase-security-list p {
+  margin: 0 0 10px;
+  color: #183652;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.purchase-security-list p:last-child {
+  margin-bottom: 0;
+}
+
+.purchase-security-btn {
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 15px 24px;
+  background: var(--navy);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.purchase-security-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(13, 43, 78, 0.22);
+}
+
+@media (max-width: 640px) {
+  .purchase-security-card {
+    padding: 30px 22px;
+    border-radius: 22px;
+  }
+
+  .purchase-security-card h2 {
+    font-size: 32px;
+  }
+
+  .purchase-security-list p {
+    font-size: 14px;
+  }
+}

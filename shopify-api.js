@@ -51,12 +51,11 @@ function moneyFormat(price) {
   if (!price || !price.amount) return "Solicitar cotización";
 
   const amount = Number(price.amount);
-  const currency = price.currencyCode || "MXN";
 
-  return amount.toLocaleString("es-MX", {
+  return amount.toLocaleString("en-US", {
     style: "currency",
-    currency
-  });
+    currency: "USD"
+  }) + " USD";
 }
 
 function normalizePriceNumber(price) {

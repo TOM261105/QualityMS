@@ -109,10 +109,10 @@ function renderCart() {
 
   cartCount.textContent = totalItems;
 
-  cartTotal.textContent = totalPrice.toLocaleString("es-MX", {
+  cartTotal.textContent = totalPrice.toLocaleString("en-US", {
     style: "currency",
-    currency: "MXN"
-  });
+    currency: "USD"
+  }) + " USD";
 
   if (!cart.length) {
     cartItems.innerHTML = `

@@ -4236,3 +4236,23 @@ footer {
     font-size: 14px;
   }
 }
+
+.product-list-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.product-list-actions .product-action {
+  width: 100%;
+  text-align: center;
+}
+
+.product-list-actions .product-action:not(.light):not(.quote) {
+  background: var(--navy);
+  color: #ffffff;
+}
+
+.product-list-actions .product-action:not(.light):not(.quote):hover {
+  background: var(--blue-mid);
+}

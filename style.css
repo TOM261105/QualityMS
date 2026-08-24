@@ -4256,3 +4256,20 @@ footer {
 .product-list-actions .product-action:not(.light):not(.quote):hover {
   background: var(--blue-mid);
 }
+
+.cart-security-note {
+  margin: 10px 0 8px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: #5b6f86;
+  text-align: center;
+}
+
+.cart-security-note strong {
+  color: var(--navy);
+}
+
+.cart-footer .cart-note {
+  font-size: 11.5px;
+  line-height: 1.45;
+}

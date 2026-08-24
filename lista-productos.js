@@ -10,6 +10,23 @@ function getSelectedCategoryFromUrl() {
   return params.get("cat");
 }
 
+function getProductPriceNumber(product) {
+  if (!product) return 0;
+
+  if (typeof product.price === "number") {
+    return product.price;
+  }
+
+  const priceText = product.priceGeneral || product.priceText || "";
+  const cleanPrice = String(priceText).replace(/[^0-9.]/g, "");
+
+  return Number(cleanPrice) || 0;
+}
+
+function hasValidPrice(product) {
+  return getProductPriceNumber(product) > 0;
+}
+
 function getProductGeneralPrice(product) {
   return product.priceGeneral || product.priceText || "Solicitar cotización";
 }
@@ -32,7 +49,7 @@ function cleanProductDescription(description) {
     }
   });
 
-  const cleaned = temp.innerHTML.trim();
+  const cleaned = temp.textContent.trim();
 
   return cleaned || "Sin descripción disponible.";
 }
@@ -53,10 +70,19 @@ function renderProductList(products) {
 
   productListBody.innerHTML = products.map(product => {
     const backUrl = "lista-productos.html" + window.location.search;
+    const productCanBeAdded = hasValidPrice(product);
 
-    const actionButton = product.type === "venta"
-      ? `<button class="product-action" data-add-id="${product.id}">Agregar al carrito</button>`
-      : `<a href="contacto.html?producto=${encodeURIComponent(product.title)}" class="product-action quote">Solicitar cotización</a>`;
+    const actionButton = productCanBeAdded
+      ? `
+        <button class="product-action" data-add-id="${product.id}">
+          Agregar al carrito
+        </button>
+      `
+      : `
+        <a href="contacto.html?producto=${encodeURIComponent(product.title)}" class="product-action quote">
+          Solicitar cotización
+        </a>
+      `;
 
     return `
       <tr>
@@ -119,8 +145,24 @@ if (productListBody) {
 
     if (!product) return;
 
+    if (!hasValidPrice(product)) {
+      alert("Este producto requiere cotización.");
+      return;
+    }
+
+    if (isShopifyReady() && !product.variantId) {
+      alert("Este producto todavía no está disponible para compra en Shopify.");
+      return;
+    }
+
     if (typeof addToCart === "function") {
-      addToCart(product);
+      addToCart({
+        ...product,
+        type: "venta",
+        price: getProductPriceNumber(product),
+        priceText: product.priceText || product.priceGeneral || "Solicitar cotización",
+        priceGeneral: product.priceGeneral || product.priceText || "Solicitar cotización"
+      });
     }
   });
 }

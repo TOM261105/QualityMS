@@ -206,25 +206,47 @@ checkMedicalAccess();
 const purchaseSecurityPopup = document.getElementById("purchaseSecurityPopup");
 const purchaseSecurityOk = document.getElementById("purchaseSecurityOk");
 
+let purchaseSecurityShownThisLoad = false;
+
+function isPurchaseSecurityPage() {
+  const storePages = [
+    "tienda.html",
+    "categoria.html",
+    "productos.html",
+    "lista-productos.html",
+    "producto.html"
+  ];
+
+  const currentPage = window.location.pathname.split("/").pop() || "index.html";
+
+  return storePages.includes(currentPage);
+}
+
 function showPurchaseSecurityNotice() {
-  if (!isStorePage()) return;
+  if (!isPurchaseSecurityPage()) return;
   if (!purchaseSecurityPopup) return;
+  if (purchaseSecurityShownThisLoad) return;
 
-  const medicalAccess = sessionStorage.getItem("medicalSpecialist");
-  const securitySeen = sessionStorage.getItem("purchaseSecurityNoticeSeen");
-
-  if (medicalAccess !== "yes") return;
-  if (securitySeen === "yes") return;
-
-  if (medicalPopup && medicalPopup.classList.contains("active")) return;
-
+  purchaseSecurityShownThisLoad = true;
   purchaseSecurityPopup.classList.add("active");
   document.body.style.overflow = "hidden";
 }
 
-function closePurchaseSecurityNotice() {
-  sessionStorage.setItem("purchaseSecurityNoticeSeen", "yes");
+function showPurchaseSecurityAfterMedicalPopup() {
+  if (!isPurchaseSecurityPage()) return;
+  if (!purchaseSecurityPopup) return;
 
+  const medicalIsOpen =
+    typeof medicalPopup !== "undefined" &&
+    medicalPopup &&
+    medicalPopup.classList.contains("active");
+
+  if (medicalIsOpen) return;
+
+  showPurchaseSecurityNotice();
+}
+
+function closePurchaseSecurityNotice() {
   if (purchaseSecurityPopup) {
     purchaseSecurityPopup.classList.remove("active");
     document.body.style.overflow = "";
@@ -235,14 +257,22 @@ if (purchaseSecurityOk) {
   purchaseSecurityOk.addEventListener("click", closePurchaseSecurityNotice);
 }
 
-if (medicalYes) {
+/* Si el usuario confirma el primer popup, después aparece el de seguridad */
+if (typeof medicalYes !== "undefined" && medicalYes) {
   medicalYes.addEventListener("click", () => {
-    setTimeout(showPurchaseSecurityNotice, 120);
+    setTimeout(showPurchaseSecurityAfterMedicalPopup, 180);
   });
 }
 
-showPurchaseSecurityNotice();
+/* Cada carga o hard refresh vuelve a mostrarlo */
+window.addEventListener("load", () => {
+  setTimeout(showPurchaseSecurityAfterMedicalPopup, 350);
+});
 
+/* También si la página vuelve desde caché del navegador */
+window.addEventListener("pageshow", () => {
+  setTimeout(showPurchaseSecurityAfterMedicalPopup, 350);
+});
 /* ── MARCAR PÁGINA ACTIVA EN EL MENÚ ─────────────────────── */
 
 function setActiveNavLink() {

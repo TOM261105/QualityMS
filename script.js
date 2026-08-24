@@ -201,6 +201,47 @@ document.querySelectorAll('a[href*="tienda.html"], a[href*="categoria.html"], a[
 });
 
 checkMedicalAccess();
+/* ── POP-UP SEGURIDAD DE COMPRA ───────────────────────────── */
+
+const purchaseSecurityPopup = document.getElementById("purchaseSecurityPopup");
+const purchaseSecurityOk = document.getElementById("purchaseSecurityOk");
+
+function showPurchaseSecurityNotice() {
+  if (!isStorePage()) return;
+  if (!purchaseSecurityPopup) return;
+
+  const medicalAccess = sessionStorage.getItem("medicalSpecialist");
+  const securitySeen = sessionStorage.getItem("purchaseSecurityNoticeSeen");
+
+  if (medicalAccess !== "yes") return;
+  if (securitySeen === "yes") return;
+
+  if (medicalPopup && medicalPopup.classList.contains("active")) return;
+
+  purchaseSecurityPopup.classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closePurchaseSecurityNotice() {
+  sessionStorage.setItem("purchaseSecurityNoticeSeen", "yes");
+
+  if (purchaseSecurityPopup) {
+    purchaseSecurityPopup.classList.remove("active");
+    document.body.style.overflow = "";
+  }
+}
+
+if (purchaseSecurityOk) {
+  purchaseSecurityOk.addEventListener("click", closePurchaseSecurityNotice);
+}
+
+if (medicalYes) {
+  medicalYes.addEventListener("click", () => {
+    setTimeout(showPurchaseSecurityNotice, 120);
+  });
+}
+
+showPurchaseSecurityNotice();
 
 /* ── MARCAR PÁGINA ACTIVA EN EL MENÚ ─────────────────────── */
 

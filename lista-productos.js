@@ -14,8 +14,27 @@ function getProductGeneralPrice(product) {
   return product.priceGeneral || product.priceText || "Solicitar cotización";
 }
 
-function getProductDistributorPrice(product) {
-  return product.priceDistributor || "Cotizar con ejecutivo";
+function cleanProductDescription(description) {
+  if (!description) return "Sin descripción disponible.";
+
+  const temp = document.createElement("div");
+  temp.innerHTML = description;
+
+  temp.querySelectorAll("p, div, span, li").forEach(element => {
+    const text = element.textContent.toLowerCase();
+
+    if (
+      text.includes("precio distribuidor") ||
+      text.includes("precio para distribuidor") ||
+      text.includes("distribuidor:")
+    ) {
+      element.remove();
+    }
+  });
+
+  const cleaned = temp.innerHTML.trim();
+
+  return cleaned || "Sin descripción disponible.";
 }
 
 function renderProductList(products) {
@@ -24,7 +43,7 @@ function renderProductList(products) {
   if (!products || products.length === 0) {
     productListBody.innerHTML = `
       <tr>
-        <td colspan="6" class="product-list-empty">
+        <td colspan="5" class="product-list-empty">
           No se encontraron productos.
         </td>
       </tr>
@@ -47,11 +66,9 @@ function renderProductList(products) {
           <strong>${product.title || "Producto sin nombre"}</strong>
         </td>
 
-        <td>${product.description || "Sin descripción disponible."}</td>
+        <td>${cleanProductDescription(product.description)}</td>
 
         <td>${getProductGeneralPrice(product)}</td>
-
-        <td>${getProductDistributorPrice(product)}</td>
 
         <td>
           <div class="product-list-actions">
@@ -79,7 +96,7 @@ function filterProductList() {
       ${product.title || ""}
       ${product.description || ""}
       ${product.priceGeneral || ""}
-      ${product.priceDistributor || ""}
+      ${product.priceText || ""}
     `.toLowerCase();
 
     return searchableText.includes(searchTerm);
@@ -112,7 +129,7 @@ async function loadProductListPage() {
   if (productListBody) {
     productListBody.innerHTML = `
       <tr>
-        <td colspan="6" class="product-list-empty">
+        <td colspan="5" class="product-list-empty">
           Cargando productos...
         </td>
       </tr>

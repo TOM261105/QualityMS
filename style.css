@@ -4273,3 +4273,279 @@ footer {
   font-size: 11.5px;
   line-height: 1.45;
 }
+
+
+/* ══════════════════════════════════════════════════════════
+   TIENDA EN MANTENIMIENTO — PEGAR AL FINAL DE style.css
+   ══════════════════════════════════════════════════════════ */
+
+/* ── PÁGINA COMPLETA DE AVISO ────────────────────────────── */
+
+.mant-section {
+  min-height: calc(100vh - 54px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  background: linear-gradient(180deg, var(--blue-bg) 0%, #e6f1fb 100%);
+}
+
+.mant-card {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 26px;
+  padding: 46px 40px 40px;
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 22px 60px rgba(13, 43, 78, 0.12);
+}
+
+.mant-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--blue-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 22px;
+}
+
+.mant-icon svg {
+  width: 34px;
+  height: 34px;
+  stroke: var(--blue);
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.mant-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--blue-mid);
+  margin-bottom: 10px;
+}
+
+.mant-card h1 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  line-height: 1.02;
+  margin-bottom: 16px;
+}
+
+.mant-card > p {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 420px;
+  margin: 0 auto 14px;
+}
+
+.mant-fecha {
+  font-size: 15px !important;
+  color: var(--navy) !important;
+  background: var(--blue-bg);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 9px 20px !important;
+  display: inline-block;
+  margin: 4px auto 16px !important;
+}
+
+.mant-fecha strong {
+  color: var(--blue-mid);
+  font-weight: 800;
+}
+
+.mant-mientras {
+  font-size: 14.5px !important;
+  margin-bottom: 28px !important;
+}
+
+.mant-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mant-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  padding: 14px 30px;
+  border-radius: 50px;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s, transform 0.2s, border-color 0.2s;
+}
+
+.mant-btn.primary {
+  background: var(--navy);
+  color: #fff;
+  border: 2px solid var(--navy);
+}
+
+.mant-btn.primary:hover {
+  background: var(--blue-mid);
+  border-color: var(--blue-mid);
+  transform: translateY(-2px);
+}
+
+.mant-btn.ghost {
+  background: transparent;
+  color: var(--navy);
+  border: 2px solid var(--border);
+}
+
+.mant-btn.ghost:hover {
+  background: var(--blue-bg);
+  border-color: var(--navy);
+  transform: translateY(-2px);
+}
+
+.mant-contacto {
+  display: flex;
+  gap: 22px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.mant-contacto a {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.mant-contacto a:hover {
+  color: var(--blue-mid);
+}
+
+/* ── MODAL DESDE OTRAS PÁGINAS ───────────────────────────── */
+
+.mant-popup {
+  position: fixed;
+  inset: 0;
+  z-index: 9997;
+  background: rgba(5, 20, 38, 0.72);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.mant-popup.active {
+  display: flex;
+}
+
+.mant-popup-card {
+  width: min(100%, 480px);
+  background: #fff;
+  border-radius: 24px;
+  padding: 38px 32px 32px;
+  text-align: center;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.25);
+  animation: popupIn 0.28s ease;
+}
+
+.mant-popup-card h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(28px, 4vw, 38px);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--navy);
+  line-height: 1.02;
+  margin-bottom: 12px;
+}
+
+.mant-popup-card p {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--muted);
+  max-width: 380px;
+  margin: 0 auto 26px;
+}
+
+/* ── BOTÓN DE TIENDA EN EL MENÚ ──────────────────────────── */
+
+.nav-links a.cta.nav-mantenimiento {
+  background: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.62);
+  position: relative;
+}
+
+.nav-links a.cta.nav-mantenimiento:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.nav-links a.cta.nav-mantenimiento::after {
+  content: "";
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #e8a33d;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .mant-section {
+    padding: 52px 16px;
+    min-height: auto;
+  }
+
+  .mant-card {
+    padding: 36px 24px 30px;
+    border-radius: 22px;
+  }
+
+  .mant-icon {
+    width: 58px;
+    height: 58px;
+  }
+
+  .mant-icon svg {
+    width: 29px;
+    height: 29px;
+  }
+
+  .mant-actions {
+    flex-direction: column;
+  }
+
+  .mant-btn {
+    width: 100%;
+  }
+
+  .mant-contacto {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .mant-popup-card {
+    padding: 32px 22px 26px;
+  }
+}

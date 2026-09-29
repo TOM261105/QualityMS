@@ -626,3 +626,63 @@ Quedo pendiente de la información de precio, disponibilidad y tiempos de entreg
 }
 
 document.addEventListener("DOMContentLoaded", prefillContactFormFromQuote);
+
+/* ── AVISO TEMPORAL: PRODUCTOS BAJO COTIZACIÓN ───────────── */
+
+function showQuoteTemporaryNotice() {
+  const storePages = [
+    "tienda.html",
+    "categoria.html",
+    "productos.html",
+    "lista-productos.html",
+    "producto.html"
+  ];
+
+  const currentPage = window.location.pathname.split("/").pop() || "index.html";
+
+  if (!storePages.includes(currentPage)) return;
+
+  // Para que no salga cada vez que cambia de página dentro de la tienda
+  if (sessionStorage.getItem("qmsQuoteNoticeShown") === "true") return;
+
+  sessionStorage.setItem("qmsQuoteNoticeShown", "true");
+
+  setTimeout(() => {
+    const notice = document.createElement("div");
+    notice.className = "quote-toast";
+
+    notice.innerHTML = `
+      <button class="quote-toast-close" type="button" aria-label="Cerrar aviso">×</button>
+
+      <div class="quote-toast-content">
+        <strong>Productos bajo cotización</strong>
+        <p>
+          Por el momento, todos los productos se venden bajo cotización.
+          Agrega los productos que te interesen y nuestro equipo te contactará.
+        </p>
+      </div>
+
+      <div class="quote-toast-progress"></div>
+    `;
+
+    document.body.appendChild(notice);
+
+    requestAnimationFrame(() => {
+      notice.classList.add("active");
+    });
+
+    const closeNotice = () => {
+      notice.classList.remove("active");
+
+      setTimeout(() => {
+        notice.remove();
+      }, 350);
+    };
+
+    notice.querySelector(".quote-toast-close")?.addEventListener("click", closeNotice);
+
+    setTimeout(closeNotice, 6500);
+  }, 900);
+}
+
+document.addEventListener("DOMContentLoaded", showQuoteTemporaryNotice);

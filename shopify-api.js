@@ -48,15 +48,9 @@ async function shopifyRequest(query, variables = {}) {
 }
 
 function moneyFormat(price) {
-  if (!price || !price.amount) return "Solicitar cotización";
-
-  const amount = Number(price.amount);
-
-  return amount.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD"
-  }) + " USD";
+  return "Bajo cotización";
 }
+
 
 function normalizePriceNumber(price) {
   if (!price || !price.amount) return 0;
@@ -85,7 +79,7 @@ function mapShopifyProduct(product) {
   const priceNumber = normalizePriceNumber(price);
   const priceText = moneyFormat(price);
   const distributorPrice = product.metafield?.value || "Cotizar con ejecutivo";
-  const canSell = Boolean(product.availableForSale && firstVariant?.id && priceNumber > 0);
+  const canSell = false;
 
   return {
     id: product.id,
@@ -93,15 +87,15 @@ function mapShopifyProduct(product) {
     title: product.title,
     category: firstCollection?.handle || "general",
     categoryName: firstCollection?.title || "General",
-    price: priceNumber,
-    priceGeneral: priceText,
-    priceDistributor: distributorPrice,
-    priceText,
+    price: 0,
+    priceGeneral: "Bajo cotización",
+    priceDistributor: "Cotizar con ejecutivo",
+    priceText: "Bajo cotización",
     image: product.featuredImage?.url || "assets/diagnostico.png",
     imageAlt: product.featuredImage?.altText || product.title,
     description: product.description || "Sin descripción disponible.",
-    availability: product.availableForSale ? "Disponible" : "Bajo cotización",
-    type: canSell ? "venta" : "cotizacion",
+    availability: "Disponible para cotización",
+    type: "cotizacion",
     variantId: firstVariant?.id || null
   };
 }

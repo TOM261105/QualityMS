@@ -4,6 +4,10 @@ const productListBody = document.getElementById("productListBody");
 const productListSearch = document.getElementById("productListSearch");
 
 let currentProductList = [];
+let filteredProductList = [];
+let currentProductPage = 1;
+
+const PRODUCTS_PER_PAGE = 50;
 
 function getSelectedCategoryFromUrl() {
   const params = new URLSearchParams(window.location.search);
@@ -35,10 +39,78 @@ function cleanProductDescription(description) {
   return cleaned || "Sin descripción disponible.";
 }
 
-function renderProductList(products) {
+function getPaginationContainer() {
+  let pagination = document.getElementById("productPagination");
+
+  if (!pagination) {
+    const tableWrap = document.querySelector(".product-table-wrap");
+
+    if (!tableWrap) return null;
+
+    pagination = document.createElement("div");
+    pagination.id = "productPagination";
+    pagination.className = "product-pagination";
+
+    tableWrap.insertAdjacentElement("afterend", pagination);
+  }
+
+  return pagination;
+}
+
+function renderPaginationControls(totalProducts) {
+  const pagination = getPaginationContainer();
+
+  if (!pagination) return;
+
+  const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
+
+  if (totalPages <= 1) {
+    pagination.innerHTML = "";
+    return;
+  }
+
+  const startItem = (currentProductPage - 1) * PRODUCTS_PER_PAGE + 1;
+  const endItem = Math.min(currentProductPage * PRODUCTS_PER_PAGE, totalProducts);
+
+  pagination.innerHTML = `
+    <div class="product-pagination-info">
+      Mostrando ${startItem}-${endItem} de ${totalProducts} productos
+    </div>
+
+    <div class="product-pagination-actions">
+      <button 
+        type="button" 
+        class="pagination-btn"
+        data-page-action="prev"
+        ${currentProductPage === 1 ? "disabled" : ""}>
+        ← Anterior
+      </button>
+
+      <span class="pagination-current">
+        Página ${currentProductPage} de ${totalPages}
+      </span>
+
+      <button 
+        type="button" 
+        class="pagination-btn"
+        data-page-action="next"
+        ${currentProductPage === totalPages ? "disabled" : ""}>
+        Siguiente →
+      </button>
+    </div>
+  `;
+}
+
+function renderProductList(products, resetPage = false) {
   if (!productListBody) return;
 
-  if (!products || products.length === 0) {
+  filteredProductList = products || [];
+
+  if (resetPage) {
+    currentProductPage = 1;
+  }
+
+  if (!filteredProductList.length) {
     productListBody.innerHTML = `
       <tr>
         <td colspan="5" class="product-list-empty">
@@ -46,10 +118,22 @@ function renderProductList(products) {
         </td>
       </tr>
     `;
+
+    renderPaginationControls(0);
     return;
   }
 
-  productListBody.innerHTML = products.map(product => {
+  const totalPages = Math.ceil(filteredProductList.length / PRODUCTS_PER_PAGE);
+
+  if (currentProductPage > totalPages) {
+    currentProductPage = totalPages;
+  }
+
+  const startIndex = (currentProductPage - 1) * PRODUCTS_PER_PAGE;
+  const endIndex = startIndex + PRODUCTS_PER_PAGE;
+  const productsToShow = filteredProductList.slice(startIndex, endIndex);
+
+  productListBody.innerHTML = productsToShow.map(product => {
     const backUrl = "lista-productos.html" + window.location.search;
 
     return `
@@ -80,6 +164,8 @@ function renderProductList(products) {
       </tr>
     `;
   }).join("");
+
+  renderPaginationControls(filteredProductList.length);
 }
 
 function filterProductList() {
@@ -98,12 +184,40 @@ function filterProductList() {
     return searchableText.includes(searchTerm);
   });
 
-  renderProductList(filteredProducts);
+  renderProductList(filteredProducts, true);
 }
 
 if (productListSearch) {
   productListSearch.addEventListener("input", filterProductList);
 }
+
+document.addEventListener("click", event => {
+  const paginationButton = event.target.closest("[data-page-action]");
+
+  if (!paginationButton) return;
+
+  const action = paginationButton.getAttribute("data-page-action");
+  const totalPages = Math.ceil(filteredProductList.length / PRODUCTS_PER_PAGE);
+
+  if (action === "prev" && currentProductPage > 1) {
+    currentProductPage -= 1;
+  }
+
+  if (action === "next" && currentProductPage < totalPages) {
+    currentProductPage += 1;
+  }
+
+  renderProductList(filteredProductList);
+
+  const tableWrap = document.querySelector(".product-table-wrap");
+
+  if (tableWrap) {
+    tableWrap.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+});
 
 if (productListBody) {
   productListBody.addEventListener("click", event => {
@@ -143,7 +257,7 @@ async function loadProductListPage() {
       currentProductList = await getStoreProducts();
     }
 
-    renderProductList(currentProductList);
+    renderProductList(currentProductList, true);
   } catch (error) {
     console.error(error);
 
@@ -154,7 +268,7 @@ async function loadProductListPage() {
       ? demoProducts.filter(product => product.category === selectedCategory)
       : demoProducts;
 
-    renderProductList(currentProductList);
+    renderProductList(currentProductList, true);
   }
 }
 

@@ -10,27 +10,6 @@ function getSelectedCategoryFromUrl() {
   return params.get("cat");
 }
 
-function getProductPriceNumber(product) {
-  if (!product) return 0;
-
-  if (typeof product.price === "number") {
-    return product.price;
-  }
-
-  const priceText = product.priceGeneral || product.priceText || "";
-  const cleanPrice = String(priceText).replace(/[^0-9.]/g, "");
-
-  return Number(cleanPrice) || 0;
-}
-
-function hasValidPrice(product) {
-  return getProductPriceNumber(product) > 0;
-}
-
-function getProductGeneralPrice(product) {
-  return product.priceGeneral || product.priceText || "Solicitar cotización";
-}
-
 function cleanProductDescription(description) {
   if (!description) return "Sin descripción disponible.";
 
@@ -43,7 +22,9 @@ function cleanProductDescription(description) {
     if (
       text.includes("precio distribuidor") ||
       text.includes("precio para distribuidor") ||
-      text.includes("distribuidor:")
+      text.includes("distribuidor:") ||
+      text.includes("precio general") ||
+      text.includes("precio usd")
     ) {
       element.remove();
     }
@@ -70,19 +51,6 @@ function renderProductList(products) {
 
   productListBody.innerHTML = products.map(product => {
     const backUrl = "lista-productos.html" + window.location.search;
-    const productCanBeAdded = hasValidPrice(product);
-
-    const actionButton = productCanBeAdded
-      ? `
-        <button class="product-action" data-add-id="${product.id}">
-          Agregar al carrito
-        </button>
-      `
-      : `
-        <a href="contacto.html?producto=${encodeURIComponent(product.title)}" class="product-action quote">
-          Solicitar cotización
-        </a>
-      `;
 
     return `
       <tr>
@@ -94,7 +62,9 @@ function renderProductList(products) {
 
         <td>${cleanProductDescription(product.description)}</td>
 
-        <td>${getProductGeneralPrice(product)}</td>
+        <td>
+          <strong>Bajo cotización</strong>
+        </td>
 
         <td>
           <div class="product-list-actions">
@@ -102,7 +72,16 @@ function renderProductList(products) {
               Ver más información
             </a>
 
-            ${actionButton}
+            <button class="product-action" data-add-id="${product.id}">
+              Agregar a cotización
+            </button>
+
+            <a 
+              href="contacto.html?producto=${encodeURIComponent(product.title)}" 
+              class="product-action quote"
+              data-quote-id="${product.id}">
+              Cotizar ahora
+            </a>
           </div>
         </td>
       </tr>
@@ -121,8 +100,6 @@ function filterProductList() {
       ${product.category || ""}
       ${product.title || ""}
       ${product.description || ""}
-      ${product.priceGeneral || ""}
-      ${product.priceText || ""}
     `.toLowerCase();
 
     return searchableText.includes(searchTerm);
@@ -138,31 +115,31 @@ if (productListSearch) {
 if (productListBody) {
   productListBody.addEventListener("click", event => {
     const addButton = event.target.closest("[data-add-id]");
-    if (!addButton) return;
+    const quoteButton = event.target.closest("[data-quote-id]");
 
-    const productId = addButton.getAttribute("data-add-id");
-    const product = currentProductList.find(item => item.id === productId);
+    if (addButton) {
+      const productId = addButton.getAttribute("data-add-id");
+      const product = currentProductList.find(item => item.id === productId);
 
-    if (!product) return;
+      if (!product) return;
 
-    if (!hasValidPrice(product)) {
-      alert("Este producto requiere cotización.");
+      if (typeof addToCart === "function") {
+        addToCart(product);
+      }
+
       return;
     }
 
-    if (isShopifyReady() && !product.variantId) {
-      alert("Este producto todavía no está disponible para compra en Shopify.");
-      return;
-    }
+    if (quoteButton) {
+      const productId = quoteButton.getAttribute("data-quote-id");
+      const product = currentProductList.find(item => item.id === productId);
 
-    if (typeof addToCart === "function") {
-      addToCart({
-        ...product,
-        type: "venta",
-        price: getProductPriceNumber(product),
-        priceText: product.priceText || product.priceGeneral || "Solicitar cotización",
-        priceGeneral: product.priceGeneral || product.priceText || "Solicitar cotización"
-      });
+      if (!product) return;
+
+      if (typeof requestQuoteForProduct === "function") {
+        event.preventDefault();
+        requestQuoteForProduct(product);
+      }
     }
   });
 }

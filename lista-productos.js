@@ -9,13 +9,83 @@ let currentProductPage = 1;
 
 const PRODUCTS_PER_PAGE = 50;
 
+/* ── IDIOMA ───────────────────────────────────────────────── */
+
+function getCurrentSiteLanguage() {
+  const storedLang =
+    localStorage.getItem("qmsLang") ||
+    localStorage.getItem("siteLang") ||
+    localStorage.getItem("language") ||
+    localStorage.getItem("lang") ||
+    localStorage.getItem("currentLang") ||
+    "";
+
+  const htmlLang = document.documentElement.lang || "";
+  const searchPlaceholder = productListSearch?.placeholder || "";
+
+  const langText = `${storedLang} ${htmlLang} ${searchPlaceholder}`.toLowerCase();
+
+  if (
+    langText.includes("en") ||
+    langText.includes("search")
+  ) {
+    return "en";
+  }
+
+  return "es";
+}
+
+function getListText(es, en) {
+  return getCurrentSiteLanguage() === "en" ? en : es;
+}
+
+function translateCategoryText(text) {
+  if (getCurrentSiteLanguage() !== "en") return text || "General";
+
+  let translated = text || "General";
+
+  const replacements = [
+    ["Audiología y timpanometría", "Audiology and tympanometry"],
+    ["Cables, conectores y accesorios", "Cables, connectors and accessories"],
+    ["Diagnóstico", "Diagnostics"],
+    ["Mobiliario", "Medical furniture"],
+    ["Monitoreo", "Monitoring"],
+    ["Emergencias", "Emergency"],
+    ["Mujer", "Women’s health"],
+    ["Especialidades", "Specialties"],
+    ["Bienestar", "Wellness"],
+    ["Nutrición", "Nutrition"],
+    ["General", "General"]
+  ];
+
+  replacements.forEach(([es, en]) => {
+    translated = translated.replace(new RegExp(es, "gi"), en);
+  });
+
+  return translated;
+}
+
+function getDisplayDescription(description) {
+  const cleaned = cleanProductDescription(description);
+
+  if (getCurrentSiteLanguage() !== "en") return cleaned;
+
+  return cleaned
+    .replace(/^Marca:/i, "Brand:")
+    .replace("Sin descripción disponible.", "No description available.");
+}
+
+/* ── UTILIDADES ───────────────────────────────────────────── */
+
 function getSelectedCategoryFromUrl() {
   const params = new URLSearchParams(window.location.search);
   return params.get("cat");
 }
 
 function cleanProductDescription(description) {
-  if (!description) return "Sin descripción disponible.";
+  if (!description) {
+    return getListText("Sin descripción disponible.", "No description available.");
+  }
 
   const temp = document.createElement("div");
   temp.innerHTML = description;
@@ -36,8 +106,10 @@ function cleanProductDescription(description) {
 
   const cleaned = temp.textContent.trim();
 
-  return cleaned || "Sin descripción disponible.";
+  return cleaned || getListText("Sin descripción disponible.", "No description available.");
 }
+
+/* ── PAGINACIÓN ───────────────────────────────────────────── */
 
 function getPaginationContainer() {
   let pagination = document.getElementById("productPagination");
@@ -74,7 +146,10 @@ function renderPaginationControls(totalProducts) {
 
   pagination.innerHTML = `
     <div class="product-pagination-info">
-      Mostrando ${startItem}-${endItem} de ${totalProducts} productos
+      ${getListText(
+        `Mostrando ${startItem}-${endItem} de ${totalProducts} productos`,
+        `Showing ${startItem}-${endItem} of ${totalProducts} products`
+      )}
     </div>
 
     <div class="product-pagination-actions">
@@ -83,11 +158,14 @@ function renderPaginationControls(totalProducts) {
         class="pagination-btn"
         data-page-action="prev"
         ${currentProductPage === 1 ? "disabled" : ""}>
-        ← Anterior
+        ${getListText("← Anterior", "← Previous")}
       </button>
 
       <span class="pagination-current">
-        Página ${currentProductPage} de ${totalPages}
+        ${getListText(
+          `Página ${currentProductPage} de ${totalPages}`,
+          `Page ${currentProductPage} of ${totalPages}`
+        )}
       </span>
 
       <button 
@@ -95,11 +173,13 @@ function renderPaginationControls(totalProducts) {
         class="pagination-btn"
         data-page-action="next"
         ${currentProductPage === totalPages ? "disabled" : ""}>
-        Siguiente →
+        ${getListText("Siguiente →", "Next →")}
       </button>
     </div>
   `;
 }
+
+/* ── RENDER TABLA ─────────────────────────────────────────── */
 
 function renderProductList(products, resetPage = false) {
   if (!productListBody) return;
@@ -114,7 +194,7 @@ function renderProductList(products, resetPage = false) {
     productListBody.innerHTML = `
       <tr>
         <td colspan="5" class="product-list-empty">
-          No se encontraron productos.
+          ${getListText("No se encontraron productos.", "No products found.")}
         </td>
       </tr>
     `;
@@ -138,26 +218,26 @@ function renderProductList(products, resetPage = false) {
 
     return `
       <tr>
-        <td>${product.categoryName || product.category || "General"}</td>
+        <td>${translateCategoryText(product.categoryName || product.category || "General")}</td>
 
         <td>
-          <strong>${product.title || "Producto sin nombre"}</strong>
+          <strong>${product.title || getListText("Producto sin nombre", "Unnamed product")}</strong>
         </td>
 
-        <td>${cleanProductDescription(product.description)}</td>
+        <td>${getDisplayDescription(product.description)}</td>
 
         <td>
-          <strong>Bajo cotización</strong>
+          <strong>${getListText("Bajo cotización", "Quote required")}</strong>
         </td>
 
         <td>
           <div class="product-list-actions">
             <a href="${getProductDetailUrl(product, backUrl)}" class="product-action light">
-              Ver más información
+              ${getListText("Ver más información", "More information")}
             </a>
 
             <button class="product-action" data-add-id="${product.id}">
-              Agregar a cotización
+              ${getListText("Agregar a cotización", "Add to quote")}
             </button>
           </div>
         </td>
@@ -167,6 +247,8 @@ function renderProductList(products, resetPage = false) {
 
   renderPaginationControls(filteredProductList.length);
 }
+
+/* ── BUSCADOR ─────────────────────────────────────────────── */
 
 function filterProductList() {
   if (!productListSearch) return;
@@ -190,6 +272,8 @@ function filterProductList() {
 if (productListSearch) {
   productListSearch.addEventListener("input", filterProductList);
 }
+
+/* ── CAMBIO DE PÁGINA ─────────────────────────────────────── */
 
 document.addEventListener("click", event => {
   const paginationButton = event.target.closest("[data-page-action]");
@@ -219,6 +303,8 @@ document.addEventListener("click", event => {
   }
 });
 
+/* ── AGREGAR A COTIZACIÓN ────────────────────────────────── */
+
 if (productListBody) {
   productListBody.addEventListener("click", event => {
     const addButton = event.target.closest("[data-add-id]");
@@ -236,12 +322,33 @@ if (productListBody) {
   });
 }
 
+/* ── RECARGAR TEXTOS CUANDO CAMBIA EL IDIOMA ─────────────── */
+
+document.getElementById("langToggle")?.addEventListener("click", () => {
+  setTimeout(() => {
+    const listToRender = filteredProductList.length ? filteredProductList : currentProductList;
+    renderProductList(listToRender);
+  }, 200);
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  setTimeout(() => {
+    const listToRender = filteredProductList.length ? filteredProductList : currentProductList;
+
+    if (listToRender.length) {
+      renderProductList(listToRender);
+    }
+  }, 350);
+});
+
+/* ── CARGA DE PRODUCTOS ──────────────────────────────────── */
+
 async function loadProductListPage() {
   if (productListBody) {
     productListBody.innerHTML = `
       <tr>
         <td colspan="5" class="product-list-empty">
-          Cargando productos...
+          ${getListText("Cargando productos...", "Loading products...")}
         </td>
       </tr>
     `;

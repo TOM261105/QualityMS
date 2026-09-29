@@ -8,7 +8,7 @@
    y súbele el número al ?v= en tus HTML.
    ══════════════════════════════════════════════════════════ */
 
-const TIENDA_CERRADA = true;
+const TIENDA_CERRADA = false;
 
 /* Fecha estimada de regreso. Déjalo como "" si no quieres mostrarla. */
 const TIENDA_REGRESA = "";
@@ -582,3 +582,47 @@ document.querySelectorAll(".faq-question").forEach(button => {
     }
   });
 });
+/* ── AUTOLLENADO DE FORMULARIO DE COTIZACIÓN ───────────────── */
+
+function prefillContactFormFromQuote() {
+  const messageField = document.getElementById("contactMessage");
+  const quoteProductsInput = document.getElementById("quoteProductsInput");
+
+  if (!messageField) return;
+
+  const params = new URLSearchParams(window.location.search);
+  const savedQuoteMessage = sessionStorage.getItem("qmsQuoteMessage");
+  const savedQuoteProducts = sessionStorage.getItem("qmsQuoteProducts");
+  const productFromUrl = params.get("producto");
+
+  let message = "";
+
+  if (savedQuoteMessage) {
+    message = savedQuoteMessage;
+
+    if (quoteProductsInput) {
+      quoteProductsInput.value = savedQuoteProducts || "";
+    }
+  } else if (productFromUrl) {
+    message = `Hola, me interesa solicitar una cotización para el siguiente producto:
+
+${productFromUrl}
+
+Quedo pendiente de la información de precio, disponibilidad y tiempos de entrega.`;
+
+    if (quoteProductsInput) {
+      quoteProductsInput.value = JSON.stringify([
+        {
+          title: productFromUrl,
+          quantity: 1
+        }
+      ]);
+    }
+  }
+
+  if (message && !messageField.value.trim()) {
+    messageField.value = message;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", prefillContactFormFromQuote);

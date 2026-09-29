@@ -104,45 +104,91 @@
         <div class="form-block">
           <h3 data-es="Contáctanos" data-en="Contact us">Contáctanos</h3>
 
-          <div class="form-grid">
-            <div class="form-group">
-              <label data-es="Nombre" data-en="First name">Nombre</label>
-              <input type="text" data-es-placeholder="Tu nombre" data-en-placeholder="Your first name" placeholder="Tu nombre">
+          <form id="contactForm" class="contact-form" action="enviar-cotizacion.php" method="POST">
+            <input type="hidden" id="quoteProductsInput" name="productos_cotizacion">
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label data-es="Nombre" data-en="First name">Nombre</label>
+                <input 
+                  type="text" 
+                  id="contactFirstName"
+                  name="nombre"
+                  required
+                  data-es-placeholder="Tu nombre" 
+                  data-en-placeholder="Your first name" 
+                  placeholder="Tu nombre">
+              </div>
+
+              <div class="form-group">
+                <label data-es="Apellido" data-en="Last name">Apellido</label>
+                <input 
+                  type="text" 
+                  id="contactLastName"
+                  name="apellido"
+                  required
+                  data-es-placeholder="Tu apellido" 
+                  data-en-placeholder="Your last name" 
+                  placeholder="Tu apellido">
+              </div>
+
+              <div class="form-group">
+                <label data-es="Correo electrónico" data-en="Email address">Correo electrónico</label>
+                <input 
+                  type="email" 
+                  id="contactEmail"
+                  name="correo"
+                  required
+                  data-es-placeholder="correo@ejemplo.com" 
+                  data-en-placeholder="email@example.com" 
+                  placeholder="correo@ejemplo.com">
+              </div>
+
+              <div class="form-group">
+                <label data-es="Número de teléfono" data-en="Phone number">Número de teléfono</label>
+                <input 
+                  type="tel" 
+                  id="contactPhone"
+                  name="telefono"
+                  required
+                  placeholder="55 0000 0000">
+              </div>
+
+              <div class="form-group full">
+                <label 
+                  data-es-html='Compañía <span class="optional-label">(opcional)</span>'
+                  data-en-html='Company <span class="optional-label">(optional)</span>'>
+                  Compañía <span class="optional-label">(opcional)</span>
+                </label>
+
+                <input 
+                  type="text" 
+                  id="contactCompany"
+                  name="compania"
+                  data-es-placeholder="Nombre de tu empresa o clínica" 
+                  data-en-placeholder="Your company or clinic name" 
+                  placeholder="Nombre de tu empresa o clínica">
+              </div>
+
+              <div class="form-group full">
+                <label data-es="¿Cómo te podemos ayudar?" data-en="How can we help you?">
+                  ¿Cómo te podemos ayudar?
+                </label>
+
+                <textarea 
+                  id="contactMessage"
+                  name="mensaje"
+                  required
+                  data-es-placeholder="Describe tu consulta o el equipo que necesitas..." 
+                  data-en-placeholder="Describe your request or the equipment you need..." 
+                  placeholder="Describe tu consulta o el equipo que necesitas..."></textarea>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label data-es="Apellido" data-en="Last name">Apellido</label>
-              <input type="text" data-es-placeholder="Tu apellido" data-en-placeholder="Your last name" placeholder="Tu apellido">
-            </div>
-
-            <div class="form-group">
-              <label data-es="Correo electrónico" data-en="Email address">Correo electrónico</label>
-              <input type="email" data-es-placeholder="correo@ejemplo.com" data-en-placeholder="email@example.com" placeholder="correo@ejemplo.com">
-            </div>
-
-            <div class="form-group">
-              <label data-es="Número de teléfono" data-en="Phone number">Número de teléfono</label>
-              <input type="tel" placeholder="55 0000 0000">
-            </div>
-
-            <div class="form-group full">
-              <label 
-                data-es-html='Compañía <span class="optional-label">(opcional)</span>'
-                data-en-html='Company <span class="optional-label">(optional)</span>'>
-                Compañía <span class="optional-label">(opcional)</span>
-              </label>
-
-              <input type="text" data-es-placeholder="Nombre de tu empresa o clínica" data-en-placeholder="Your company or clinic name" placeholder="Nombre de tu empresa o clínica">
-            </div>
-
-            <div class="form-group full">
-              <label data-es="¿Cómo te podemos ayudar?" data-en="How can we help you?">¿Cómo te podemos ayudar?</label>
-
-              <textarea data-es-placeholder="Describe tu consulta o el equipo que necesitas..." data-en-placeholder="Describe your request or the equipment you need..." placeholder="Describe tu consulta o el equipo que necesitas..."></textarea>
-            </div>
-          </div>
-
-          <button class="form-submit" data-es="Enviar mensaje" data-en="Send message">Enviar mensaje</button>
+            <button class="form-submit" type="submit" data-es="Enviar solicitud" data-en="Send request">
+              Enviar solicitud
+            </button>
+          </form>
 
           <p 
             class="form-note"

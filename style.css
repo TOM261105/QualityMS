@@ -4677,3 +4677,76 @@ footer {
     border-radius: 16px;
   }
 }
+
+.product-pagination {
+  margin-top: 24px;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.product-pagination-info {
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.product-pagination-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pagination-btn {
+  border: none;
+  border-radius: 999px;
+  background: var(--navy);
+  color: #ffffff;
+  font-family: 'Barlow', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  padding: 11px 18px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s, opacity 0.2s;
+}
+
+.pagination-btn:hover:not(:disabled) {
+  background: var(--blue-mid);
+  transform: translateY(-2px);
+}
+
+.pagination-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.pagination-current {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .product-pagination {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .product-pagination-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .pagination-btn {
+    flex: 1;
+    min-width: 130px;
+  }
+}

@@ -75,13 +75,6 @@ function renderProductList(products) {
             <button class="product-action" data-add-id="${product.id}">
               Agregar a cotización
             </button>
-
-            <a 
-              href="contacto.html?producto=${encodeURIComponent(product.title)}" 
-              class="product-action quote"
-              data-quote-id="${product.id}">
-              Cotizar ahora
-            </a>
           </div>
         </td>
       </tr>
@@ -115,31 +108,16 @@ if (productListSearch) {
 if (productListBody) {
   productListBody.addEventListener("click", event => {
     const addButton = event.target.closest("[data-add-id]");
-    const quoteButton = event.target.closest("[data-quote-id]");
 
-    if (addButton) {
-      const productId = addButton.getAttribute("data-add-id");
-      const product = currentProductList.find(item => item.id === productId);
+    if (!addButton) return;
 
-      if (!product) return;
+    const productId = addButton.getAttribute("data-add-id");
+    const product = currentProductList.find(item => item.id === productId);
 
-      if (typeof addToCart === "function") {
-        addToCart(product);
-      }
+    if (!product) return;
 
-      return;
-    }
-
-    if (quoteButton) {
-      const productId = quoteButton.getAttribute("data-quote-id");
-      const product = currentProductList.find(item => item.id === productId);
-
-      if (!product) return;
-
-      if (typeof requestQuoteForProduct === "function") {
-        event.preventDefault();
-        requestQuoteForProduct(product);
-      }
+    if (typeof addToCart === "function") {
+      addToCart(product);
     }
   });
 }

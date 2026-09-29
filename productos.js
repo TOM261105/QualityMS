@@ -6,27 +6,11 @@ const allProductsSearch = document.getElementById("allProductsSearch");
 let allStoreProducts = [];
 let allStoreCollections = [];
 
-function getProductGeneralPrice(product) {
-  return product.priceGeneral || product.priceText || "Solicitar cotización";
-}
-
 function renderProductCard(product) {
-  const actionButton = product.type === "venta"
-    ? `
-      <button class="product-action" type="button" data-add-id="${product.id}">
-        Agregar al carrito
-      </button>
-    `
-    : `
-      <a href="contacto.html?producto=${encodeURIComponent(product.title)}" class="product-action quote">
-        Solicitar cotización
-      </a>
-    `;
-
   return `
     <article class="shopify-product-card">
       <div class="shopify-product-img">
-        <span class="shopify-product-status">${product.availability || "Disponible"}</span>
+        <span class="shopify-product-status">Bajo cotización</span>
         <img src="${product.image}" alt="${product.imageAlt || product.title}">
       </div>
 
@@ -40,7 +24,7 @@ function renderProductCard(product) {
         <p>${product.description || "Sin descripción disponible."}</p>
 
         <div class="shopify-product-footer">
-          <strong>${getProductGeneralPrice(product)}</strong>
+          <strong>Bajo cotización</strong>
         </div>
 
         <div class="shopify-product-actions">
@@ -48,7 +32,16 @@ function renderProductCard(product) {
             Ver más información
           </a>
 
-          ${actionButton}
+          <button class="product-action" type="button" data-add-id="${product.id}">
+            Agregar a cotización
+          </button>
+
+          <a 
+            href="contacto.html?producto=${encodeURIComponent(product.title)}" 
+            class="product-action quote"
+            data-quote-id="${product.id}">
+            Cotizar ahora
+          </a>
         </div>
       </div>
     </article>
@@ -132,9 +125,6 @@ function filterAllProducts() {
       ${product.description || ""}
       ${product.categoryName || ""}
       ${product.category || ""}
-      ${product.priceGeneral || ""}
-      ${product.priceDistributor || ""}
-      ${product.priceText || ""}
     `.toLowerCase();
 
     return searchableText.includes(searchTerm);
@@ -150,15 +140,31 @@ if (allProductsSearch) {
 if (allProductsContainer) {
   allProductsContainer.addEventListener("click", event => {
     const addButton = event.target.closest("[data-add-id]");
-    if (!addButton) return;
+    const quoteButton = event.target.closest("[data-quote-id]");
 
-    const productId = addButton.getAttribute("data-add-id");
-    const product = allStoreProducts.find(item => item.id === productId);
+    if (addButton) {
+      const productId = addButton.getAttribute("data-add-id");
+      const product = allStoreProducts.find(item => item.id === productId);
 
-    if (!product) return;
+      if (!product) return;
 
-    if (typeof addToCart === "function") {
-      addToCart(product);
+      if (typeof addToCart === "function") {
+        addToCart(product);
+      }
+
+      return;
+    }
+
+    if (quoteButton) {
+      const productId = quoteButton.getAttribute("data-quote-id");
+      const product = allStoreProducts.find(item => item.id === productId);
+
+      if (!product) return;
+
+      if (typeof requestQuoteForProduct === "function") {
+        event.preventDefault();
+        requestQuoteForProduct(product);
+      }
     }
   });
 }

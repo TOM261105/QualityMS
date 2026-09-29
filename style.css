@@ -4583,3 +4583,97 @@ footer {
   opacity: 0.65;
   cursor: not-allowed;
 }
+
+/* ── AVISO TEMPORAL DE COTIZACIÓN ─────────────────────────── */
+
+.quote-toast {
+  position: fixed;
+  right: 26px;
+  bottom: 26px;
+  width: min(390px, calc(100vw - 32px));
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-left: 6px solid var(--blue-mid);
+  border-radius: 18px;
+  box-shadow: 0 18px 48px rgba(13, 43, 78, 0.18);
+  padding: 18px 46px 20px 20px;
+  z-index: 5000;
+  opacity: 0;
+  transform: translateY(18px);
+  pointer-events: none;
+  overflow: hidden;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.quote-toast.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.quote-toast-content strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 6px;
+}
+
+.quote-toast-content p {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 0;
+}
+
+.quote-toast-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 50%;
+  background: var(--blue-pale);
+  color: var(--navy);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.quote-toast-close:hover {
+  background: var(--border);
+}
+
+.quote-toast-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 4px;
+  width: 100%;
+  background: var(--blue-mid);
+  transform-origin: left;
+  animation: quoteToastProgress 6.5s linear forwards;
+}
+
+@keyframes quoteToastProgress {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .quote-toast {
+    left: 16px;
+    right: 16px;
+    bottom: 18px;
+    width: auto;
+    padding: 17px 44px 19px 18px;
+    border-radius: 16px;
+  }
+}

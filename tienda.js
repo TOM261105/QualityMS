@@ -14,17 +14,21 @@ function getCurrentStoreLanguage() {
     localStorage.getItem("currentLang") ||
     "";
 
-  const htmlLang = document.documentElement.lang || "";
-  const pageText = document.body.innerText || "";
+  const cleanStoredLang = String(storedLang).toLowerCase().trim();
 
-  const langText = `${storedLang} ${htmlLang} ${pageText}`.toLowerCase();
+  if (cleanStoredLang === "en" || cleanStoredLang === "english") return "en";
+  if (cleanStoredLang === "es" || cleanStoredLang === "spanish" || cleanStoredLang === "español") return "es";
+
+  const visualCatalogBtn = document.querySelector('a[href="productos.html"]')?.textContent.trim().toLowerCase() || "";
+  const productListBtn = document.querySelector('a[href="lista-productos.html"]')?.textContent.trim().toLowerCase() || "";
+  const categoriesTitle = document.querySelector(".categories-title-block h3")?.textContent.trim().toLowerCase() || "";
+  const sectionTitle = document.querySelector(".section-header h2")?.textContent.trim().toLowerCase() || "";
 
   if (
-    langText.includes("product categories") ||
-    langText.includes("browse by section") ||
-    langText.includes("visual catalog") ||
-    langText.includes("products to quote") ||
-    langText.includes("en")
+    visualCatalogBtn.includes("visual catalog") ||
+    productListBtn.includes("product list") ||
+    categoriesTitle.includes("product categories") ||
+    sectionTitle.includes("all the medical equipment")
   ) {
     return "en";
   }
@@ -37,11 +41,13 @@ function getStoreText(es, en) {
 }
 
 function translateCategoryTitle(title) {
-  if (getCurrentStoreLanguage() !== "en") return title || "General";
+  const currentLang = getCurrentStoreLanguage();
 
-  let translated = title || "General";
+  if (!title) return currentLang === "en" ? "General" : "General";
 
-  const replacements = [
+  let translated = title;
+
+  const replacementsToEnglish = [
     ["Audiología y timpanometría", "Audiology and tympanometry"],
     ["Cables, conectores y accesorios", "Cables, connectors and accessories"],
     ["Electrocardiografía y accesorios", "Electrocardiography and accessories"],
@@ -53,29 +59,47 @@ function translateCategoryTitle(title) {
     ["Mujer", "Women’s health"],
     ["Especialidades", "Specialties"],
     ["Bienestar", "Wellness"],
-    ["Nutrición", "Nutrition"],
-    ["General", "General"]
+    ["Nutrición", "Nutrition"]
   ];
 
-  replacements.forEach(([es, en]) => {
-    translated = translated.replace(new RegExp(es, "gi"), en);
+  const replacementsToSpanish = [
+    ["Audiology and tympanometry", "Audiología y timpanometría"],
+    ["Cables, connectors and accessories", "Cables, conectores y accesorios"],
+    ["Electrocardiography and accessories", "Electrocardiografía y accesorios"],
+    ["Stethoscopes and accessories", "Estetoscopios y accesorios"],
+    ["Diagnostics", "Diagnóstico"],
+    ["Medical furniture", "Mobiliario"],
+    ["Monitoring", "Monitoreo"],
+    ["Emergency", "Emergencias"],
+    ["Women’s health", "Mujer"],
+    ["Specialties", "Especialidades"],
+    ["Wellness", "Bienestar"],
+    ["Nutrition", "Nutrición"]
+  ];
+
+  const replacements = currentLang === "en"
+    ? replacementsToEnglish
+    : replacementsToSpanish;
+
+  replacements.forEach(([from, to]) => {
+    translated = translated.replace(new RegExp(from, "gi"), to);
   });
 
   return translated;
 }
 
 function translateCategoryDescription(description) {
-  if (getCurrentStoreLanguage() !== "en") {
-    return description || "Explora los productos disponibles en esta categoría.";
-  }
+  const currentLang = getCurrentStoreLanguage();
 
   if (!description) {
-    return "Explore the products available in this category.";
+    return currentLang === "en"
+      ? "Explore the products available in this category."
+      : "Explora los productos disponibles en esta categoría.";
   }
 
   let translated = description;
 
-  const replacements = [
+  const replacementsToEnglish = [
     ["Explora los productos disponibles en esta categoría.", "Explore the products available in this category."],
     ["Explora los productos disponibles en esta categoría", "Explore the products available in this category"],
     ["Explora los productos disponibles", "Explore the available products"],
@@ -84,8 +108,21 @@ function translateCategoryDescription(description) {
     ["categoría", "category"]
   ];
 
-  replacements.forEach(([es, en]) => {
-    translated = translated.replace(new RegExp(es, "gi"), en);
+  const replacementsToSpanish = [
+    ["Explore the products available in this category.", "Explora los productos disponibles en esta categoría."],
+    ["Explore the products available in this category", "Explora los productos disponibles en esta categoría"],
+    ["Explore the available products", "Explora los productos disponibles"],
+    ["in this category", "en esta categoría"],
+    ["available products", "productos disponibles"],
+    ["category", "categoría"]
+  ];
+
+  const replacements = currentLang === "en"
+    ? replacementsToEnglish
+    : replacementsToSpanish;
+
+  replacements.forEach(([from, to]) => {
+    translated = translated.replace(new RegExp(from, "gi"), to);
   });
 
   return translated;
@@ -200,7 +237,7 @@ async function loadStoreCategories() {
 document.getElementById("langToggle")?.addEventListener("click", () => {
   setTimeout(() => {
     renderCategories(currentStoreCollections);
-  }, 200);
+  }, 250);
 });
 
 loadStoreCategories();

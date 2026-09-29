@@ -17,6 +17,28 @@ function saveCart() {
   localStorage.setItem("qualityCart", JSON.stringify(cart));
 }
 
+function escapeCartText(value) {
+  const div = document.createElement("div");
+  div.textContent = value || "";
+  return div.innerHTML;
+}
+
+function normalizeQuoteProduct(product) {
+  return {
+    id: product.id || product.handle || product.title,
+    handle: product.handle || "",
+    title: product.title || "Producto",
+    image: product.image || "assets/diagnostico.png",
+    imageAlt: product.imageAlt || product.title || "Producto",
+    categoryName: product.categoryName || product.category || "General",
+    availability: product.availability || "Disponible para cotización",
+    priceText: "Bajo cotización",
+    priceGeneral: "Bajo cotización",
+    variantId: product.variantId || null,
+    quantity: product.quantity || 1
+  };
+}
+
 function openCart() {
   loadCart();
   renderCart();
@@ -32,39 +54,18 @@ function closeCart() {
   document.body.style.overflow = "";
 }
 
-function getProductPriceNumber(product) {
-  if (typeof product.price === "number") return product.price;
-
-  const priceText = product.priceGeneral || product.priceText || "";
-  const cleanPrice = priceText.replace(/[^0-9.]/g, "");
-
-  return Number(cleanPrice) || 0;
-}
-
 function addToCart(product) {
   loadCart();
 
   if (!product) return;
 
-  const existingProduct = cart.find(item => item.id === product.id);
+  const quoteProduct = normalizeQuoteProduct(product);
+  const existingProduct = cart.find(item => item.id === quoteProduct.id);
 
   if (existingProduct) {
     existingProduct.quantity += 1;
   } else {
-    cart.push({
-      id: product.id,
-      handle: product.handle,
-      title: product.title,
-      image: product.image,
-      imageAlt: product.imageAlt || product.title,
-      price: getProductPriceNumber(product),
-      priceText: product.priceText || product.priceGeneral || "Solicitar cotización",
-      priceGeneral: product.priceGeneral || product.priceText || "Solicitar cotización",
-      priceDistributor: product.priceDistributor || "Cotizar con ejecutivo",
-      categoryName: product.categoryName || product.category || "General",
-      variantId: product.variantId || null,
-      quantity: 1
-    });
+    cart.push(quoteProduct);
   }
 
   saveCart();
@@ -99,25 +100,66 @@ function updateQuantity(productId, newQuantity) {
   renderCart();
 }
 
+function getQuoteMessageFromItems(items) {
+  const lines = items.map((item, index) => {
+    return `${index + 1}. ${item.title}
+   Categoría: ${item.categoryName || "General"}
+   Cantidad: ${item.quantity}`;
+  }).join("\n\n");
+
+  return `Hola, me interesa solicitar una cotización para los siguientes productos:
+
+${lines}
+
+Quedo pendiente de la información de precio, disponibilidad y tiempos de entrega.`;
+}
+
+function saveQuoteRequest(items) {
+  const normalizedItems = items.map(item => normalizeQuoteProduct(item));
+  const message = getQuoteMessageFromItems(normalizedItems);
+
+  sessionStorage.setItem("qmsQuoteMessage", message);
+  sessionStorage.setItem("qmsQuoteProducts", JSON.stringify(normalizedItems));
+}
+
+function requestQuoteForProduct(product) {
+  if (!product) return;
+
+  const quoteProduct = normalizeQuoteProduct(product);
+  saveQuoteRequest([quoteProduct]);
+
+  window.location.href = `contacto.html?cotizacion=producto&producto=${encodeURIComponent(quoteProduct.title)}`;
+}
+
+function requestQuoteFromCart() {
+  loadCart();
+
+  if (!cart.length) {
+    alert("Tu carrito de cotización está vacío.");
+    return;
+  }
+
+  saveQuoteRequest(cart);
+  window.location.href = "contacto.html?cotizacion=carrito";
+}
+
 function renderCart() {
   loadCart();
 
   if (!cartItems || !cartCount || !cartTotal) return;
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   cartCount.textContent = totalItems;
 
-  cartTotal.textContent = totalPrice.toLocaleString("en-US", {
-    style: "currency",
-    currency: "USD"
-  }) + " USD";
+  cartTotal.textContent = totalItems === 1
+    ? "1 producto"
+    : `${totalItems} productos`;
 
   if (!cart.length) {
     cartItems.innerHTML = `
       <div class="cart-empty">
-        <p>Tu carrito está vacío.</p>
+        <p>Tu carrito de cotización está vacío.</p>
       </div>
     `;
     return;
@@ -125,20 +167,21 @@ function renderCart() {
 
   cartItems.innerHTML = cart.map(item => `
     <div class="cart-item">
-      <img src="${item.image}" alt="${item.imageAlt || item.title}">
+      <img src="${escapeCartText(item.image)}" alt="${escapeCartText(item.imageAlt || item.title)}">
 
       <div class="cart-item-info">
-        <h4>${item.title}</h4>
-        <p>${item.priceText}</p>
+        <h4>${escapeCartText(item.title)}</h4>
+        <p>${escapeCartText(item.categoryName || "General")}</p>
+        <p class="cart-item-quote">Bajo cotización</p>
 
         <div class="cart-quantity">
-          <button type="button" data-decrease-id="${item.id}">−</button>
+          <button type="button" data-decrease-id="${escapeCartText(item.id)}">−</button>
           <span>${item.quantity}</span>
-          <button type="button" data-increase-id="${item.id}">+</button>
+          <button type="button" data-increase-id="${escapeCartText(item.id)}">+</button>
         </div>
       </div>
 
-      <button class="cart-remove" type="button" data-remove-id="${item.id}">
+      <button class="cart-remove" type="button" data-remove-id="${escapeCartText(item.id)}">
         ×
       </button>
     </div>
@@ -178,29 +221,9 @@ if (cartItems) {
   });
 }
 
-async function goToCheckout() {
-  loadCart();
-
-  if (!cart.length) {
-    alert("Tu carrito está vacío.");
-    return;
-  }
-
-  if (typeof isShopifyReady !== "function" || !isShopifyReady()) {
-    alert("Demo: cuando se conecte Shopify, este botón enviará al checkout seguro de Shopify.");
-    return;
-  }
-
-  const checkoutUrl = await createShopifyCart(cart);
-
-  if (checkoutUrl) {
-    window.location.href = checkoutUrl;
-  }
-}
-
 cartOpenBtn?.addEventListener("click", openCart);
 cartCloseBtn?.addEventListener("click", closeCart);
 cartOverlay?.addEventListener("click", closeCart);
-checkoutBtn?.addEventListener("click", goToCheckout);
+checkoutBtn?.addEventListener("click", requestQuoteFromCart);
 
 renderCart();

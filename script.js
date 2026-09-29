@@ -642,11 +642,6 @@ function showQuoteTemporaryNotice() {
 
   if (!storePages.includes(currentPage)) return;
 
-  // Para que no salga cada vez que cambia de página dentro de la tienda
-  if (sessionStorage.getItem("qmsQuoteNoticeShown") === "true") return;
-
-  sessionStorage.setItem("qmsQuoteNoticeShown", "true");
-
   setTimeout(() => {
     const notice = document.createElement("div");
     notice.className = "quote-toast";

@@ -51,7 +51,6 @@ function moneyFormat(price) {
   return "Bajo cotización";
 }
 
-
 function normalizePriceNumber(price) {
   if (!price || !price.amount) return 0;
   return Number(price.amount) || 0;
@@ -59,6 +58,77 @@ function normalizePriceNumber(price) {
 
 function getProductMainCollection(product) {
   return product.collections?.edges?.[0]?.node || null;
+}
+
+/* ── LIMPIEZA DE MARCAS EN TÍTULOS ───────────────────────── */
+
+const PRODUCT_BRANDS_TO_REMOVE = [
+  "Welch Allyn",
+  "Hillrom",
+  "Hill-Rom",
+  "Midmark",
+  "SECA",
+  "Seca"
+];
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function detectProductBrand(title, collectionTitle) {
+  const productTitle = String(title || "");
+  const productCollection = String(collectionTitle || "");
+
+  const foundBrand = PRODUCT_BRANDS_TO_REMOVE.find(brand => {
+    const brandRegex = new RegExp(`^\\s*${escapeRegExp(brand)}\\b`, "i");
+    const collectionRegex = new RegExp(`\\b${escapeRegExp(brand)}\\b`, "i");
+
+    return brandRegex.test(productTitle) || collectionRegex.test(productCollection);
+  });
+
+  if (foundBrand) return foundBrand;
+
+  if (productCollection.includes("|")) {
+    return productCollection.split("|")[0].trim();
+  }
+
+  return "";
+}
+
+function cleanShopifyProductTitle(title, brand) {
+  let cleanTitle = String(title || "").trim();
+
+  if (brand) {
+    const brandPattern = new RegExp(
+      `^\\s*${escapeRegExp(brand)}\\s*(\\||-|–|—|:|/)?\\s*`,
+      "i"
+    );
+
+    cleanTitle = cleanTitle.replace(brandPattern, "").trim();
+  }
+
+  PRODUCT_BRANDS_TO_REMOVE.forEach(item => {
+    const pattern = new RegExp(
+      `^\\s*${escapeRegExp(item)}\\s*(\\||-|–|—|:|/)?\\s*`,
+      "i"
+    );
+
+    cleanTitle = cleanTitle.replace(pattern, "").trim();
+  });
+
+  return cleanTitle || title || "Producto";
+}
+
+function addBrandToProductDescription(description, brand) {
+  const cleanDescription = String(description || "Sin descripción disponible.").trim();
+
+  if (!brand) return cleanDescription;
+
+  if (cleanDescription.toLowerCase().includes(brand.toLowerCase())) {
+    return cleanDescription;
+  }
+
+  return `Marca: ${brand}. ${cleanDescription}`;
 }
 
 function mapShopifyCollection(collection) {
@@ -77,14 +147,16 @@ function mapShopifyProduct(product) {
   const firstCollection = getProductMainCollection(product);
   const price = firstVariant?.price || null;
   const priceNumber = normalizePriceNumber(price);
-  const priceText = moneyFormat(price);
-  const distributorPrice = product.metafield?.value || "Cotizar con ejecutivo";
-  const canSell = false;
+
+  const brand = detectProductBrand(product.title, firstCollection?.title);
+  const cleanTitle = cleanShopifyProductTitle(product.title, brand);
+  const cleanDescription = addBrandToProductDescription(product.description, brand);
 
   return {
     id: product.id,
     handle: product.handle,
-    title: product.title,
+    originalTitle: product.title,
+    title: cleanTitle,
     category: firstCollection?.handle || "general",
     categoryName: firstCollection?.title || "General",
     price: 0,
@@ -92,8 +164,8 @@ function mapShopifyProduct(product) {
     priceDistributor: "Cotizar con ejecutivo",
     priceText: "Bajo cotización",
     image: product.featuredImage?.url || "assets/diagnostico.png",
-    imageAlt: product.featuredImage?.altText || product.title,
-    description: product.description || "Sin descripción disponible.",
+    imageAlt: product.featuredImage?.altText || cleanTitle,
+    description: cleanDescription,
     availability: "Disponible para cotización",
     type: "cotizacion",
     variantId: firstVariant?.id || null
@@ -189,7 +261,7 @@ async function getStoreCollectionWithProducts(collectionHandle) {
   }
 
   const query = `
-    query GetCollectionProducts($handle: String!) {
+    query GetCollectionProducts($handle: String!, $cursor: String) {
       collection(handle: $handle) {
         id
         title
@@ -199,7 +271,11 @@ async function getStoreCollectionWithProducts(collectionHandle) {
           url
           altText
         }
-        products(first: 100) {
+        products(first: 250, after: $cursor) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
           edges {
             node {
               id
@@ -240,20 +316,39 @@ async function getStoreCollectionWithProducts(collectionHandle) {
     }
   `;
 
-  const data = await shopifyRequest(query, {
-    handle: collectionHandle
-  });
+  let collectionData = null;
+  let allProducts = [];
+  let cursor = null;
+  let hasNextPage = true;
 
-  if (!data.collection) {
-    return {
-      collection: null,
-      products: []
-    };
+  while (hasNextPage) {
+    const data = await shopifyRequest(query, {
+      handle: collectionHandle,
+      cursor
+    });
+
+    if (!data.collection) {
+      return {
+        collection: null,
+        products: []
+      };
+    }
+
+    if (!collectionData) {
+      collectionData = mapShopifyCollection(data.collection);
+    }
+
+    const products = data.collection.products.edges.map(edge => mapShopifyProduct(edge.node));
+
+    allProducts = allProducts.concat(products);
+
+    hasNextPage = data.collection.products.pageInfo.hasNextPage;
+    cursor = data.collection.products.pageInfo.endCursor;
   }
 
   return {
-    collection: mapShopifyCollection(data.collection),
-    products: data.collection.products.edges.map(edge => mapShopifyProduct(edge.node))
+    collection: collectionData,
+    products: allProducts
   };
 }
 
@@ -261,8 +356,12 @@ async function getStoreProducts() {
   if (!isShopifyReady()) return getDemoProducts();
 
   const query = `
-    query GetProducts {
-      products(first: 250) {
+    query GetProducts($cursor: String) {
+      products(first: 250, after: $cursor) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
         edges {
           node {
             id
@@ -302,9 +401,22 @@ async function getStoreProducts() {
     }
   `;
 
-  const data = await shopifyRequest(query);
+  let allProducts = [];
+  let cursor = null;
+  let hasNextPage = true;
 
-  return data.products.edges.map(edge => mapShopifyProduct(edge.node));
+  while (hasNextPage) {
+    const data = await shopifyRequest(query, { cursor });
+
+    const products = data.products.edges.map(edge => mapShopifyProduct(edge.node));
+
+    allProducts = allProducts.concat(products);
+
+    hasNextPage = data.products.pageInfo.hasNextPage;
+    cursor = data.products.pageInfo.endCursor;
+  }
+
+  return allProducts;
 }
 
 async function getStoreProductByHandle(productHandle) {

@@ -4549,3 +4549,37 @@ footer {
     padding: 32px 22px 26px;
   }
 }
+
+.cart-item-quote {
+  margin-top: 4px;
+  font-size: 12px !important;
+  font-weight: 700;
+  color: var(--blue-mid) !important;
+}
+
+.cart-total strong {
+  text-align: right;
+  color: var(--navy);
+}
+
+.product-action.quote {
+  background: var(--navy) !important;
+  color: #ffffff !important;
+}
+
+.product-action.quote:hover {
+  background: var(--blue-mid) !important;
+}
+
+.contact-form {
+  width: 100%;
+}
+
+.form-submit {
+  margin-top: 6px;
+}
+
+.form-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

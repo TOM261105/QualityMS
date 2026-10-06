@@ -4,8 +4,12 @@ const productListBody = document.getElementById("productListBody");
 const productListSearch = document.getElementById("productListSearch");
 
 let currentProductList = [];
-let filteredProductList = [];
 let currentProductPage = 1;
+let nextProductCursor = null;
+let hasNextProductPage = false;
+let pageCursors = [null];
+let currentSearchTerm = "";
+let searchTimer = null;
 
 const PRODUCTS_PER_PAGE = 50;
 
@@ -20,14 +24,24 @@ function getCurrentSiteLanguage() {
     localStorage.getItem("currentLang") ||
     "";
 
-  const htmlLang = document.documentElement.lang || "";
-  const searchPlaceholder = productListSearch?.placeholder || "";
+  const cleanStoredLang = String(storedLang).toLowerCase().trim();
 
-  const langText = `${storedLang} ${htmlLang} ${searchPlaceholder}`.toLowerCase();
+  if (cleanStoredLang === "en" || cleanStoredLang === "english") return "en";
+  if (cleanStoredLang === "es" || cleanStoredLang === "spanish" || cleanStoredLang === "español") return "es";
+
+  const htmlLang = String(document.documentElement.lang || "").toLowerCase().trim();
+
+  if (htmlLang.startsWith("en")) return "en";
+  if (htmlLang.startsWith("es")) return "es";
+
+  const pageText = document.body.innerText.toLowerCase();
+  const searchPlaceholder = productListSearch?.placeholder?.toLowerCase() || "";
 
   if (
-    langText.includes("en") ||
-    langText.includes("search")
+    pageText.includes("product list") ||
+    pageText.includes("products to quote") ||
+    pageText.includes("request quote") ||
+    searchPlaceholder.includes("search")
   ) {
     return "en";
   }
@@ -47,6 +61,8 @@ function translateCategoryText(text) {
   const replacements = [
     ["Audiología y timpanometría", "Audiology and tympanometry"],
     ["Cables, conectores y accesorios", "Cables, connectors and accessories"],
+    ["Electrocardiografía y accesorios", "Electrocardiography and accessories"],
+    ["Estetoscopios y accesorios", "Stethoscopes and accessories"],
     ["Diagnóstico", "Diagnostics"],
     ["Mobiliario", "Medical furniture"],
     ["Monitoreo", "Monitoring"],
@@ -109,6 +125,30 @@ function cleanProductDescription(description) {
   return cleaned || getListText("Sin descripción disponible.", "No description available.");
 }
 
+function renderLoadingState() {
+  if (!productListBody) return;
+
+  productListBody.innerHTML = `
+    <tr>
+      <td colspan="5" class="product-list-empty">
+        ${getListText("Cargando productos...", "Loading products...")}
+      </td>
+    </tr>
+  `;
+}
+
+function renderEmptyState() {
+  if (!productListBody) return;
+
+  productListBody.innerHTML = `
+    <tr>
+      <td colspan="5" class="product-list-empty">
+        ${getListText("No se encontraron productos.", "No products found.")}
+      </td>
+    </tr>
+  `;
+}
+
 /* ── PAGINACIÓN ───────────────────────────────────────────── */
 
 function getPaginationContainer() {
@@ -129,26 +169,21 @@ function getPaginationContainer() {
   return pagination;
 }
 
-function renderPaginationControls(totalProducts) {
+function renderPaginationControls() {
   const pagination = getPaginationContainer();
 
   if (!pagination) return;
 
-  const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
-
-  if (totalPages <= 1) {
+  if (currentProductPage === 1 && !hasNextProductPage) {
     pagination.innerHTML = "";
     return;
   }
 
-  const startItem = (currentProductPage - 1) * PRODUCTS_PER_PAGE + 1;
-  const endItem = Math.min(currentProductPage * PRODUCTS_PER_PAGE, totalProducts);
-
   pagination.innerHTML = `
     <div class="product-pagination-info">
       ${getListText(
-        `Mostrando ${startItem}-${endItem} de ${totalProducts} productos`,
-        `Showing ${startItem}-${endItem} of ${totalProducts} products`
+        `Página ${currentProductPage} · Mostrando ${currentProductList.length} productos`,
+        `Page ${currentProductPage} · Showing ${currentProductList.length} products`
       )}
     </div>
 
@@ -163,8 +198,8 @@ function renderPaginationControls(totalProducts) {
 
       <span class="pagination-current">
         ${getListText(
-          `Página ${currentProductPage} de ${totalPages}`,
-          `Page ${currentProductPage} of ${totalPages}`
+          `Página ${currentProductPage}`,
+          `Page ${currentProductPage}`
         )}
       </span>
 
@@ -172,7 +207,7 @@ function renderPaginationControls(totalProducts) {
         type="button" 
         class="pagination-btn"
         data-page-action="next"
-        ${currentProductPage === totalPages ? "disabled" : ""}>
+        ${!hasNextProductPage ? "disabled" : ""}>
         ${getListText("Siguiente →", "Next →")}
       </button>
     </div>
@@ -181,39 +216,18 @@ function renderPaginationControls(totalProducts) {
 
 /* ── RENDER TABLA ─────────────────────────────────────────── */
 
-function renderProductList(products, resetPage = false) {
+function renderProductList(products) {
   if (!productListBody) return;
 
-  filteredProductList = products || [];
+  currentProductList = products || [];
 
-  if (resetPage) {
-    currentProductPage = 1;
-  }
-
-  if (!filteredProductList.length) {
-    productListBody.innerHTML = `
-      <tr>
-        <td colspan="5" class="product-list-empty">
-          ${getListText("No se encontraron productos.", "No products found.")}
-        </td>
-      </tr>
-    `;
-
-    renderPaginationControls(0);
+  if (!currentProductList.length) {
+    renderEmptyState();
+    renderPaginationControls();
     return;
   }
 
-  const totalPages = Math.ceil(filteredProductList.length / PRODUCTS_PER_PAGE);
-
-  if (currentProductPage > totalPages) {
-    currentProductPage = totalPages;
-  }
-
-  const startIndex = (currentProductPage - 1) * PRODUCTS_PER_PAGE;
-  const endIndex = startIndex + PRODUCTS_PER_PAGE;
-  const productsToShow = filteredProductList.slice(startIndex, endIndex);
-
-  productListBody.innerHTML = productsToShow.map(product => {
+  productListBody.innerHTML = currentProductList.map(product => {
     const backUrl = "lista-productos.html" + window.location.search;
 
     return `
@@ -245,32 +259,105 @@ function renderProductList(products, resetPage = false) {
     `;
   }).join("");
 
-  renderPaginationControls(filteredProductList.length);
+  renderPaginationControls();
+}
+
+/* ── CARGA REAL DE 50 PRODUCTOS ──────────────────────────── */
+
+async function loadProductPage(cursor = null, pageNumber = 1, shouldScroll = false) {
+  renderLoadingState();
+
+  try {
+    const selectedCategory = getSelectedCategoryFromUrl();
+
+    let response;
+
+    if (selectedCategory) {
+      response = await getStoreCollectionProductsPage(selectedCategory, {
+        cursor,
+        limit: PRODUCTS_PER_PAGE
+      });
+    } else {
+      response = await getStoreProductsPage({
+        cursor,
+        limit: PRODUCTS_PER_PAGE,
+        searchTerm: currentSearchTerm
+      });
+    }
+
+    currentProductPage = pageNumber;
+    nextProductCursor = response.pageInfo?.endCursor || null;
+    hasNextProductPage = Boolean(response.pageInfo?.hasNextPage);
+
+    renderProductList(response.products || []);
+
+    if (shouldScroll) {
+      const tableWrap = document.querySelector(".product-table-wrap");
+
+      if (tableWrap) {
+        tableWrap.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    }
+  } catch (error) {
+    console.error(error);
+
+    let demoProducts = getDemoProducts();
+    const selectedCategory = getSelectedCategoryFromUrl();
+
+    if (selectedCategory) {
+      demoProducts = demoProducts.filter(product => product.category === selectedCategory);
+    }
+
+    if (currentSearchTerm) {
+      const term = currentSearchTerm.toLowerCase();
+
+      demoProducts = demoProducts.filter(product => {
+        const text = `
+          ${product.categoryName || ""}
+          ${product.category || ""}
+          ${product.title || ""}
+          ${product.description || ""}
+        `.toLowerCase();
+
+        return text.includes(term);
+      });
+    }
+
+    const startIndex = (pageNumber - 1) * PRODUCTS_PER_PAGE;
+    const endIndex = startIndex + PRODUCTS_PER_PAGE;
+
+    currentProductPage = pageNumber;
+    currentProductList = demoProducts.slice(startIndex, endIndex);
+    hasNextProductPage = endIndex < demoProducts.length;
+    nextProductCursor = hasNextProductPage ? String(endIndex) : null;
+
+    renderProductList(currentProductList);
+  }
 }
 
 /* ── BUSCADOR ─────────────────────────────────────────────── */
 
-function filterProductList() {
-  if (!productListSearch) return;
-
-  const searchTerm = productListSearch.value.toLowerCase().trim();
-
-  const filteredProducts = currentProductList.filter(product => {
-    const searchableText = `
-      ${product.categoryName || ""}
-      ${product.category || ""}
-      ${product.title || ""}
-      ${product.description || ""}
-    `.toLowerCase();
-
-    return searchableText.includes(searchTerm);
-  });
-
-  renderProductList(filteredProducts, true);
+function resetPagination() {
+  currentProductPage = 1;
+  nextProductCursor = null;
+  hasNextProductPage = false;
+  pageCursors = [null];
 }
 
 if (productListSearch) {
-  productListSearch.addEventListener("input", filterProductList);
+  productListSearch.addEventListener("input", () => {
+    clearTimeout(searchTimer);
+
+    searchTimer = setTimeout(() => {
+      currentSearchTerm = productListSearch.value.toLowerCase().trim();
+
+      resetPagination();
+      loadProductPage(null, 1, false);
+    }, 350);
+  });
 }
 
 /* ── CAMBIO DE PÁGINA ─────────────────────────────────────── */
@@ -281,25 +368,24 @@ document.addEventListener("click", event => {
   if (!paginationButton) return;
 
   const action = paginationButton.getAttribute("data-page-action");
-  const totalPages = Math.ceil(filteredProductList.length / PRODUCTS_PER_PAGE);
 
-  if (action === "prev" && currentProductPage > 1) {
-    currentProductPage -= 1;
+  if (action === "next") {
+    if (!hasNextProductPage || !nextProductCursor) return;
+
+    const nextPage = currentProductPage + 1;
+
+    pageCursors[nextPage - 1] = nextProductCursor;
+
+    loadProductPage(nextProductCursor, nextPage, true);
   }
 
-  if (action === "next" && currentProductPage < totalPages) {
-    currentProductPage += 1;
-  }
+  if (action === "prev") {
+    if (currentProductPage === 1) return;
 
-  renderProductList(filteredProductList);
+    const previousPage = currentProductPage - 1;
+    const previousCursor = pageCursors[previousPage - 1] || null;
 
-  const tableWrap = document.querySelector(".product-table-wrap");
-
-  if (tableWrap) {
-    tableWrap.scrollIntoView({
-      behavior: "smooth",
-      block: "start"
-    });
+    loadProductPage(previousCursor, previousPage, true);
   }
 });
 
@@ -326,57 +412,10 @@ if (productListBody) {
 
 document.getElementById("langToggle")?.addEventListener("click", () => {
   setTimeout(() => {
-    const listToRender = filteredProductList.length ? filteredProductList : currentProductList;
-    renderProductList(listToRender);
-  }, 200);
+    renderProductList(currentProductList);
+  }, 250);
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  setTimeout(() => {
-    const listToRender = filteredProductList.length ? filteredProductList : currentProductList;
+/* ── INICIO ───────────────────────────────────────────────── */
 
-    if (listToRender.length) {
-      renderProductList(listToRender);
-    }
-  }, 350);
-});
-
-/* ── CARGA DE PRODUCTOS ──────────────────────────────────── */
-
-async function loadProductListPage() {
-  if (productListBody) {
-    productListBody.innerHTML = `
-      <tr>
-        <td colspan="5" class="product-list-empty">
-          ${getListText("Cargando productos...", "Loading products...")}
-        </td>
-      </tr>
-    `;
-  }
-
-  try {
-    const selectedCategory = getSelectedCategoryFromUrl();
-
-    if (selectedCategory) {
-      const { products } = await getStoreCollectionWithProducts(selectedCategory);
-      currentProductList = products;
-    } else {
-      currentProductList = await getStoreProducts();
-    }
-
-    renderProductList(currentProductList, true);
-  } catch (error) {
-    console.error(error);
-
-    const selectedCategory = getSelectedCategoryFromUrl();
-    const demoProducts = getDemoProducts();
-
-    currentProductList = selectedCategory
-      ? demoProducts.filter(product => product.category === selectedCategory)
-      : demoProducts;
-
-    renderProductList(currentProductList, true);
-  }
-}
-
-loadProductListPage();
+loadProductPage(null, 1, false);

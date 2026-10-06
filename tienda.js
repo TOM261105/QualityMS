@@ -167,6 +167,8 @@ function renderCategories(collections) {
           <img 
             src="${collection.image || "assets/product-placeholder.png"}" 
             alt="${collection.altText || categoryTitle}"
+            loading="lazy"
+            decoding="async"
           >
         </div>
 

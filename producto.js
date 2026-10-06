@@ -128,7 +128,12 @@ function renderSingleProduct(product) {
   singleProductContainer.innerHTML = `
     <section class="single-product-card">
       <div class="single-product-image">
-        <img src="${product.image}" alt="${product.imageAlt || product.title}">
+        <img 
+          src="${product.image}" 
+          alt="${product.imageAlt || product.title}"
+          loading="lazy"
+          decoding="async"
+        >
       </div>
 
       <div class="single-product-info">

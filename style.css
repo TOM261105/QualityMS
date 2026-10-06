@@ -4750,3 +4750,20 @@ footer {
     min-width: 130px;
   }
 }
+
+.footer-logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.footer-logo-link img {
+  display: block;
+  cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.footer-logo-link:hover img {
+  opacity: 0.85;
+  transform: translateY(-2px);
+}

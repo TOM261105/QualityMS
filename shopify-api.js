@@ -470,7 +470,204 @@ async function getStoreProductByHandle(productHandle) {
 
   return mapShopifyProduct(data.product);
 }
+/* ── PRODUCTOS POR PÁGINA PARA LISTA ─────────────────────── */
 
+async function getStoreProductsPage(options = {}) {
+  const {
+    cursor = null,
+    limit = 50,
+    searchTerm = ""
+  } = options;
+
+  if (!isShopifyReady()) {
+    let demoProducts = getDemoProducts();
+
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase().trim();
+
+      demoProducts = demoProducts.filter(product => {
+        const text = `
+          ${product.title || ""}
+          ${product.description || ""}
+          ${product.category || ""}
+          ${product.categoryName || ""}
+        `.toLowerCase();
+
+        return text.includes(term);
+      });
+    }
+
+    const startIndex = cursor ? Number(cursor) : 0;
+    const endIndex = startIndex + limit;
+
+    return {
+      products: demoProducts.slice(startIndex, endIndex),
+      pageInfo: {
+        hasNextPage: endIndex < demoProducts.length,
+        endCursor: endIndex < demoProducts.length ? String(endIndex) : null
+      }
+    };
+  }
+
+  const query = `
+    query GetProductsPage($cursor: String, $limit: Int!, $searchQuery: String) {
+      products(first: $limit, after: $cursor, query: $searchQuery) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        edges {
+          node {
+            id
+            title
+            handle
+            description
+            availableForSale
+            featuredImage {
+              url
+              altText
+            }
+            metafield(namespace: "custom", key: "precio_distribuidor") {
+              value
+            }
+            collections(first: 3) {
+              edges {
+                node {
+                  title
+                  handle
+                }
+              }
+            }
+            variants(first: 1) {
+              edges {
+                node {
+                  id
+                  price {
+                    amount
+                    currencyCode
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const data = await shopifyRequest(query, {
+    cursor,
+    limit,
+    searchQuery: searchTerm ? searchTerm : null
+  });
+
+  return {
+    products: data.products.edges.map(edge => mapShopifyProduct(edge.node)),
+    pageInfo: data.products.pageInfo
+  };
+}
+
+async function getStoreCollectionProductsPage(collectionHandle, options = {}) {
+  const {
+    cursor = null,
+    limit = 50
+  } = options;
+
+  if (!isShopifyReady()) {
+    const demoProducts = getDemoProducts().filter(product => product.category === collectionHandle);
+
+    const startIndex = cursor ? Number(cursor) : 0;
+    const endIndex = startIndex + limit;
+
+    return {
+      collection: getDemoCollections().find(item => item.handle === collectionHandle) || null,
+      products: demoProducts.slice(startIndex, endIndex),
+      pageInfo: {
+        hasNextPage: endIndex < demoProducts.length,
+        endCursor: endIndex < demoProducts.length ? String(endIndex) : null
+      }
+    };
+  }
+
+  const query = `
+    query GetCollectionProductsPage($handle: String!, $cursor: String, $limit: Int!) {
+      collection(handle: $handle) {
+        id
+        title
+        handle
+        description
+        image {
+          url
+          altText
+        }
+        products(first: $limit, after: $cursor) {
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
+          edges {
+            node {
+              id
+              title
+              handle
+              description
+              availableForSale
+              featuredImage {
+                url
+                altText
+              }
+              metafield(namespace: "custom", key: "precio_distribuidor") {
+                value
+              }
+              collections(first: 3) {
+                edges {
+                  node {
+                    title
+                    handle
+                  }
+                }
+              }
+              variants(first: 1) {
+                edges {
+                  node {
+                    id
+                    price {
+                      amount
+                      currencyCode
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const data = await shopifyRequest(query, {
+    handle: collectionHandle,
+    cursor,
+    limit
+  });
+
+  if (!data.collection) {
+    return {
+      collection: null,
+      products: [],
+      pageInfo: {
+        hasNextPage: false,
+        endCursor: null
+      }
+    };
+  }
+
+  return {
+    collection: mapShopifyCollection(data.collection),
+    products: data.collection.products.edges.map(edge => mapShopifyProduct(edge.node)),
+    pageInfo: data.collection.products.pageInfo
+  };
+}
 async function createShopifyCart(cartItems) {
   if (!isShopifyReady()) {
     alert("Shopify todavía no está configurado.");

@@ -40,7 +40,12 @@ function renderCategoryProducts(products) {
       <article class="shopify-product-card">
         <div class="shopify-product-img">
           <span class="shopify-product-status">Bajo cotización</span>
-          <img src="${product.image}" alt="${product.imageAlt || product.title}">
+          <img 
+            src="${product.image}" 
+            alt="${product.imageAlt || product.title}"
+            loading="lazy"
+            decoding="async"
+          >
         </div>
 
         <div class="shopify-product-body">

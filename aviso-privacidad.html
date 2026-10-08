@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aviso de Privacidad | Quality Medical Service</title>
+
+  <!-- FAVICON -->
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/favicon.png">
+
+  <!-- PREVIEW PARA WHATSAPP / REDES -->
+  <meta property="og:title" content="Aviso de Privacidad | Quality Medical Service">
+  <meta property="og:description" content="Consulta el aviso de privacidad de Quality Medical Service.">
+  <meta property="og:image" content="https://tom261105.github.io/QualityMS/assets/preview-qms.png">
+  <meta property="og:url" content="https://tom261105.github.io/QualityMS/aviso-privacidad.html">
+  <meta property="og:type" content="website">
+
+  <!-- TWITTER / X PREVIEW -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aviso de Privacidad | Quality Medical Service">
+  <meta name="twitter:description" content="Consulta el aviso de privacidad de Quality Medical Service.">
+  <meta name="twitter:image" content="https://tom261105.github.io/QualityMS/assets/preview-qms.png">
+
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .privacy-section {
+      padding: 120px 0 90px;
+      background: linear-gradient(180deg, #eef7ff 0%, #ffffff 100%);
+    }
+
+    .privacy-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 46px;
+      box-shadow: 0 20px 55px rgba(15, 45, 80, 0.08);
+      color: var(--navy);
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    .privacy-card h1 {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: clamp(44px, 7vw, 78px);
+      line-height: 0.95;
+      margin: 0 0 18px;
+      text-transform: uppercase;
+      color: var(--navy);
+    }
+
+    .privacy-card h1 span {
+      color: var(--blue-mid);
+    }
+
+    .privacy-card h2 {
+      font-family: "Barlow Condensed", sans-serif;
+      font-size: 34px;
+      line-height: 1;
+      margin: 42px 0 14px;
+      text-transform: uppercase;
+      color: var(--navy);
+    }
+
+    .privacy-card h3 {
+      font-size: 20px;
+      margin: 26px 0 12px;
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    .privacy-card p {
+      color: var(--text);
+      font-size: 17px;
+      line-height: 1.75;
+      margin: 0 0 18px;
+    }
+
+    .privacy-card ul,
+    .privacy-card ol {
+      margin: 0 0 24px 22px;
+      padding: 0;
+      color: var(--text);
+    }
+
+    .privacy-card li {
+      margin-bottom: 12px;
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    .privacy-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(36, 133, 204, 0.1);
+      color: var(--blue-mid);
+      border-radius: 999px;
+      padding: 10px 16px;
+      font-weight: 800;
+      margin-bottom: 26px;
+      font-size: 14px;
+    }
+
+    .privacy-intro {
+      font-size: 18px;
+      line-height: 1.8;
+      color: var(--text);
+      max-width: 920px;
+    }
+
+    .privacy-highlight {
+      background: #f4f9ff;
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--blue-mid);
+      border-radius: 18px;
+      padding: 20px 22px;
+      margin: 24px 0;
+    }
+
+    .privacy-highlight p {
+      margin: 0;
+    }
+
+    .privacy-contact {
+      background: var(--navy);
+      color: #ffffff;
+      border-radius: 22px;
+      padding: 26px;
+      margin-top: 36px;
+    }
+
+    .privacy-contact h2 {
+      color: #ffffff;
+      margin-top: 0;
+    }
+
+    .privacy-contact p,
+    .privacy-contact a {
+      color: #ffffff;
+    }
+
+    .privacy-contact a {
+      font-weight: 800;
+      text-decoration: underline;
+    }
+
+    .privacy-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 34px;
+    }
+
+    .privacy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 22px;
+      border-radius: 999px;
+      background: var(--navy);
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 800;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .privacy-btn:hover {
+      transform: translateY(-2px);
+      background: var(--blue-mid);
+    }
+
+    .privacy-btn.light {
+      background: transparent;
+      color: var(--navy);
+      border: 1px solid var(--navy);
+    }
+
+    .privacy-btn.light:hover {
+      color: #ffffff;
+      background: var(--navy);
+    }
+
+    .privacy-footer-link {
+      display: inline-flex;
+      margin-top: 14px;
+      color: inherit;
+      text-decoration: none;
+      font-weight: 700;
+      opacity: 0.85;
+    }
+
+    .privacy-footer-link:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .privacy-section {
+        padding: 92px 0 70px;
+      }
+
+      .privacy-card {
+        padding: 28px 22px;
+        border-radius: 22px;
+      }
+
+      .privacy-card h2 {
+        font-size: 28px;
+      }
+
+      .privacy-card p,
+      .privacy-card li {
+        font-size: 16px;
+      }
+
+      .privacy-actions {
+        flex-direction: column;
+      }
+
+      .privacy-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- POP-UP ESPECIALISTA MÉDICO -->
+  <div class="medical-popup" id="medicalPopup">
+    <div class="medical-popup-card">
+      <div class="medical-popup-logo">
+        <img src="assets/logo-qualityms.png" alt="Quality Medical Service">
+      </div>
+
+      <h2 data-es="Aviso importante" data-en="Important notice">Aviso importante</h2>
+
+      <p 
+        data-es="Para continuar, confirma si eres especialista médico o profesional de la salud."
+        data-en="To continue, please confirm whether you are a medical specialist or healthcare professional.">
+        Para continuar, confirma si eres especialista médico o profesional de la salud.
+      </p>
+
+      <div class="medical-popup-actions">
+        <button id="medicalYes" class="medical-btn medical-btn-primary"
+          data-es="Sí, soy especialista"
+          data-en="Yes, I am a specialist">
+          Sí, soy especialista
+        </button>
+
+        <button id="medicalNo" class="medical-btn medical-btn-outline"
+          data-es="No"
+          data-en="No">
+          No
+        </button>
+      </div>
+
+      <small
+        data-es="Al seleccionar “Sí”, confirmas que puedes consultar información relacionada con equipo médico."
+        data-en="By selecting “Yes”, you confirm that you may access information related to medical equipment.">
+        Al seleccionar “Sí”, confirmas que puedes consultar información relacionada con equipo médico.
+      </small>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <nav class="nav-links">
+        <a href="index.html" data-es="Conócenos" data-en="About us">Conócenos</a>
+        <a href="distribuidores.html" data-es="Distribuidores" data-en="Distributors">Distribuidores</a>
+        <a href="soporte.html" data-es="Soporte" data-en="Support">Soporte</a>
+        <a href="contacto.html" data-es="Contáctanos" data-en="Contact us">Contáctanos</a>
+        <a href="tienda.html" class="cta" data-es="Tienda en línea" data-en="Online Store">Tienda en línea</a>
+      </nav>
+
+      <button class="lang-btn" id="langToggle">ES / EN</button>
+    </div>
+  </div>
+
+  <!-- AVISO DE PRIVACIDAD -->
+  <section class="privacy-section">
+    <div class="container">
+      <div class="privacy-card reveal">
+        <span class="privacy-meta">Última actualización: 06 de octubre, 2026</span>
+
+        <h1>Aviso de <span>Privacidad</span></h1>
+
+        <p class="privacy-intro">
+          QUALITY MEDICAL SERVICE S.A. DE C.V. (en lo sucesivo la “Empresa”), con domicilio para oír y recibir notificaciones en Bajío, 287, Piso 2, Roma Sur, Cuauhtemoc, CDMX, C.P 06760, pone a su disposición el presente Aviso de Privacidad (en lo sucesivo el “Aviso”), previo a la obtención y tratamiento de sus datos personales, en cumplimiento con la Ley Federal de Protección de Datos Personales en Posesión de los Particulares (LFPDPPP), su Reglamento y demás disposiciones aplicables.
+        </p>
+
+        <h2>I. Objeto</h2>
+
+        <p>
+          El presente Aviso regula la forma, términos y condiciones conforme a los cuales la Empresa —incluyendo sus empresas subsidiarias, filiales o relacionadas— está facultada y autorizada por el Titular para obtener, recabar, tratar, almacenar, utilizar y transferir sus datos personales (en lo sucesivo los “Datos”).
+        </p>
+
+        <h2>II. Datos Personales Recabados</h2>
+
+        <p>
+          Para cumplir con las finalidades descritas en el presente Aviso, la Empresa podrá recabar las siguientes categorías de Datos:
+        </p>
+
+        <ul>
+          <li>
+            <strong>Datos de identificación y contacto:</strong> Nombre completo, teléfono fijo y/o móvil, correo electrónico, domicilio, Registro Federal de Contribuyentes (RFC).
+          </li>
+
+          <li>
+            <strong>Datos de navegación y comportamiento digital:</strong> Identificadores en línea, dirección IP, cookies, web beacons, tipo de navegador, sistema operativo y hábitos de interacción en nuestro sitio web o redes sociales.
+          </li>
+        </ul>
+
+        <h2>III. Finalidades del Tratamiento de los Datos</h2>
+
+        <p>
+          Los Datos personales recabados serán utilizados para las siguientes finalidades:
+        </p>
+
+        <h3>A. Finalidades Primarias</h3>
+
+        <p>
+          Necesarias para la prestación del servicio y/o relación comercial:
+        </p>
+
+        <ol>
+          <li>Verificar y confirmar su identidad.</li>
+          <li>Atender, cotizar y dar seguimiento a sus solicitudes de productos o servicios médicos y equipos de salud.</li>
+          <li>Procesar pedidos, facturación y cobro.</li>
+          <li>Cumplir con obligaciones contractuales, legales y regulatorias aplicables a la Empresa.</li>
+          <li>Brindar soporte técnico, garantías, servicios postventa y atención al cliente.</li>
+        </ol>
+
+        <h3>B. Finalidades Secundarias</h3>
+
+        <p>
+          Marketing Digital, Publicidad y Prospección Comercial:
+        </p>
+
+        <ol>
+          <li>
+            Envío de boletines informativos, promociones, ofertas, descuentos y publicidad referente a productos de la Empresa a través de correo electrónico, mensajería instantánea (ej. WhatsApp), SMS o redes sociales.
+          </li>
+
+          <li>
+            Realización de campañas de marketing digital, perfilamiento publicitario y segmentación de audiencias en plataformas de terceros (ej. Meta, Google, LinkedIn).
+          </li>
+
+          <li>
+            Elaboración de encuestas de satisfacción, estudios de mercado y análisis estadísticos para evaluar la calidad de nuestros productos y servicios.
+          </li>
+
+          <li>
+            Telemarketing y prospección comercial.
+          </li>
+        </ol>
+
+        <h2>IV. Negativa para el Tratamiento de Finalidades Secundarias</h2>
+
+        <p>
+          En caso de que no desee que sus Datos sean tratados para las Finalidades Secundarias mencionadas en el apartado anterior, usted puede manifestar su negativa en cualquier momento enviando un correo electrónico a la dirección:
+        </p>
+
+        <div class="privacy-highlight">
+          <p>
+            <strong>contacto@qualityms.com.mx</strong>
+          </p>
+        </div>
+
+        <p>
+          La negativa para el uso de sus datos personales para estas finalidades secundarias no podrá ser motivo para que le neguemos los servicios y productos que solicita o contrata con nosotros.
+        </p>
+
+        <h2>V. Consentimiento</h2>
+
+        <p>
+          El Titular manifiesta bajo protesta de decir verdad que:
+        </p>
+
+        <ol>
+          <li>
+            <strong>Entornos digitales:</strong> Al hacer clic en “aceptar”, enviar formularios de contacto, suscribirse a boletines o continuar navegando en el sitio web de la Empresa, otorga su consentimiento expreso para el tratamiento de sus Datos conforme a este Aviso.
+          </li>
+
+          <li>
+            <strong>Medios sonoros o audiovisuales:</strong> Al proporcionar sus Datos a través de llamadas, grabaciones o cualquier otra tecnología, otorga su consentimiento para el tratamiento descrito.
+          </li>
+
+          <li>
+            <strong>Medios impresos:</strong> Su firma, rúbrica o el hecho de proporcionar sus datos de forma física constituye la aceptación expresa de este Aviso.
+          </li>
+
+          <li>
+            El Titular garantiza que la información proporcionada es veraz, completa y actualizada, siendo el único responsable por la veracidad de esta.
+          </li>
+        </ol>
+
+        <h2>VI. Datos Sensibles</h2>
+
+        <p>
+          El Titular declara que no ha proporcionado ni proporcionará a la Empresa “datos personales sensibles” (aquellos que afecten a la esfera más íntima de su titular o cuya utilización indebida pueda dar origen a discriminación o un riesgo grave).
+        </p>
+
+        <h2>VII. Datos Excluidos y Sitios de Terceros</h2>
+
+        <p>
+          El sitio web de la Empresa puede contener enlaces a sitios web de terceros, redes sociales o foros públicos. Si usted accede a dichos enlaces o comparte información en plataformas públicas:
+        </p>
+
+        <ol>
+          <li>
+            La Empresa no asume responsabilidad alguna sobre las prácticas de privacidad o contenidos de dichos sitios externos.
+          </li>
+
+          <li>
+            La información compartida en redes sociales, comentarios o foros públicos es de carácter accesible y recabable por cualquier usuario, quedando fuera del control de la Empresa.
+          </li>
+        </ol>
+
+        <h2>VIII. Uso de Cookies y Tecnologías de Rastreo</h2>
+
+        <p>
+          Le informamos que en nuestras páginas de internet utilizamos cookies, web beacons y otras tecnologías a través de las cuales es posible monitorear su comportamiento como usuario de internet, brindarle un mejor servicio y experiencia de usuario al navegar en nuestra página, así como ofrecerle nuevas opciones de productos basadas en sus preferencias.
+        </p>
+
+        <p>
+          Usted puede deshabilitar el uso de cookies a través de la configuración de su navegador de internet.
+        </p>
+
+        <h2>IX. Cambios al Aviso de Privacidad</h2>
+
+        <p>
+          La Empresa se reserva el derecho de efectuar en cualquier momento modificaciones o actualizaciones al presente Aviso para la atención de novedades legislativas, políticas internas o nuevos requerimientos para la prestación de sus servicios.
+        </p>
+
+        <p>
+          Dichas modificaciones estarán disponibles al público a través de nuestro sitio web:
+        </p>
+
+        <div class="privacy-highlight">
+          <p>
+            <strong>www.qualityms.com.mx</strong>
+          </p>
+        </div>
+
+        <div class="privacy-contact">
+          <h2>Contacto</h2>
+
+          <p>
+            Para dudas relacionadas con este Aviso de Privacidad o para manifestar su negativa al tratamiento de finalidades secundarias, puede escribir a:
+          </p>
+
+          <p>
+            <a href="mailto:contacto@qualityms.com.mx">contacto@qualityms.com.mx</a>
+          </p>
+        </div>
+
+        <div class="privacy-actions">
+          <a href="contacto.html" class="privacy-btn">Contactar</a>
+          <a href="index.html" class="privacy-btn light">Volver al inicio</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <!-- BLOQUE IZQUIERDO -->
+      <div>
+        <div class="footer-brand">
+          <div class="footer-logo-main">
+            <img src="assets/logo-qualityms.png" alt="Quality Medical Service">
+          </div>
+        </div>
+
+        <a href="mailto:contacto@qualityms.com.mx" class="footer-email">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          contacto@qualityms.com.mx
+        </a>
+
+        <a 
+          href="aviso-privacidad.html" 
+          class="privacy-footer-link"
+          data-es="Aviso de privacidad"
+          data-en="Privacy notice">
+          Aviso de privacidad
+        </a>
+      </div>
+
+      <!-- REDES -->
+      <div class="footer-col">
+        <h4 data-es="Redes sociales" data-en="Social media">Redes sociales</h4>
+
+        <div class="social-row">
+          <a href="#" class="social-btn" aria-label="Instagram">
+            <svg viewBox="0 0 24 24">
+              <rect x="2" y="2" width="20" height="20" rx="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+            </svg>
+          </a>
+
+          <a href="#" class="social-btn" aria-label="YouTube">
+            <svg viewBox="0 0 24 24">
+              <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.95A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+              <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/>
+            </svg>
+          </a>
+
+          <a href="#" class="social-btn" aria-label="X">
+            <svg viewBox="0 0 24 24">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </a>
+
+          <a href="#" class="social-btn" aria-label="Facebook">
+            <svg viewBox="0 0 24 24">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- TELÉFONOS -->
+      <div class="footer-col">
+        <h4 data-es="Teléfonos" data-en="Phone numbers">Teléfonos</h4>
+
+        <div class="phones-list">
+          <a href="tel:5555147815">55-55-14-78-15</a>
+          <a href="tel:5555333373">55-55-33-33-73</a>
+          <a href="tel:5555120102">55-55-12-01-02</a>
+          <a href="tel:5555115576">55-55-11-55-76</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>© Copyright QualityMedicalService. All Rights Reserved</p>
+
+      <div class="footer-bottom-right">
+        <p data-es="Diseño web profesional" data-en="Professional web design">Diseño web profesional</p>
+
+        <div class="footer-logo-secondary">
+          <a href="https://web-ltr.com/" class="footer-logo-link" target="_blank" rel="noopener noreferrer">
+            <img src="assets/marcadeagualtr.png" alt="Logo de tu empresa">
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

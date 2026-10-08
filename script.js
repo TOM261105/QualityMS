@@ -681,3 +681,96 @@ function showQuoteTemporaryNotice() {
 }
 
 document.addEventListener("DOMContentLoaded", showQuoteTemporaryNotice);
+
+function getQuoteTextForBigin() {
+  const savedMessage = sessionStorage.getItem("qmsQuoteMessage") || "";
+  const savedProducts = sessionStorage.getItem("qmsQuoteProducts") || "";
+
+  if (savedMessage.trim()) {
+    return savedMessage.trim();
+  }
+
+  if (savedProducts.trim()) {
+    try {
+      const parsedProducts = JSON.parse(savedProducts);
+
+      if (Array.isArray(parsedProducts) && parsedProducts.length) {
+        return parsedProducts.map((item, index) => {
+          const title = item.title || item.name || "Producto sin nombre";
+          const quantity = item.quantity || item.qty || 1;
+          const sku = item.sku || item.code || "";
+
+          return `${index + 1}. ${title}${sku ? ` | SKU: ${sku}` : ""} | Cantidad: ${quantity}`;
+        }).join("\n");
+      }
+    } catch (error) {
+      return savedProducts.trim();
+    }
+  }
+
+  try {
+    const cart = JSON.parse(localStorage.getItem("qualityCart") || "[]");
+
+    if (Array.isArray(cart) && cart.length) {
+      return cart.map((item, index) => {
+        const title = item.title || item.name || "Producto sin nombre";
+        const quantity = item.quantity || item.qty || 1;
+        const sku = item.sku || item.code || "";
+
+        return `${index + 1}. ${title}${sku ? ` | SKU: ${sku}` : ""} | Cantidad: ${quantity}`;
+      }).join("\n");
+    }
+  } catch (error) {
+    console.warn("No se pudo leer el carrito:", error);
+  }
+
+  return "";
+}
+
+function sendCartToBiginForm() {
+  const iframe = document.getElementById("biginFormIframe");
+  const previewBox = document.getElementById("quotePreviewBox");
+  const previewText = document.getElementById("quotePreviewText");
+  const copyButton = document.getElementById("copyQuoteText");
+
+  if (!iframe) return;
+
+  const quoteText = getQuoteTextForBigin();
+
+  if (!quoteText) {
+    if (previewBox) previewBox.hidden = true;
+    return;
+  }
+
+  if (previewBox && previewText) {
+    previewBox.hidden = false;
+    previewText.value = quoteText;
+  }
+
+  const baseSrc = iframe.getAttribute("data-bigin-base-src") || iframe.src.split("?")[0];
+  const cartFieldName = iframe.getAttribute("data-cart-field") || "CONTACTCF10";
+
+  const formUrl = new URL(baseSrc);
+
+  formUrl.searchParams.set(cartFieldName, quoteText);
+  formUrl.searchParams.set("productos_cotizacion", quoteText);
+
+  iframe.src = formUrl.toString();
+
+  if (copyButton && previewText) {
+    copyButton.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(previewText.value);
+        copyButton.textContent = "Copiado";
+        setTimeout(() => {
+          copyButton.textContent = "Copiar productos";
+        }, 1800);
+      } catch (error) {
+        previewText.select();
+        document.execCommand("copy");
+      }
+    });
+  }
+}
+
+document.addEventListener("DOMContentLoaded", sendCartToBiginForm);

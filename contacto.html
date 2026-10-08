@@ -24,59 +24,6 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
-
-  <style>
-    .contact-map-link {
-      display: inline-flex;
-      margin-top: 10px;
-      color: var(--blue-mid);
-      font-weight: 800;
-      text-decoration: none;
-    }
-
-    .contact-map-link:hover {
-      text-decoration: underline;
-    }
-
-    .bigin-form-box {
-      width: 100%;
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 0;
-      box-shadow: 0 18px 45px rgba(15, 45, 80, 0.08);
-      overflow: hidden;
-    }
-
-    .bigin-form-iframe {
-      display: block;
-      width: 100%;
-      height: 760px;
-      border: none;
-      border-radius: 24px;
-      background: #ffffff;
-    }
-
-    .privacy-footer-link {
-      display: inline-flex;
-      margin-top: 14px;
-      color: inherit;
-      text-decoration: none;
-      font-weight: 700;
-      opacity: 0.85;
-    }
-
-    .privacy-footer-link:hover {
-      opacity: 1;
-      text-decoration: underline;
-    }
-
-    @media (max-width: 768px) {
-      .bigin-form-iframe {
-        height: 820px;
-      }
-    }
-  </style>
 </head>
 
 <body>
@@ -124,7 +71,7 @@
         <a href="index.html" data-es="Conócenos" data-en="About us">Conócenos</a>
         <a href="distribuidores.html" data-es="Distribuidores" data-en="Distributors">Distribuidores</a>
         <a href="soporte.html" data-es="Soporte" data-en="Support">Soporte</a>
-        <a href="contacto.html" data-es="Contáctanos" data-en="Contact us">Contáctanos</a>
+        <a href="contacto.html" class="active" data-es="Contáctanos" data-en="Contact us">Contáctanos</a>
         <a href="tienda.html" class="cta" data-es="Tienda en línea" data-en="Online Store">Tienda en línea</a>
       </nav>
 
@@ -133,7 +80,7 @@
   </div>
 
   <!-- CONTACTO -->
-  <section class="contact-section" id="contacto">
+  <section class="contact-section contact-page-clean" id="contacto">
     <div class="container">
       <div class="section-header reveal">
         <span class="eyebrow" data-es="Estamos aquí" data-en="We are here">Estamos aquí</span>
@@ -146,74 +93,88 @@
       </div>
 
       <div class="contact-layout-clean reveal">
-      <!-- FORMULARIO BIGIN / ZOHO -->
-      <div class="form-block form-block-wide">
-        <h3 data-es="Contáctanos" data-en="Contact us">Contáctanos</h3>
+        <!-- FORMULARIO BIGIN / ZOHO -->
+        <div class="form-block form-block-wide">
+          <h3 data-es="Contáctanos" data-en="Contact us">Contáctanos</h3>
 
-        <p 
-          class="form-note contact-intro-note"
-          data-es="Completa el formulario y nuestro equipo se pondrá en contacto contigo."
-          data-en="Complete the form and our team will contact you.">
-          Completa el formulario y nuestro equipo se pondrá en contacto contigo.
-        </p>
+          <p 
+            class="contact-intro-note"
+            data-es="Completa el formulario y nuestro equipo se pondrá en contacto contigo."
+            data-en="Complete the form and our team will contact you.">
+            Completa el formulario y nuestro equipo se pondrá en contacto contigo.
+          </p>
 
-        <div class="bigin-form-box">
-          <iframe 
-            class="bigin-form-iframe"
-            src="https://us.bigin.online/org938567094/forms/newform"
-            title="Formulario de contacto Quality Medical Service"
-            loading="lazy"
-            scrolling="no">
-          </iframe>
-        </div>
-
-        <p 
-          class="form-note"
-          data-es-html='Al enviar aceptas nuestro <a href="aviso-privacidad.html">aviso de privacidad</a>.'
-          data-en-html='By submitting, you accept our <a href="aviso-privacidad.html">privacy notice</a>.'>
-          Al enviar aceptas nuestro <a href="aviso-privacidad.html">aviso de privacidad</a>.
-        </p>
-      </div>
-
-      <!-- UBICACIÓN -->
-      <div class="contact-location-grid">
-        <div class="map-block">
-          <h3 data-es="Nuestra ubicación" data-en="Our location">Nuestra ubicación</h3>
-
-          <div class="map-frame">
-            <iframe
-              src="https://www.google.com/maps?q=Eje%205%20Sur%20Playa%20Villa%20del%20Mar%2075%2C%20Iztacalco%2C%2008830%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX&output=embed"
-              allowfullscreen
+          <div class="bigin-form-box">
+            <iframe 
+              class="bigin-form-iframe"
+              src="https://us.bigin.online/org938567094/forms/newform"
+              title="Formulario de contacto Quality Medical Service"
               loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade">
+              scrolling="no">
             </iframe>
           </div>
-        </div>
 
-        <div class="address-box address-box-clean">
-          <svg viewBox="0 0 24 24">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
-
-          <p>
-            <strong>Quality Medical Service</strong><br>
-            Eje 5 Sur Playa Villa del Mar 75,<br>
-            Iztacalco, 08830 Ciudad de México, CDMX
-            <br>
-            <a 
-              href="https://maps.app.goo.gl/G4SUFvq1tw6M2Zeh8"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="contact-map-link"
-              data-es="Abrir en Google Maps"
-              data-en="Open in Google Maps">
-              Abrir en Google Maps
-            </a>
+          <p 
+            class="contact-form-note"
+            data-es-html='Al enviar aceptas nuestro <a href="aviso-privacidad.html">aviso de privacidad</a>.'
+            data-en-html='By submitting, you accept our <a href="aviso-privacidad.html">privacy notice</a>.'>
+            Al enviar aceptas nuestro <a href="aviso-privacidad.html">aviso de privacidad</a>.
           </p>
         </div>
-      </div>
 
+        <!-- UBICACIÓN -->
+        <div class="contact-location-clean">
+          <div class="contact-location-card">
+            <h3 class="contact-location-title" data-es="Nuestra ubicación" data-en="Our location">
+              Nuestra ubicación
+            </h3>
+
+            <div class="map-frame">
+              <iframe
+                src="https://www.google.com/maps?q=Eje%205%20Sur%20Playa%20Villa%20del%20Mar%2075%2C%20Iztacalco%2C%2008830%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX&output=embed"
+                allowfullscreen
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
+          </div>
+
+          <div class="contact-address-card">
+            <div class="contact-address-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+
+            <div>
+              <h3>Quality Medical Service</h3>
+              <p>
+                Eje 5 Sur Playa Villa del Mar 75,<br>
+                Iztacalco, 08830 Ciudad de México, CDMX
+              </p>
+            </div>
+
+            <div class="contact-address-actions">
+              <a 
+                href="https://maps.app.goo.gl/G4SUFvq1tw6M2Zeh8"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="primary"
+                data-es="Abrir en Google Maps"
+                data-en="Open in Google Maps">
+                Abrir en Google Maps
+              </a>
+
+              <a 
+                href="mailto:contacto@qualityms.com.mx"
+                class="secondary">
+                contacto@qualityms.com.mx
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 

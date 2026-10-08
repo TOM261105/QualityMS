@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contacto | Quality Medical Service</title>
+
   <!-- FAVICON -->
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/favicon.png">
@@ -20,13 +21,71 @@
   <meta name="twitter:title" content="Quality Medical Service">
   <meta name="twitter:description" content="High-tech medical equipment for every specialty.">
   <meta name="twitter:image" content="https://tom261105.github.io/QualityMS/assets/preview-qms.png">
-  
+
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
+
+  <style>
+    .contact-map-link {
+      display: inline-flex;
+      margin-top: 10px;
+      color: var(--blue-mid);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .contact-map-link:hover {
+      text-decoration: underline;
+    }
+
+    .bigin-form-box {
+      width: 100%;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: 0 18px 45px rgba(15, 45, 80, 0.08);
+      overflow: hidden;
+    }
+
+    .bigin-form-box iframe,
+    .bigin-form-iframe {
+      width: 100%;
+      min-height: 650px;
+      border: none;
+      border-radius: 18px;
+    }
+
+    .privacy-footer-link {
+      display: inline-flex;
+      margin-top: 14px;
+      color: inherit;
+      text-decoration: none;
+      font-weight: 700;
+      opacity: 0.85;
+    }
+
+    .privacy-footer-link:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 768px) {
+      .bigin-form-box {
+        padding: 10px;
+        border-radius: 18px;
+      }
+
+      .bigin-form-box iframe,
+      .bigin-form-iframe {
+        min-height: 720px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-   <!-- POP-UP ESPECIALISTA MÉDICO -->
+  <!-- POP-UP ESPECIALISTA MÉDICO -->
   <div class="medical-popup" id="medicalPopup">
     <div class="medical-popup-card">
       <div class="medical-popup-logo">
@@ -62,7 +121,8 @@
       </small>
     </div>
   </div>
-  
+
+  <!-- NAV -->
   <div class="topbar">
     <div class="topbar-inner">
       <nav class="nav-links">
@@ -77,6 +137,7 @@
     </div>
   </div>
 
+  <!-- CONTACTO -->
   <section class="contact-section" id="contacto">
     <div class="container">
       <div class="section-header reveal">
@@ -90,12 +151,13 @@
       </div>
 
       <div class="contact-grid reveal">
+        <!-- MAPA -->
         <div class="map-block">
           <h3 data-es="Nuestra ubicación" data-en="Our location">Nuestra ubicación</h3>
 
           <div class="map-frame">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3763.7!2d-99.085!3d19.386!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDIzJzA5LjYiTiA5OcKwMDUnMDYuMCJX!5e0!3m2!1ses!2smx!4v1620000000000!5m2!1ses!2smx"
+              src="https://www.google.com/maps?q=Eje%205%20Sur%20Playa%20Villa%20del%20Mar%2075%2C%20Iztacalco%2C%2008830%20Ciudad%20de%20M%C3%A9xico%2C%20CDMX&output=embed"
               allowfullscreen
               loading="lazy"
               referrerpolicy="no-referrer-when-downgrade">
@@ -109,117 +171,64 @@
             </svg>
 
             <p>
-              <strong>Quality Medical Service</strong>
-              Playa Villa del Mar 75, Militar Marte,<br>
-              Iztacalco, 08850 Ciudad de México, CDMX
+              <strong>Quality Medical Service</strong><br>
+              Eje 5 Sur Playa Villa del Mar 75,<br>
+              Iztacalco, 08830 Ciudad de México, CDMX
+              <br>
+              <a 
+                href="https://maps.app.goo.gl/G4SUFvq1tw6M2Zeh8"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="contact-map-link"
+                data-es="Abrir en Google Maps"
+                data-en="Open in Google Maps">
+                Abrir en Google Maps
+              </a>
             </p>
           </div>
         </div>
 
+        <!-- FORMULARIO BIGIN / ZOHO -->
         <div class="form-block">
           <h3 data-es="Contáctanos" data-en="Contact us">Contáctanos</h3>
 
-          <form id="contactForm" class="contact-form" action="enviar-cotizacion.php" method="POST">
-            <input type="hidden" id="quoteProductsInput" name="productos_cotizacion">
+          <p 
+            class="form-note"
+            data-es="Completa el formulario y nuestro equipo se pondrá en contacto contigo."
+            data-en="Complete the form and our team will contact you.">
+            Completa el formulario y nuestro equipo se pondrá en contacto contigo.
+          </p>
 
-            <div class="form-grid">
-              <div class="form-group">
-                <label data-es="Nombre" data-en="First name">Nombre</label>
-                <input 
-                  type="text" 
-                  id="contactFirstName"
-                  name="nombre"
-                  required
-                  data-es-placeholder="Tu nombre" 
-                  data-en-placeholder="Your first name" 
-                  placeholder="Tu nombre">
-              </div>
+          <div class="bigin-form-box">
+            <script 
+              id="formScript7597456000000666157" 
+              src="https://us.bigin.online/org938567094/forms/newform?script=$sYG">
+            </script>
 
-              <div class="form-group">
-                <label data-es="Apellido" data-en="Last name">Apellido</label>
-                <input 
-                  type="text" 
-                  id="contactLastName"
-                  name="apellido"
-                  required
-                  data-es-placeholder="Tu apellido" 
-                  data-en-placeholder="Your last name" 
-                  placeholder="Tu apellido">
-              </div>
-
-              <div class="form-group">
-                <label data-es="Correo electrónico" data-en="Email address">Correo electrónico</label>
-                <input 
-                  type="email" 
-                  id="contactEmail"
-                  name="correo"
-                  required
-                  data-es-placeholder="correo@ejemplo.com" 
-                  data-en-placeholder="email@example.com" 
-                  placeholder="correo@ejemplo.com">
-              </div>
-
-              <div class="form-group">
-                <label data-es="Número de teléfono" data-en="Phone number">Número de teléfono</label>
-                <input 
-                  type="tel" 
-                  id="contactPhone"
-                  name="telefono"
-                  required
-                  placeholder="55 0000 0000">
-              </div>
-
-              <div class="form-group full">
-                <label 
-                  data-es-html='Compañía <span class="optional-label">(opcional)</span>'
-                  data-en-html='Company <span class="optional-label">(optional)</span>'>
-                  Compañía <span class="optional-label">(opcional)</span>
-                </label>
-
-                <input 
-                  type="text" 
-                  id="contactCompany"
-                  name="compania"
-                  data-es-placeholder="Nombre de tu empresa o clínica" 
-                  data-en-placeholder="Your company or clinic name" 
-                  placeholder="Nombre de tu empresa o clínica">
-              </div>
-
-              <div class="form-group full">
-                <label data-es="¿Cómo te podemos ayudar?" data-en="How can we help you?">
-                  ¿Cómo te podemos ayudar?
-                </label>
-
-                <textarea 
-                  id="contactMessage"
-                  name="mensaje"
-                  required
-                  data-es-placeholder="Describe tu consulta o el equipo que necesitas..." 
-                  data-en-placeholder="Describe your request or the equipment you need..." 
-                  placeholder="Describe tu consulta o el equipo que necesitas..."></textarea>
-              </div>
-            </div>
-
-            <button class="form-submit" type="submit" data-es="Enviar solicitud" data-en="Send request">
-              Enviar solicitud
-            </button>
-          </form>
+            <noscript>
+              <iframe 
+                class="bigin-form-iframe"
+                src="https://us.bigin.online/org938567094/forms/newform"
+                title="Formulario de contacto Quality Medical Service">
+              </iframe>
+            </noscript>
+          </div>
 
           <p 
             class="form-note"
-            data-es="Al enviar aceptas nuestro aviso de privacidad. No compartiremos tu información con terceros."
-            data-en="By submitting, you accept our privacy notice. We will not share your information with third parties.">
-            Al enviar aceptas nuestro aviso de privacidad. No compartiremos tu información con terceros.
+            data-es-html='Al enviar aceptas nuestro <a href="aviso-privacidad.html">aviso de privacidad</a>.'
+            data-en-html='By submitting, you accept our <a href="aviso-privacidad.html">privacy notice</a>.'>
+            Al enviar aceptas nuestro <a href="aviso-privacidad.html">aviso de privacidad</a>.
           </p>
         </div>
       </div>
     </div>
   </section>
-     <!-- FOOTER -->
+
+  <!-- FOOTER -->
   <footer>
     <div class="footer-inner">
-    
-    <!-- BLOQUE IZQUIERDO -->
+      <!-- BLOQUE IZQUIERDO -->
       <div>
         <div class="footer-brand">
           <div class="footer-logo-main">
@@ -234,9 +243,17 @@
           </svg>
           contacto@qualityms.com.mx
         </a>
+
+        <a 
+          href="aviso-privacidad.html" 
+          class="privacy-footer-link"
+          data-es="Aviso de privacidad"
+          data-en="Privacy notice">
+          Aviso de privacidad
+        </a>
       </div>
 
-    <!-- REDES -->
+      <!-- REDES -->
       <div class="footer-col">
         <h4 data-es="Redes sociales" data-en="Social media">Redes sociales</h4>
 
@@ -270,7 +287,7 @@
         </div>
       </div>
 
-    <!-- TELÉFONOS -->
+      <!-- TELÉFONOS -->
       <div class="footer-col">
         <h4 data-es="Teléfonos" data-en="Phone numbers">Teléfonos</h4>
 
@@ -297,6 +314,7 @@
       </div>
     </div>
   </footer>
-  <script src="script.js"defer></script>
+
+  <script src="script.js" defer></script>
 </body>
 </html>

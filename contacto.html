@@ -104,16 +104,31 @@
             Completa el formulario y nuestro equipo se pondrá en contacto contigo.
           </p>
 
+          <div class="quote-preview-box" id="quotePreviewBox" hidden>
+            <div>
+              <strong>Productos agregados a cotización</strong>
+              <p>Estos productos se enviarán junto con el formulario.</p>
+            </div>
+
+            <textarea id="quotePreviewText" readonly></textarea>
+
+            <button type="button" id="copyQuoteText">
+              Copiar productos
+            </button>
+          </div>
+
           <div class="bigin-form-box">
             <iframe 
+              id="biginFormIframe"
               class="bigin-form-iframe"
               src="https://us.bigin.online/org938567094/forms/newform"
+              data-bigin-base-src="https://us.bigin.online/org938567094/forms/newform"
+              data-cart-field="CONTACTCF10"
               title="Formulario de contacto Quality Medical Service"
               loading="lazy"
               scrolling="no">
             </iframe>
           </div>
-
           <p 
             class="contact-form-note"
             data-es-html='Al enviar aceptas nuestro <a href="aviso-privacidad.html">aviso de privacidad</a>.'

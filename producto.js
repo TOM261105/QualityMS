@@ -350,8 +350,19 @@ function renderSingleProduct(product) {
             Cotizar este producto
           </button>
 
-          <button class="btn-outline product-share-btn" type="button" data-single-share>
-            Compartir producto
+          <button 
+          class="btn-outline product-share-btn product-share-icon-btn" 
+          type="button" 
+          data-single-share
+          aria-label="Compartir producto"
+          title="Compartir producto">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.6" y1="10.7" x2="15.4" y2="6.3"></line>
+            <line x1="8.6" y1="13.3" x2="15.4" y2="17.7"></line>
+          </svg>
           </button>
         </div>
       </div>

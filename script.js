@@ -80,6 +80,7 @@ if (langToggle) {
   });
 }
 
+
 // Abrir/cerrar tarjetas de Misión, Visión y Objetivos
 document.addEventListener("DOMContentLoaded", () => {
   const archCards = document.querySelectorAll(".arch-card");
@@ -109,6 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
 
 /* ── POP-UP ESPECIALISTA MÉDICO ───────────────────────────── */
 
@@ -402,6 +404,7 @@ if (!tiendaEnMantenimiento) {
   checkMedicalAccess();
 }
 
+
 /* ── POP-UP SEGURIDAD DE COMPRA ───────────────────────────── */
 
 const purchaseSecurityPopup = document.getElementById("purchaseSecurityPopup");
@@ -477,6 +480,7 @@ window.addEventListener("pageshow", () => {
   setTimeout(showPurchaseSecurityAfterMedicalPopup, 350);
 });
 
+
 /* ── MARCAR PÁGINA ACTIVA EN EL MENÚ ─────────────────────── */
 
 function setActiveNavLink() {
@@ -518,6 +522,7 @@ function setActiveNavLink() {
   });
 }
 
+
 /* ── LINKS DE REDES SOCIALES ─────────────────────────────── */
 
 const socialLinks = {
@@ -538,6 +543,7 @@ document.querySelectorAll(".social-btn").forEach(link => {
 });
 
 setActiveNavLink();
+
 
 /* ── PROBLEMAS FRECUENTES SMOOTH ─────────────────────────── */
 
@@ -582,7 +588,10 @@ document.querySelectorAll(".faq-question").forEach(button => {
     }
   });
 });
-/* ── AUTOLLENADO DE FORMULARIO DE COTIZACIÓN ───────────────── */
+
+
+/* ── AUTOLLENADO DE FORMULARIO DE COTIZACIÓN ANTIGUO ─────── */
+/* Este bloque se queda por si alguna página todavía usa el formulario anterior. */
 
 function prefillContactFormFromQuote() {
   const messageField = document.getElementById("contactMessage");
@@ -626,6 +635,7 @@ Quedo pendiente de la información de precio, disponibilidad y tiempos de entreg
 }
 
 document.addEventListener("DOMContentLoaded", prefillContactFormFromQuote);
+
 
 /* ── AVISO TEMPORAL: PRODUCTOS BAJO COTIZACIÓN ───────────── */
 
@@ -682,9 +692,17 @@ function showQuoteTemporaryNotice() {
 
 document.addEventListener("DOMContentLoaded", showQuoteTemporaryNotice);
 
+
+/* ── MENSAJE EDITABLE DEL CARRITO EN CONTACTO ─────────────── */
+
 function getQuoteTextForBigin() {
+  const editedMessage = sessionStorage.getItem("qmsQuoteEditedMessage") || "";
   const savedMessage = sessionStorage.getItem("qmsQuoteMessage") || "";
   const savedProducts = sessionStorage.getItem("qmsQuoteProducts") || "";
+
+  if (editedMessage.trim()) {
+    return editedMessage.trim();
+  }
 
   if (savedMessage.trim()) {
     return savedMessage.trim();
@@ -727,50 +745,102 @@ function getQuoteTextForBigin() {
   return "";
 }
 
-function sendCartToBiginForm() {
-  const iframe = document.getElementById("biginFormIframe");
+function setupEditableQuoteMessage() {
   const previewBox = document.getElementById("quotePreviewBox");
   const previewText = document.getElementById("quotePreviewText");
   const copyButton = document.getElementById("copyQuoteText");
+  const saveButton = document.getElementById("saveQuoteText");
+  const clearButton = document.getElementById("clearQuoteText");
+  const iframe = document.getElementById("biginFormIframe");
 
-  if (!iframe) return;
+  if (!previewBox || !previewText) return;
 
   const quoteText = getQuoteTextForBigin();
 
-  if (!quoteText) {
-    if (previewBox) previewBox.hidden = true;
+  if (!quoteText.trim()) {
+    previewBox.hidden = true;
+
+    if (iframe) {
+      const baseSrc = iframe.getAttribute("data-bigin-base-src") || "https://us.bigin.online/org938567094/forms/newform";
+      iframe.src = baseSrc;
+    }
+
     return;
   }
 
-  if (previewBox && previewText) {
-    previewBox.hidden = false;
-    previewText.value = quoteText;
+  previewBox.hidden = false;
+  previewText.value = quoteText;
+
+  /* Dejamos el iframe limpio. El usuario copiará y pegará el mensaje manualmente. */
+  if (iframe) {
+    const baseSrc = iframe.getAttribute("data-bigin-base-src") || "https://us.bigin.online/org938567094/forms/newform";
+    iframe.src = baseSrc;
   }
 
-  const baseSrc = iframe.getAttribute("data-bigin-base-src") || iframe.src.split("?")[0];
-  const cartFieldName = iframe.getAttribute("data-cart-field") || "CONTACTCF10";
+  previewText.addEventListener("input", () => {
+    sessionStorage.setItem("qmsQuoteEditedMessage", previewText.value.trim());
+  });
 
-  const formUrl = new URL(baseSrc);
+  if (copyButton) {
+    copyButton.onclick = async () => {
+      const textToCopy = previewText.value.trim();
 
-  formUrl.searchParams.set(cartFieldName, quoteText);
-  formUrl.searchParams.set("productos_cotizacion", quoteText);
+      if (!textToCopy) return;
 
-  iframe.src = formUrl.toString();
-
-  if (copyButton && previewText) {
-    copyButton.addEventListener("click", async () => {
       try {
-        await navigator.clipboard.writeText(previewText.value);
+        await navigator.clipboard.writeText(textToCopy);
         copyButton.textContent = "Copiado";
+
         setTimeout(() => {
-          copyButton.textContent = "Copiar productos";
+          copyButton.textContent = localStorage.getItem("siteLang") === "en" ? "Copy message" : "Copiar mensaje";
         }, 1800);
       } catch (error) {
         previewText.select();
         document.execCommand("copy");
+
+        copyButton.textContent = "Copiado";
+
+        setTimeout(() => {
+          copyButton.textContent = localStorage.getItem("siteLang") === "en" ? "Copy message" : "Copiar mensaje";
+        }, 1800);
       }
-    });
+    };
+  }
+
+  if (saveButton) {
+    saveButton.onclick = () => {
+      sessionStorage.setItem("qmsQuoteEditedMessage", previewText.value.trim());
+
+      saveButton.textContent = localStorage.getItem("siteLang") === "en" ? "Saved" : "Guardado";
+
+      setTimeout(() => {
+        saveButton.textContent = localStorage.getItem("siteLang") === "en" ? "Save changes" : "Guardar cambios";
+      }, 1800);
+    };
+  }
+
+  if (clearButton) {
+    clearButton.onclick = () => {
+      sessionStorage.removeItem("qmsQuoteMessage");
+      sessionStorage.removeItem("qmsQuoteProducts");
+      sessionStorage.removeItem("qmsQuoteEditedMessage");
+      localStorage.removeItem("qualityCart");
+
+      previewText.value = "";
+      previewBox.hidden = true;
+
+      const cartCount = document.getElementById("cartCount");
+      const cartTotal = document.getElementById("cartTotal");
+
+      if (cartCount) cartCount.textContent = "0";
+      if (cartTotal) cartTotal.textContent = "0 productos";
+
+      if (iframe) {
+        const baseSrc = iframe.getAttribute("data-bigin-base-src") || "https://us.bigin.online/org938567094/forms/newform";
+        iframe.src = baseSrc;
+      }
+    };
   }
 }
 
-document.addEventListener("DOMContentLoaded", sendCartToBiginForm);
+document.addEventListener("DOMContentLoaded", setupEditableQuoteMessage);

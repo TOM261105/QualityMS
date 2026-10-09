@@ -5371,3 +5371,28 @@ footer {
 .quote-preview-actions button.clear:hover {
   background: var(--blue-bg);
 }
+
+.dist-logo img {
+  display: block;
+  width: 100%;
+  max-width: 170px;
+  max-height: 58px;
+  object-fit: contain;
+  object-position: center;
+  filter: none !important;
+  opacity: 1 !important;
+  transition: transform 0.25s ease;
+}
+
+.dist-logo:hover img {
+  filter: none !important;
+  opacity: 1 !important;
+  transform: scale(1.04);
+}
+
+@media (max-width: 640px) {
+  .dist-logo img {
+    max-width: 130px;
+    max-height: 46px;
+  }
+}

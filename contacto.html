@@ -104,17 +104,55 @@
             Completa el formulario y nuestro equipo se pondrá en contacto contigo.
           </p>
 
+          <!-- MENSAJE EDITABLE DEL CARRITO -->
           <div class="quote-preview-box" id="quotePreviewBox" hidden>
             <div>
-              <strong>Productos agregados a cotización</strong>
-              <p>Estos productos se enviarán junto con el formulario.</p>
+              <strong 
+                data-es="Productos agregados a cotización"
+                data-en="Products added to quote">
+                Productos agregados a cotización
+              </strong>
+
+              <p 
+                data-es="Puedes editar este mensaje antes de copiarlo y pegarlo en el formulario."
+                data-en="You can edit this message before copying and pasting it into the form.">
+                Puedes editar este mensaje antes de copiarlo y pegarlo en el formulario.
+              </p>
             </div>
 
-            <textarea id="quotePreviewText" readonly></textarea>
+            <textarea 
+              id="quotePreviewText"
+              data-es-placeholder="Aquí aparecerán los productos agregados al carrito. También puedes editar este mensaje manualmente."
+              data-en-placeholder="Products added to the cart will appear here. You can also edit this message manually."
+              placeholder="Aquí aparecerán los productos agregados al carrito. También puedes editar este mensaje manualmente."></textarea>
 
-            <button type="button" id="copyQuoteText">
-              Copiar productos
-            </button>
+            <div class="quote-preview-actions">
+              <button 
+                type="button" 
+                id="copyQuoteText"
+                data-es="Copiar mensaje"
+                data-en="Copy message">
+                Copiar mensaje
+              </button>
+
+              <button 
+                type="button" 
+                id="saveQuoteText" 
+                class="secondary"
+                data-es="Guardar cambios"
+                data-en="Save changes">
+                Guardar cambios
+              </button>
+
+              <button 
+                type="button" 
+                id="clearQuoteText" 
+                class="clear"
+                data-es="Vaciar mensaje"
+                data-en="Clear message">
+                Vaciar mensaje
+              </button>
+            </div>
           </div>
 
           <div class="bigin-form-box">
@@ -123,12 +161,12 @@
               class="bigin-form-iframe"
               src="https://us.bigin.online/org938567094/forms/newform"
               data-bigin-base-src="https://us.bigin.online/org938567094/forms/newform"
-              data-cart-field="CONTACTCF10"
               title="Formulario de contacto Quality Medical Service"
               loading="lazy"
               scrolling="no">
             </iframe>
           </div>
+
           <p 
             class="contact-form-note"
             data-es-html='Al enviar aceptas nuestro <a href="aviso-privacidad.html">aviso de privacidad</a>.'

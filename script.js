@@ -526,7 +526,7 @@ function setActiveNavLink() {
 /* ── LINKS DE REDES SOCIALES ─────────────────────────────── */
 
 const socialLinks = {
-  Instagram: "https://www.instagram.com/quality_medical_service?stkn=cmpoYmZwdmRjejB0",
+  Instagram: "https://www.instagram.com/quality_medical_service",
   YouTube: "https://www.youtube.com/channel/UCkZFxncboEjXPPjk5UjPAvg",
   X: "https://x.com/QualityMedical_",
   Facebook: "https://www.facebook.com/p/Quality-MS-100075618777480/"

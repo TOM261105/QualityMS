@@ -2,6 +2,8 @@
    Este archivo permite que la tienda lea:
    - Categorías desde Shopify Collections
    - Productos desde Shopify Products
+   - Descripción larga desde Shopify descriptionHtml
+   - Descripción corta desde metafield custom.descripcion_corta
    - Precios desde variantes de Shopify
    - Precio distribuidor desde metafields
    - Checkout desde Shopify Cart
@@ -119,12 +121,20 @@ function cleanShopifyProductTitle(title, brand) {
   return cleanTitle || title || "Producto";
 }
 
+function stripShopifyHTML(value) {
+  const temp = document.createElement("div");
+  temp.innerHTML = String(value || "");
+  return temp.textContent.trim();
+}
+
 function addBrandToProductDescription(description, brand) {
   const cleanDescription = String(description || "Sin descripción disponible.").trim();
 
   if (!brand) return cleanDescription;
 
-  if (cleanDescription.toLowerCase().includes(brand.toLowerCase())) {
+  const plainText = stripShopifyHTML(cleanDescription);
+
+  if (plainText.toLowerCase().includes(brand.toLowerCase())) {
     return cleanDescription;
   }
 
@@ -150,22 +160,46 @@ function mapShopifyProduct(product) {
 
   const brand = detectProductBrand(product.title, firstCollection?.title);
   const cleanTitle = cleanShopifyProductTitle(product.title, brand);
-  const cleanDescription = addBrandToProductDescription(product.description, brand);
+
+  const rawDescriptionHTML =
+    product.descriptionHtml ||
+    product.description ||
+    "";
+
+  const rawDescriptionText =
+    product.description ||
+    stripShopifyHTML(product.descriptionHtml) ||
+    "";
+
+  const cleanDescriptionHTML = addBrandToProductDescription(rawDescriptionHTML, brand);
+  const cleanDescriptionText = addBrandToProductDescription(rawDescriptionText, brand);
+
+  const shortDescription =
+    product.shortDescription?.value ||
+    product.descripcionCorta?.value ||
+    "";
 
   return {
     id: product.id,
     handle: product.handle,
     originalTitle: product.title,
     title: cleanTitle,
+
     category: firstCollection?.handle || "general",
     categoryName: firstCollection?.title || "General",
+
     price: 0,
     priceGeneral: "Bajo cotización",
     priceDistributor: "Cotizar con ejecutivo",
     priceText: "Bajo cotización",
+
     image: product.featuredImage?.url || "assets/diagnostico.png",
     imageAlt: product.featuredImage?.altText || cleanTitle,
-    description: cleanDescription,
+
+    description: cleanDescriptionHTML || cleanDescriptionText || "Sin descripción disponible.",
+    descriptionHtml: cleanDescriptionHTML || cleanDescriptionText || "Sin descripción disponible.",
+    shortDescription: shortDescription,
+
     availability: "Disponible para cotización",
     type: "cotizacion",
     variantId: firstVariant?.id || null
@@ -215,6 +249,8 @@ function getProductDetailUrl(product, backUrl = "productos.html") {
   return `producto.html?id=${encodeURIComponent(product.id)}&back=${backParam}`;
 }
 
+/* ── COLLECTIONS ───────────────────────────────────────── */
+
 async function getStoreCollections() {
   if (!isShopifyReady()) return getDemoCollections();
 
@@ -241,6 +277,8 @@ async function getStoreCollections() {
 
   return data.collections.edges.map(edge => mapShopifyCollection(edge.node));
 }
+
+/* ── COLLECTION CON TODOS SUS PRODUCTOS ─────────────────── */
 
 async function getStoreCollectionWithProducts(collectionHandle) {
   if (!isShopifyReady()) {
@@ -282,12 +320,16 @@ async function getStoreCollectionWithProducts(collectionHandle) {
               title
               handle
               description
+              descriptionHtml
               availableForSale
               featuredImage {
                 url
                 altText
               }
-              metafield(namespace: "custom", key: "precio_distribuidor") {
+              shortDescription: metafield(namespace: "custom", key: "descripcion_corta") {
+                value
+              }
+              distributorPrice: metafield(namespace: "custom", key: "precio_distribuidor") {
                 value
               }
               collections(first: 3) {
@@ -352,6 +394,8 @@ async function getStoreCollectionWithProducts(collectionHandle) {
   };
 }
 
+/* ── TODOS LOS PRODUCTOS ────────────────────────────────── */
+
 async function getStoreProducts() {
   if (!isShopifyReady()) return getDemoProducts();
 
@@ -368,12 +412,16 @@ async function getStoreProducts() {
             title
             handle
             description
+            descriptionHtml
             availableForSale
             featuredImage {
               url
               altText
             }
-            metafield(namespace: "custom", key: "precio_distribuidor") {
+            shortDescription: metafield(namespace: "custom", key: "descripcion_corta") {
+              value
+            }
+            distributorPrice: metafield(namespace: "custom", key: "precio_distribuidor") {
               value
             }
             collections(first: 3) {
@@ -419,6 +467,8 @@ async function getStoreProducts() {
   return allProducts;
 }
 
+/* ── PRODUCTO INDIVIDUAL ────────────────────────────────── */
+
 async function getStoreProductByHandle(productHandle) {
   if (!isShopifyReady()) {
     return getDemoProducts().find(product => product.id === productHandle || product.handle === productHandle) || null;
@@ -431,12 +481,16 @@ async function getStoreProductByHandle(productHandle) {
         title
         handle
         description
+        descriptionHtml
         availableForSale
         featuredImage {
           url
           altText
         }
-        metafield(namespace: "custom", key: "precio_distribuidor") {
+        shortDescription: metafield(namespace: "custom", key: "descripcion_corta") {
+          value
+        }
+        distributorPrice: metafield(namespace: "custom", key: "precio_distribuidor") {
           value
         }
         collections(first: 3) {
@@ -470,6 +524,7 @@ async function getStoreProductByHandle(productHandle) {
 
   return mapShopifyProduct(data.product);
 }
+
 /* ── PRODUCTOS POR PÁGINA PARA LISTA ─────────────────────── */
 
 async function getStoreProductsPage(options = {}) {
@@ -488,6 +543,7 @@ async function getStoreProductsPage(options = {}) {
       demoProducts = demoProducts.filter(product => {
         const text = `
           ${product.title || ""}
+          ${product.shortDescription || ""}
           ${product.description || ""}
           ${product.category || ""}
           ${product.categoryName || ""}
@@ -522,12 +578,16 @@ async function getStoreProductsPage(options = {}) {
             title
             handle
             description
+            descriptionHtml
             availableForSale
             featuredImage {
               url
               altText
             }
-            metafield(namespace: "custom", key: "precio_distribuidor") {
+            shortDescription: metafield(namespace: "custom", key: "descripcion_corta") {
+              value
+            }
+            distributorPrice: metafield(namespace: "custom", key: "precio_distribuidor") {
               value
             }
             collections(first: 3) {
@@ -611,12 +671,16 @@ async function getStoreCollectionProductsPage(collectionHandle, options = {}) {
               title
               handle
               description
+              descriptionHtml
               availableForSale
               featuredImage {
                 url
                 altText
               }
-              metafield(namespace: "custom", key: "precio_distribuidor") {
+              shortDescription: metafield(namespace: "custom", key: "descripcion_corta") {
+                value
+              }
+              distributorPrice: metafield(namespace: "custom", key: "precio_distribuidor") {
                 value
               }
               collections(first: 3) {
@@ -668,6 +732,9 @@ async function getStoreCollectionProductsPage(collectionHandle, options = {}) {
     pageInfo: data.collection.products.pageInfo
   };
 }
+
+/* ── CREAR CARRITO SHOPIFY ──────────────────────────────── */
+
 async function createShopifyCart(cartItems) {
   if (!isShopifyReady()) {
     alert("Shopify todavía no está configurado.");

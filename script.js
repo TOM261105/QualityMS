@@ -844,3 +844,25 @@ function setupEditableQuoteMessage() {
 }
 
 document.addEventListener("DOMContentLoaded", setupEditableQuoteMessage);
+
+function setupHomeNavbarFade() {
+  const topbar = document.getElementById("mainTopbar");
+
+  if (!topbar || !document.body.classList.contains("home-page")) return;
+
+  function updateNavbarState() {
+    if (window.scrollY > 90) {
+      topbar.classList.add("nav-logo-only");
+    } else {
+      topbar.classList.remove("nav-logo-only");
+    }
+  }
+
+  updateNavbarState();
+
+  window.addEventListener("scroll", updateNavbarState, {
+    passive: true
+  });
+}
+
+document.addEventListener("DOMContentLoaded", setupHomeNavbarFade);

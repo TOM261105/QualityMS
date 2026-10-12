@@ -1,11 +1,10 @@
 /* ── SHOPIFY STOREFRONT API ─────────────────────────
    Este archivo permite que la tienda lea:
    - Categorías desde Shopify Collections
+   - Si no hay collections, arma categorías desde Vendor / Proveedor
    - Productos desde Shopify Products
    - Descripción larga desde Shopify descriptionHtml
    - Descripción corta desde metafield custom.descripcion_corta
-   - Precios desde variantes de Shopify
-   - Precio distribuidor desde metafields
    - Checkout desde Shopify Cart
 ──────────────────────────────────────────────────── */
 
@@ -49,10 +48,6 @@ async function shopifyRequest(query, variables = {}) {
   return result.data;
 }
 
-function moneyFormat(price) {
-  return "Bajo cotización";
-}
-
 function normalizePriceNumber(price) {
   if (!price || !price.amount) return 0;
   return Number(price.amount) || 0;
@@ -60,6 +55,31 @@ function normalizePriceNumber(price) {
 
 function getProductMainCollection(product) {
   return product.collections?.edges?.[0]?.node || null;
+}
+
+/* ── HELPERS ───────────────────────────────────── */
+
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function stripShopifyHTML(value) {
+  const temp = document.createElement("div");
+  temp.innerHTML = String(value || "");
+  return temp.textContent.trim();
+}
+
+function handleizeCategory(value) {
+  const clean = String(value || "")
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/&/g, "y")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return clean || "general";
 }
 
 /* ── LIMPIEZA DE MARCAS EN TÍTULOS ───────────────────────── */
@@ -70,16 +90,20 @@ const PRODUCT_BRANDS_TO_REMOVE = [
   "Hill-Rom",
   "Midmark",
   "SECA",
-  "Seca"
+  "Seca",
+  "Baxter",
+  "Bovie",
+  "HUNTLEIGH",
+  "Huntleigh",
+  "Mortara"
 ];
 
-function escapeRegExp(value) {
-  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function detectProductBrand(title, collectionTitle) {
+function detectProductBrand(title, collectionTitle, vendor) {
   const productTitle = String(title || "");
   const productCollection = String(collectionTitle || "");
+  const productVendor = String(vendor || "").trim();
+
+  if (productVendor) return productVendor;
 
   const foundBrand = PRODUCT_BRANDS_TO_REMOVE.find(brand => {
     const brandRegex = new RegExp(`^\\s*${escapeRegExp(brand)}\\b`, "i");
@@ -121,12 +145,6 @@ function cleanShopifyProductTitle(title, brand) {
   return cleanTitle || title || "Producto";
 }
 
-function stripShopifyHTML(value) {
-  const temp = document.createElement("div");
-  temp.innerHTML = String(value || "");
-  return temp.textContent.trim();
-}
-
 function addBrandToProductDescription(description, brand) {
   const cleanDescription = String(description || "Sin descripción disponible.").trim();
 
@@ -140,6 +158,35 @@ function addBrandToProductDescription(description, brand) {
 
   return `Marca: ${brand}. ${cleanDescription}`;
 }
+
+function getProductCategoryInfo(product) {
+  const firstCollection = getProductMainCollection(product);
+
+  const vendor = String(product.vendor || "").trim();
+  const productType = String(product.productType || "").trim();
+  const collectionTitle = String(firstCollection?.title || "").trim();
+  const collectionHandle = String(firstCollection?.handle || "").trim();
+
+  const title =
+    vendor ||
+    collectionTitle ||
+    productType ||
+    "General";
+
+  const handle =
+    handleizeCategory(vendor) ||
+    collectionHandle ||
+    handleizeCategory(collectionTitle) ||
+    handleizeCategory(productType) ||
+    "general";
+
+  return {
+    handle,
+    title
+  };
+}
+
+/* ── MAPS ───────────────────────────────────── */
 
 function mapShopifyCollection(collection) {
   return {
@@ -155,9 +202,9 @@ function mapShopifyCollection(collection) {
 function mapShopifyProduct(product) {
   const firstVariant = product.variants?.edges?.[0]?.node || null;
   const firstCollection = getProductMainCollection(product);
-  const price = firstVariant?.price || null;
 
-  const brand = detectProductBrand(product.title, firstCollection?.title);
+  const categoryInfo = getProductCategoryInfo(product);
+  const brand = detectProductBrand(product.title, firstCollection?.title, product.vendor);
   const cleanTitle = cleanShopifyProductTitle(product.title, brand);
 
   const rawDescriptionHTML =
@@ -184,8 +231,11 @@ function mapShopifyProduct(product) {
     originalTitle: product.title,
     title: cleanTitle,
 
-    category: firstCollection?.handle || "general",
-    categoryName: firstCollection?.title || "General",
+    vendor: product.vendor || "",
+    productType: product.productType || "",
+
+    category: categoryInfo.handle,
+    categoryName: categoryInfo.title,
 
     price: 0,
     priceGeneral: "Bajo cotización",
@@ -204,6 +254,33 @@ function mapShopifyProduct(product) {
     variantId: firstVariant?.id || null
   };
 }
+
+function buildCollectionsFromProducts(products) {
+  const categoryMap = new Map();
+
+  products.forEach(product => {
+    const handle = product.category || handleizeCategory(product.categoryName);
+    const title = product.categoryName || "General";
+
+    if (!categoryMap.has(handle)) {
+      categoryMap.set(handle, {
+        id: `generated-${handle}`,
+        handle,
+        title,
+        description: `Productos de ${title}.`,
+        image: product.image || "assets/diagnostico.png",
+        altText: title,
+        generatedFromProducts: true
+      });
+    }
+  });
+
+  return Array.from(categoryMap.values()).sort((a, b) => {
+    return a.title.localeCompare(b.title, "es");
+  });
+}
+
+/* ── DEMO ───────────────────────────────────── */
 
 function getDemoCollections() {
   if (typeof CATEGORY_INFO === "undefined") return [];
@@ -248,6 +325,48 @@ function getProductDetailUrl(product, backUrl = "productos.html") {
   return `producto.html?id=${encodeURIComponent(product.id)}&back=${backParam}`;
 }
 
+/* ── PRODUCT QUERY FRAGMENT ───────────────────────────────────── */
+
+const PRODUCT_FIELDS = `
+  id
+  title
+  handle
+  vendor
+  productType
+  description
+  descriptionHtml
+  availableForSale
+  featuredImage {
+    url
+    altText
+  }
+  shortDescription: metafield(namespace: "custom", key: "descripcion_corta") {
+    value
+  }
+  distributorPrice: metafield(namespace: "custom", key: "precio_distribuidor") {
+    value
+  }
+  collections(first: 3) {
+    edges {
+      node {
+        title
+        handle
+      }
+    }
+  }
+  variants(first: 1) {
+    edges {
+      node {
+        id
+        price {
+          amount
+          currencyCode
+        }
+      }
+    }
+  }
+`;
+
 /* ── COLLECTIONS ───────────────────────────────────────── */
 
 async function getStoreCollections() {
@@ -274,7 +393,53 @@ async function getStoreCollections() {
 
   const data = await shopifyRequest(query);
 
-  return data.collections.edges.map(edge => mapShopifyCollection(edge.node));
+  const collections = data.collections.edges.map(edge => mapShopifyCollection(edge.node));
+
+  if (collections.length > 0) {
+    return collections;
+  }
+
+  const products = await getStoreProducts();
+  return buildCollectionsFromProducts(products);
+}
+
+/* ── TODOS LOS PRODUCTOS ────────────────────────────────── */
+
+async function getStoreProducts() {
+  if (!isShopifyReady()) return getDemoProducts();
+
+  const query = `
+    query GetProducts($cursor: String) {
+      products(first: 250, after: $cursor) {
+        pageInfo {
+          hasNextPage
+          endCursor
+        }
+        edges {
+          node {
+            ${PRODUCT_FIELDS}
+          }
+        }
+      }
+    }
+  `;
+
+  let allProducts = [];
+  let cursor = null;
+  let hasNextPage = true;
+
+  while (hasNextPage) {
+    const data = await shopifyRequest(query, { cursor });
+
+    const products = data.products.edges.map(edge => mapShopifyProduct(edge.node));
+
+    allProducts = allProducts.concat(products);
+
+    hasNextPage = data.products.pageInfo.hasNextPage;
+    cursor = data.products.pageInfo.endCursor;
+  }
+
+  return allProducts;
 }
 
 /* ── COLLECTION CON TODOS SUS PRODUCTOS ─────────────────── */
@@ -315,41 +480,7 @@ async function getStoreCollectionWithProducts(collectionHandle) {
           }
           edges {
             node {
-              id
-              title
-              handle
-              description
-              descriptionHtml
-              availableForSale
-              featuredImage {
-                url
-                altText
-              }
-              shortDescription: metafield(namespace: "custom", key: "descripcion_corta") {
-                value
-              }
-              distributorPrice: metafield(namespace: "custom", key: "precio_distribuidor") {
-                value
-              }
-              collections(first: 3) {
-                edges {
-                  node {
-                    title
-                    handle
-                  }
-                }
-              }
-              variants(first: 1) {
-                edges {
-                  node {
-                    id
-                    price {
-                      amount
-                      currencyCode
-                    }
-                  }
-                }
-              }
+              ${PRODUCT_FIELDS}
             }
           }
         }
@@ -361,6 +492,7 @@ async function getStoreCollectionWithProducts(collectionHandle) {
   let allProducts = [];
   let cursor = null;
   let hasNextPage = true;
+  let collectionExists = false;
 
   while (hasNextPage) {
     const data = await shopifyRequest(query, {
@@ -369,11 +501,10 @@ async function getStoreCollectionWithProducts(collectionHandle) {
     });
 
     if (!data.collection) {
-      return {
-        collection: null,
-        products: []
-      };
+      break;
     }
+
+    collectionExists = true;
 
     if (!collectionData) {
       collectionData = mapShopifyCollection(data.collection);
@@ -387,83 +518,34 @@ async function getStoreCollectionWithProducts(collectionHandle) {
     cursor = data.collection.products.pageInfo.endCursor;
   }
 
-  return {
-    collection: collectionData,
-    products: allProducts
-  };
-}
-
-/* ── TODOS LOS PRODUCTOS ────────────────────────────────── */
-
-async function getStoreProducts() {
-  if (!isShopifyReady()) return getDemoProducts();
-
-  const query = `
-    query GetProducts($cursor: String) {
-      products(first: 250, after: $cursor) {
-        pageInfo {
-          hasNextPage
-          endCursor
-        }
-        edges {
-          node {
-            id
-            title
-            handle
-            description
-            descriptionHtml
-            availableForSale
-            featuredImage {
-              url
-              altText
-            }
-            shortDescription: metafield(namespace: "custom", key: "descripcion_corta") {
-              value
-            }
-            distributorPrice: metafield(namespace: "custom", key: "precio_distribuidor") {
-              value
-            }
-            collections(first: 3) {
-              edges {
-                node {
-                  title
-                  handle
-                }
-              }
-            }
-            variants(first: 1) {
-              edges {
-                node {
-                  id
-                  price {
-                    amount
-                    currencyCode
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  `;
-
-  let allProducts = [];
-  let cursor = null;
-  let hasNextPage = true;
-
-  while (hasNextPage) {
-    const data = await shopifyRequest(query, { cursor });
-
-    const products = data.products.edges.map(edge => mapShopifyProduct(edge.node));
-
-    allProducts = allProducts.concat(products);
-
-    hasNextPage = data.products.pageInfo.hasNextPage;
-    cursor = data.products.pageInfo.endCursor;
+  if (collectionExists && allProducts.length > 0) {
+    return {
+      collection: collectionData,
+      products: allProducts
+    };
   }
 
-  return allProducts;
+  const allStoreProducts = await getStoreProducts();
+  const generatedCollections = buildCollectionsFromProducts(allStoreProducts);
+
+  const fallbackCollection =
+    generatedCollections.find(item => item.handle === collectionHandle) || {
+      id: `generated-${collectionHandle}`,
+      handle: collectionHandle,
+      title: collectionHandle,
+      description: "Explora los productos disponibles en esta categoría.",
+      image: "assets/diagnostico.png",
+      altText: collectionHandle
+    };
+
+  const fallbackProducts = allStoreProducts.filter(product => {
+    return product.category === collectionHandle;
+  });
+
+  return {
+    collection: fallbackCollection,
+    products: fallbackProducts
+  };
 }
 
 /* ── PRODUCTO INDIVIDUAL ────────────────────────────────── */
@@ -476,41 +558,7 @@ async function getStoreProductByHandle(productHandle) {
   const query = `
     query GetProduct($handle: String!) {
       product(handle: $handle) {
-        id
-        title
-        handle
-        description
-        descriptionHtml
-        availableForSale
-        featuredImage {
-          url
-          altText
-        }
-        shortDescription: metafield(namespace: "custom", key: "descripcion_corta") {
-          value
-        }
-        distributorPrice: metafield(namespace: "custom", key: "precio_distribuidor") {
-          value
-        }
-        collections(first: 3) {
-          edges {
-            node {
-              title
-              handle
-            }
-          }
-        }
-        variants(first: 1) {
-          edges {
-            node {
-              id
-              price {
-                amount
-                currencyCode
-              }
-            }
-          }
-        }
+        ${PRODUCT_FIELDS}
       }
     }
   `;
@@ -573,41 +621,7 @@ async function getStoreProductsPage(options = {}) {
         }
         edges {
           node {
-            id
-            title
-            handle
-            description
-            descriptionHtml
-            availableForSale
-            featuredImage {
-              url
-              altText
-            }
-            shortDescription: metafield(namespace: "custom", key: "descripcion_corta") {
-              value
-            }
-            distributorPrice: metafield(namespace: "custom", key: "precio_distribuidor") {
-              value
-            }
-            collections(first: 3) {
-              edges {
-                node {
-                  title
-                  handle
-                }
-              }
-            }
-            variants(first: 1) {
-              edges {
-                node {
-                  id
-                  price {
-                    amount
-                    currencyCode
-                  }
-                }
-              }
-            }
+            ${PRODUCT_FIELDS}
           }
         }
       }
@@ -666,41 +680,7 @@ async function getStoreCollectionProductsPage(collectionHandle, options = {}) {
           }
           edges {
             node {
-              id
-              title
-              handle
-              description
-              descriptionHtml
-              availableForSale
-              featuredImage {
-                url
-                altText
-              }
-              shortDescription: metafield(namespace: "custom", key: "descripcion_corta") {
-                value
-              }
-              distributorPrice: metafield(namespace: "custom", key: "precio_distribuidor") {
-                value
-              }
-              collections(first: 3) {
-                edges {
-                  node {
-                    title
-                    handle
-                  }
-                }
-              }
-              variants(first: 1) {
-                edges {
-                  node {
-                    id
-                    price {
-                      amount
-                      currencyCode
-                    }
-                  }
-                }
-              }
+              ${PRODUCT_FIELDS}
             }
           }
         }
@@ -714,21 +694,30 @@ async function getStoreCollectionProductsPage(collectionHandle, options = {}) {
     limit
   });
 
-  if (!data.collection) {
+  if (data.collection && data.collection.products.edges.length > 0) {
     return {
-      collection: null,
-      products: [],
-      pageInfo: {
-        hasNextPage: false,
-        endCursor: null
-      }
+      collection: mapShopifyCollection(data.collection),
+      products: data.collection.products.edges.map(edge => mapShopifyProduct(edge.node)),
+      pageInfo: data.collection.products.pageInfo
     };
   }
 
+  const allProducts = await getStoreProducts();
+  const filteredProducts = allProducts.filter(product => product.category === collectionHandle);
+
+  const startIndex = cursor ? Number(cursor) : 0;
+  const endIndex = startIndex + limit;
+
+  const generatedCollections = buildCollectionsFromProducts(allProducts);
+  const generatedCollection = generatedCollections.find(item => item.handle === collectionHandle) || null;
+
   return {
-    collection: mapShopifyCollection(data.collection),
-    products: data.collection.products.edges.map(edge => mapShopifyProduct(edge.node)),
-    pageInfo: data.collection.products.pageInfo
+    collection: generatedCollection,
+    products: filteredProducts.slice(startIndex, endIndex),
+    pageInfo: {
+      hasNextPage: endIndex < filteredProducts.length,
+      endCursor: endIndex < filteredProducts.length ? String(endIndex) : null
+    }
   };
 }
 

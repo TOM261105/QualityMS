@@ -6564,3 +6564,43 @@ footer {
   background: var(--qms-primary) !important;
   color: #ffffff !important;
 }
+
+/* ───────────────────────────────────────────────────────────
+   DISTRIBUIDORES — LOGOS MÁS GRANDES
+   ─────────────────────────────────────────────────────────── */
+
+.dist-logo {
+  width: 310px !important;
+  height: 130px !important;
+  padding: 0 24px !important;
+}
+
+.dist-logo img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 250px !important;
+  max-height: 92px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* Hace que el carrusel siga fluido aunque los logos sean más grandes */
+.dist-track {
+  animation: distScroll 52s linear infinite !important;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .dist-logo {
+    width: 220px !important;
+    height: 96px !important;
+    padding: 0 16px !important;
+  }
+
+  .dist-logo img {
+    max-width: 180px !important;
+    max-height: 68px !important;
+  }
+}

@@ -866,3 +866,25 @@ function setupHomeNavbarFade() {
 }
 
 document.addEventListener("DOMContentLoaded", setupHomeNavbarFade);
+
+function setupGlobalNavbarLogoFade() {
+  const topbar = document.getElementById("mainTopbar") || document.querySelector(".topbar");
+
+  if (!topbar) return;
+
+  function updateNavbarState() {
+    if (window.scrollY > 90) {
+      topbar.classList.add("nav-logo-only");
+    } else {
+      topbar.classList.remove("nav-logo-only");
+    }
+  }
+
+  updateNavbarState();
+
+  window.addEventListener("scroll", updateNavbarState, {
+    passive: true
+  });
+}
+
+document.addEventListener("DOMContentLoaded", setupGlobalNavbarLogoFade);

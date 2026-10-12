@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quality Medical Service</title>
+
   <!-- FAVICON -->
   <link rel="icon" type="image/png" href="assets/favicon.png">
   <link rel="apple-touch-icon" href="assets/favicon.png">
@@ -22,11 +23,11 @@
   <meta name="twitter:image" content="https://tom261105.github.io/QualityMS/assets/preview-qms.png">
   
   <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 
-<body>
- <!-- POP-UP ESPECIALISTA MÉDICO -->
+<body class="home-page">
+  <!-- POP-UP ESPECIALISTA MÉDICO -->
   <div class="medical-popup" id="medicalPopup">
     <div class="medical-popup-card">
       <div class="medical-popup-logo">
@@ -42,13 +43,17 @@
       </p>
 
       <div class="medical-popup-actions">
-        <button id="medicalYes" class="medical-btn medical-btn-primary"
+        <button 
+          id="medicalYes" 
+          class="medical-btn medical-btn-primary"
           data-es="Sí, soy especialista"
           data-en="Yes, I am a specialist">
           Sí, soy especialista
         </button>
 
-        <button id="medicalNo" class="medical-btn medical-btn-outline"
+        <button 
+          id="medicalNo" 
+          class="medical-btn medical-btn-outline"
           data-es="No"
           data-en="No">
           No
@@ -64,8 +69,13 @@
   </div>
   
   <!-- NAV -->
-  <div class="topbar">
+  <div class="topbar" id="mainTopbar">
     <div class="topbar-inner">
+
+      <a href="index.html" class="nav-logo" aria-label="Quality Medical Service">
+        <img src="assets/logo-qualityms.png" alt="Quality Medical Service">
+      </a>
+
       <nav class="nav-links">
         <a href="index.html" class="active" data-es="Conócenos" data-en="About us">Conócenos</a>
         <a href="distribuidores.html" data-es="Distribuidores" data-en="Distributors">Distribuidores</a>
@@ -78,141 +88,132 @@
     </div>
   </div>
 
-    <!-- HERO -->
-  <section class="hero">
+  <!-- HERO -->
+  <section class="hero"></section>
 
-    <!-- PANEL DEL HERO — OCULTO TEMPORALMENTE
-         La imagen de fondo ya trae el logo y el texto.
-         Para volver a mostrarlo, quita las dos líneas de comentario.
+  <!-- ABOUT -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <h2 class="about-heading reveal">
+        <span class="hash">#</span><span data-es="CalidadEnTusManos" data-en="QualityInYourHands">CalidadEnTusManos</span>
+      </h2>
 
-    <div class="hero-panel">
+      <div class="about-divider reveal"></div>
 
-      <div class="hero-logo">
-        <div class="hero-logo-img">
-          <img src="assets/logo-qualityms.png" alt="Quality Medical Service">
+      <div class="about-layout reveal">
+        <!-- FILA 1 -->
+        <div class="about-card about-image-card">
+          <div class="about-photo about-photo-left">
+            <img 
+              src="https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=900&auto=format&fit=crop&q=80" 
+              alt="Equipo médico y cirugía" 
+              loading="lazy">
+          </div>
+
+          <div class="about-slider-dots" aria-hidden="true">
+            <span class="active"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="about-card about-text-card">
+          <p 
+            data-es-html="Somos una compañía con una trayectoria que inicia en 1978. A lo largo de los años, cada paso que hemos dado nos ha permitido consolidarnos y convertirnos en lo que hoy somos: <strong>Quality MS</strong>. Nos especializamos en la importación, distribución y comercialización de equipos y sistemas médicos de alta tecnología para profesionales de la salud."
+            data-en-html="We are a company with a history that began in 1978. Over the years, every step we have taken has allowed us to grow and become what we are today: <strong>Quality MS</strong>. We specialize in the import, distribution and commercialization of high-tech medical equipment and systems for healthcare professionals.">
+            Somos una compañía con una trayectoria que inicia en 1978. A lo largo de los años, cada paso que hemos dado nos ha permitido consolidarnos y convertirnos en lo que hoy somos: <strong>Quality MS</strong>. Nos especializamos en la importación, distribución y comercialización de equipos y sistemas médicos de alta tecnología para profesionales de la salud.
+          </p>
+        </div>
+
+        <!-- FILA 2 -->
+        <div class="about-card about-text-card">
+          <p 
+            data-es-html="Contamos con marcas reconocidas a nivel nacional e internacional, así como con un equipo de asesores y técnicos especializados, comprometidos en ofrecer productos de calidad, atención personalizada y soluciones adaptadas a cada necesidad. Somos una opción confiable para <strong>hospitales públicos y privados, sanatorios, clínicas, médicos particulares y estudiantes.</strong>"
+            data-en-html="We work with nationally and internationally recognized brands, supported by a team of specialized advisors and technicians committed to providing quality products, personalized attention and solutions adapted to every need. We are a reliable option for <strong>public and private hospitals, healthcare centers, clinics, private doctors and students.</strong>">
+            Contamos con marcas reconocidas a nivel nacional e internacional, así como con un equipo de asesores y técnicos especializados, comprometidos en ofrecer productos de calidad, atención personalizada y soluciones adaptadas a cada necesidad. Somos una opción confiable para <strong>hospitales públicos y privados, sanatorios, clínicas, médicos particulares y estudiantes.</strong>
+          </p>
+        </div>
+
+        <div class="about-card about-image-card about-image-card-right">
+          <div class="about-photo about-photo-right">
+            <img 
+              src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=900&auto=format&fit=crop&q=80" 
+              alt="Instrumental médico" 
+              loading="lazy">
+          </div>
+
+          <div class="about-slider-dots" aria-hidden="true">
+            <span class="active"></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
         </div>
       </div>
-
-      <h1 
-        data-es-html="Tenemos el <strong>equipo ideal</strong> para diagnosticar a tus pacientes"
-        data-en-html="We have the <strong>ideal equipment</strong> to diagnose your patients">
-        Tenemos el <strong>equipo ideal</strong> para diagnosticar a tus pacientes
-      </h1>
-
-      <div class="hero-dots">
-        <span class="active"></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-
-      <a href="#about" class="hero-btn" data-es="Conócenos" data-en="About us">Conócenos</a>
-
     </div>
-
-    -->
-
   </section>
 
-<!-- ABOUT -->
-<section class="about-section" id="about">
-  <div class="container">
-    <h2 class="about-heading reveal">
-      <span class="hash">#</span><span data-es="CalidadEnTusManos" data-en="QualityInYourHands">CalidadEnTusManos</span>
-    </h2>
+  <!-- MISIÓN / VISIÓN / OBJETIVOS -->
+  <section class="arch-section">
+    <div class="arch-grid reveal">
 
-    <div class="about-divider reveal"></div>
+      <!-- MISIÓN -->
+      <div class="arch-card" role="button" tabindex="0" aria-expanded="false">
+        <img src="assets/mision.jpg" alt="Misión" loading="lazy">
 
-    <div class="about-layout reveal">
-      <!-- FILA 1 -->
-      <div class="about-card about-image-card">
-        <div class="about-photo about-photo-left">
-          <img src="https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?w=900&auto=format&fit=crop&q=80" alt="Equipo médico y cirugía" loading="lazy">
+        <div class="arch-content">
+          <p
+            data-es-html='Obtener siempre <strong>lo mejor para nuestros médicos</strong>, proveerles por todos los medios lo máximo en <strong>tecnología médica a nivel global</strong>, atenderlos con <strong>respeto, prontitud, calidad y servicio</strong>. A nosotros mismos, ofrecer a todos los que formamos parte de la empresa <strong>bienestar y seguridad</strong> dentro de una empresa con <strong>historia, trascendencia y credibilidad</strong>.'
+            data-en-html='Always obtain <strong>the best for our doctors</strong>, providing them through every available means with the highest level of <strong>global medical technology</strong>, while serving them with <strong>respect, promptness, quality and service</strong>. For ourselves, to offer everyone who is part of the company <strong>well-being and security</strong> within an organization with <strong>history, transcendence and credibility</strong>.'>
+            Obtener siempre <strong>lo mejor para nuestros médicos</strong>, proveerles por todos los medios lo máximo en <strong>tecnología médica a nivel global</strong>, atenderlos con <strong>respeto, prontitud, calidad y servicio</strong>. A nosotros mismos, ofrecer a todos los que formamos parte de la empresa <strong>bienestar y seguridad</strong> dentro de una empresa con <strong>historia, trascendencia y credibilidad</strong>.
+          </p>
         </div>
 
-        <div class="about-slider-dots" aria-hidden="true">
-          <span class="active"></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+        <div class="arch-label" data-es="Misión" data-en="Mission">Misión</div>
       </div>
 
-      <div class="about-card about-text-card">
-        <p 
-          data-es-html="Somos una compañía con una trayectoria que inicia en 1978. A lo largo de los años, cada paso que hemos dado nos ha permitido consolidarnos y convertirnos en lo que hoy somos: <strong>Quality MS</strong>. Nos especializamos en la importación, distribución y comercialización de equipos y sistemas médicos de alta tecnología para profesionales de la salud."
-          data-en-html="We are a company with a history that began in 1978. Over the years, every step we have taken has allowed us to grow and become what we are today: <strong>Quality MS</strong>. We specialize in the import, distribution and commercialization of high-tech medical equipment and systems for healthcare professionals.">
-          Somos una compañía con una trayectoria que inicia en 1978. A lo largo de los años, cada paso que hemos dado nos ha permitido consolidarnos y convertirnos en lo que hoy somos: <strong>Quality MS</strong>. Nos especializamos en la importación, distribución y comercialización de equipos y sistemas médicos de alta tecnología para profesionales de la salud.
-        </p>
-      </div>
+      <!-- VISIÓN -->
+      <div class="arch-card" role="button" tabindex="0" aria-expanded="false">
+        <img src="assets/vision.jpg" alt="Visión" loading="lazy">
 
-      <!-- FILA 2 -->
-      <div class="about-card about-text-card">
-        <p 
-          data-es-html="Contamos con marcas reconocidas a nivel nacional e internacional, así como con un equipo de asesores y técnicos especializados, comprometidos en ofrecer productos de calidad, atención personalizada y soluciones adaptadas a cada necesidad. Somos una opción confiable para <strong>hospitales públicos y privados, sanatorios, clínicas, médicos particulares y estudiantes.</strong>"
-          data-en-html="We work with nationally and internationally recognized brands, supported by a team of specialized advisors and technicians committed to providing quality products, personalized attention and solutions adapted to every need. We are a reliable option for <strong>public and private hospitals, healthcare centers, clinics, private doctors and students.</strong>">
-          Contamos con marcas reconocidas a nivel nacional e internacional, así como con un equipo de asesores y técnicos especializados, comprometidos en ofrecer productos de calidad, atención personalizada y soluciones adaptadas a cada necesidad. Somos una opción confiable para <strong>hospitales públicos y privados, sanatorios, clínicas, médicos particulares y estudiantes.</strong>
-        </p>
-      </div>
-
-      <div class="about-card about-image-card about-image-card-right">
-        <div class="about-photo about-photo-right">
-          <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=900&auto=format&fit=crop&q=80" alt="Instrumental médico" loading="lazy">
+        <div class="arch-content">
+          <p
+            data-es-html='En esta época, los medios son la vía más importante en la comunicación, la <strong>tecnología cambia minuto a minuto</strong> y la población exige la <strong>mejor atención</strong>. Por esto, <strong>Quality MS</strong> tiene la obligación de estar siempre a la <strong>vanguardia en atención y servicio</strong> para el sector salud en el país, como una empresa con <strong>credibilidad, futuro y potencial</strong>.'
+            data-en-html='In this era, media has become one of the most important channels of communication, <strong>technology changes minute by minute</strong>, and people demand the <strong>best possible care</strong>. For this reason, <strong>Quality MS</strong> has the responsibility to remain at the <strong>forefront of attention and service</strong> for the healthcare sector in the country, as a company with <strong>credibility, future and potential</strong>.'>
+            En esta época, los medios son la vía más importante en la comunicación, la <strong>tecnología cambia minuto a minuto</strong> y la población exige la <strong>mejor atención</strong>. Por esto, <strong>Quality MS</strong> tiene la obligación de estar siempre a la <strong>vanguardia en atención y servicio</strong> para el sector salud en el país, como una empresa con <strong>credibilidad, futuro y potencial</strong>.
+          </p>
         </div>
 
-        <div class="about-slider-dots" aria-hidden="true">
-          <span class="active"></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- MISIÓN / VISIÓN / OBJETIVOS -->
-<section class="arch-section">
-  <div class="arch-grid reveal">
-
-    <!-- MISIÓN -->
-    <div class="arch-card" role="button" tabindex="0" aria-expanded="false">
-      <img src="assets/mision.jpg" alt="Misión" loading="lazy">
-
-      <div class="arch-content">
-        <p
-          data-es-html='Obtener siempre <strong>lo mejor para nuestros médicos</strong>, proveerles por todos los medios lo máximo en <strong>tecnología médica a nivel global</strong>, atenderlos con <strong>respeto, prontitud, calidad y servicio</strong>. A nosotros mismos, ofrecer a todos los que formamos parte de la empresa <strong>bienestar y seguridad</strong> dentro de una empresa con <strong>historia, trascendencia y credibilidad</strong>.'
-          data-en-html='Always obtain <strong>the best for our doctors</strong>, providing them through every available means with the highest level of <strong>global medical technology</strong>, while serving them with <strong>respect, promptness, quality and service</strong>. For ourselves, to offer everyone who is part of the company <strong>well-being and security</strong> within an organization with <strong>history, transcendence and credibility</strong>.'>
-          Obtener siempre <strong>lo mejor para nuestros médicos</strong>, proveerles por todos los medios lo máximo en <strong>tecnología médica a nivel global</strong>, atenderlos con <strong>respeto, prontitud, calidad y servicio</strong>. A nosotros mismos, ofrecer a todos los que formamos parte de la empresa <strong>bienestar y seguridad</strong> dentro de una empresa con <strong>historia, trascendencia y credibilidad</strong>.
-        </p>
+        <div class="arch-label" data-es="Visión" data-en="Vision">Visión</div>
       </div>
 
-      <div class="arch-label" data-es="Misión" data-en="Mission">Misión</div>
-    </div>
+      <!-- OBJETIVOS -->
+      <div class="arch-card" role="button" tabindex="0" aria-expanded="false">
+        <img src="assets/objetivos.jpg" alt="Objetivos" loading="lazy">
 
-    <!-- VISIÓN -->
-    <div class="arch-card" role="button" tabindex="0" aria-expanded="false">
-      <img src="assets/vision.jpg" alt="Visión" loading="lazy">
-
-      <div class="arch-content">
-        <p
-          data-es-html='En esta época, los medios son la vía más importante en la comunicación, la <strong>tecnología cambia minuto a minuto</strong> y la población exige la <strong>mejor atención</strong>. Por esto, <strong>Quality MS</strong> tiene la obligación de estar siempre a la <strong>vanguardia en atención y servicio</strong> para el sector salud en el país, como una empresa con <strong>credibilidad, futuro y potencial</strong>.'
-          data-en-html='In this era, media has become one of the most important channels of communication, <strong>technology changes minute by minute</strong>, and people demand the <strong>best possible care</strong>. For this reason, <strong>Quality MS</strong> has the responsibility to remain at the <strong>forefront of attention and service</strong> for the healthcare sector in the country, as a company with <strong>credibility, future and potential</strong>.'>
-          En esta época, los medios son la vía más importante en la comunicación, la <strong>tecnología cambia minuto a minuto</strong> y la población exige la <strong>mejor atención</strong>. Por esto, <strong>Quality MS</strong> tiene la obligación de estar siempre a la <strong>vanguardia en atención y servicio</strong> para el sector salud en el país, como una empresa con <strong>credibilidad, futuro y potencial</strong>.
-        </p>
-      </div>
-
-      <div class="arch-label" data-es="Visión" data-en="Vision">Visión</div>
-    </div>
-
-    <!-- OBJETIVOS -->
-    <div class="arch-card" role="button" tabindex="0" aria-expanded="false">
-      <img src="assets/objetivos.jpg" alt="Objetivos" loading="lazy">
-
-      <div 
-        class="arch-content arch-content-list"
-        data-es-html='
+        <div 
+          class="arch-content arch-content-list"
+          data-es-html='
+            <ul>
+              <li>Ser una <strong>marca líder</strong> en el mercado.</li>
+              <li>Garantizar la <strong>satisfacción del cliente</strong>.</li>
+              <li>Lograr mayor <strong>participación en el mercado</strong>.</li>
+              <li>Proveer <strong>soluciones especializadas</strong>.</li>
+              <li><strong>Mejorar constantemente</strong>.</li>
+              <li>Ofrecer el <strong>mejor servicio</strong>.</li>
+            </ul>
+          '
+          data-en-html='
+            <ul>
+              <li>Become a <strong>leading brand</strong> in the market.</li>
+              <li>Guarantee <strong>customer satisfaction</strong>.</li>
+              <li>Achieve greater <strong>market participation</strong>.</li>
+              <li>Provide <strong>specialized solutions</strong>.</li>
+              <li><strong>Continuously improve</strong>.</li>
+              <li>Offer the <strong>best service</strong>.</li>
+            </ul>
+          '>
           <ul>
             <li>Ser una <strong>marca líder</strong> en el mercado.</li>
             <li>Garantizar la <strong>satisfacción del cliente</strong>.</li>
@@ -221,32 +222,13 @@
             <li><strong>Mejorar constantemente</strong>.</li>
             <li>Ofrecer el <strong>mejor servicio</strong>.</li>
           </ul>
-        '
-        data-en-html='
-          <ul>
-            <li>Become a <strong>leading brand</strong> in the market.</li>
-            <li>Guarantee <strong>customer satisfaction</strong>.</li>
-            <li>Achieve greater <strong>market participation</strong>.</li>
-            <li>Provide <strong>specialized solutions</strong>.</li>
-            <li><strong>Continuously improve</strong>.</li>
-            <li>Offer the <strong>best service</strong>.</li>
-          </ul>
-        '>
-        <ul>
-          <li>Ser una <strong>marca líder</strong> en el mercado.</li>
-          <li>Garantizar la <strong>satisfacción del cliente</strong>.</li>
-          <li>Lograr mayor <strong>participación en el mercado</strong>.</li>
-          <li>Proveer <strong>soluciones especializadas</strong>.</li>
-          <li><strong>Mejorar constantemente</strong>.</li>
-          <li>Ofrecer el <strong>mejor servicio</strong>.</li>
-        </ul>
+        </div>
+
+        <div class="arch-label" data-es="Objetivos" data-en="Goals">Objetivos</div>
       </div>
 
-      <div class="arch-label" data-es="Objetivos" data-en="Goals">Objetivos</div>
     </div>
-
-  </div>
-</section>
+  </section>
 
   <!-- VALORES -->
   <section class="valores-section">
@@ -332,7 +314,7 @@
     </div>
   </section>
 
-     <!-- FOOTER -->
+  <!-- FOOTER -->
   <footer>
     <div class="footer-inner footer-inner-expanded">
 
@@ -452,6 +434,6 @@
     </div>
   </footer>
 
-  <script src="script.js?v=5"defer></script>
+  <script src="script.js?v=6" defer></script>
 </body>
 </html>

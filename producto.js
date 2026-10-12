@@ -102,6 +102,26 @@ function stripHTML(value) {
   return temp.textContent || temp.innerText || "";
 }
 
+function getSafeProductDescriptionHTML(product) {
+  const rawDescription =
+    product?.descriptionHtml ||
+    product?.description ||
+    "";
+
+  if (!String(rawDescription).trim()) {
+    return "<p>Sin descripción disponible.</p>";
+  }
+
+  const temp = document.createElement("div");
+  temp.innerHTML = rawDescription;
+
+  temp.querySelectorAll("script, style, iframe").forEach(element => {
+    element.remove();
+  });
+
+  return temp.innerHTML.trim() || `<p>${escapeHTML(stripHTML(rawDescription))}</p>`;
+}
+
 function makeAbsoluteUrl(path) {
   if (!path) {
     return "https://tom261105.github.io/QualityMS/assets/preview-qms.png";
@@ -144,7 +164,11 @@ function updateProductMetaTags(product) {
 
   const shareUrl = getProductShareUrl(product);
   const cleanTitle = stripHTML(product.title || "Producto médico");
-  const cleanDescription = stripHTML(product.description || "Producto médico disponible bajo cotización en Quality Medical Service.");
+  const cleanDescription = stripHTML(
+    product.shortDescription ||
+    product.description ||
+    "Producto médico disponible bajo cotización en Quality Medical Service."
+  );
   const shortDescription = cleanDescription.length > 155
     ? cleanDescription.substring(0, 152).trim() + "..."
     : cleanDescription;
@@ -305,7 +329,7 @@ function renderSingleProduct(product) {
 
   const cleanTitle = escapeHTML(product.title || "Producto médico");
   const cleanCategory = escapeHTML(product.categoryName || product.category || "General");
-  const cleanDescription = escapeHTML(stripHTML(product.description || "Sin descripción disponible."));
+  const productDescriptionHTML = getSafeProductDescriptionHTML(product);
   const cleanImage = escapeHTML(product.image || "assets/preview-qms.png");
   const cleanImageAlt = escapeHTML(product.imageAlt || product.title || "Producto médico");
 
@@ -325,9 +349,9 @@ function renderSingleProduct(product) {
 
         <h1>${cleanTitle}</h1>
 
-        <p class="single-product-description">
-          ${cleanDescription}
-        </p>
+        <div class="single-product-description">
+          ${productDescriptionHTML}
+        </div>
 
         <div class="single-product-data">
           <div>
@@ -351,18 +375,18 @@ function renderSingleProduct(product) {
           </button>
 
           <button 
-          class="btn-outline product-share-btn product-share-icon-btn" 
-          type="button" 
-          data-single-share
-          aria-label="Compartir producto"
-          title="Compartir producto">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="18" cy="5" r="3"></circle>
-            <circle cx="6" cy="12" r="3"></circle>
-            <circle cx="18" cy="19" r="3"></circle>
-            <line x1="8.6" y1="10.7" x2="15.4" y2="6.3"></line>
-            <line x1="8.6" y1="13.3" x2="15.4" y2="17.7"></line>
-          </svg>
+            class="btn-outline product-share-btn product-share-icon-btn" 
+            type="button" 
+            data-single-share
+            aria-label="Compartir producto"
+            title="Compartir producto">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="18" cy="5" r="3"></circle>
+              <circle cx="6" cy="12" r="3"></circle>
+              <circle cx="18" cy="19" r="3"></circle>
+              <line x1="8.6" y1="10.7" x2="15.4" y2="6.3"></line>
+              <line x1="8.6" y1="13.3" x2="15.4" y2="17.7"></line>
+            </svg>
           </button>
         </div>
       </div>

@@ -156,7 +156,6 @@ function mapShopifyProduct(product) {
   const firstVariant = product.variants?.edges?.[0]?.node || null;
   const firstCollection = getProductMainCollection(product);
   const price = firstVariant?.price || null;
-  const priceNumber = normalizePriceNumber(price);
 
   const brand = detectProductBrand(product.title, firstCollection?.title);
   const cleanTitle = cleanShopifyProductTitle(product.title, brand);

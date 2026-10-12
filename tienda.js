@@ -43,7 +43,7 @@ function getStoreText(es, en) {
 function translateCategoryTitle(title) {
   const currentLang = getCurrentStoreLanguage();
 
-  if (!title) return currentLang === "en" ? "General" : "General";
+  if (!title) return "General";
 
   let translated = title;
 
@@ -77,9 +77,7 @@ function translateCategoryTitle(title) {
     ["Nutrition", "Nutrición"]
   ];
 
-  const replacements = currentLang === "en"
-    ? replacementsToEnglish
-    : replacementsToSpanish;
+  const replacements = currentLang === "en" ? replacementsToEnglish : replacementsToSpanish;
 
   replacements.forEach(([from, to]) => {
     translated = translated.replace(new RegExp(from, "gi"), to);
@@ -117,9 +115,7 @@ function translateCategoryDescription(description) {
     ["category", "categoría"]
   ];
 
-  const replacements = currentLang === "en"
-    ? replacementsToEnglish
-    : replacementsToSpanish;
+  const replacements = currentLang === "en" ? replacementsToEnglish : replacementsToSpanish;
 
   replacements.forEach(([from, to]) => {
     translated = translated.replace(new RegExp(from, "gi"), to);
@@ -174,10 +170,7 @@ function renderCategories(collections) {
 
         <div class="pc-body">
           <h3>${categoryTitle}</h3>
-
-          <p>
-            ${categoryDescription}
-          </p>
+          <p>${categoryDescription}</p>
         </div>
 
         <div class="pc-footer">
@@ -205,7 +198,6 @@ function makeCategoryCardsClickable() {
 
     card.addEventListener("click", event => {
       if (event.target.closest("a, button")) return;
-
       window.location.href = href;
     });
 

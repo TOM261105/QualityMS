@@ -6715,3 +6715,166 @@ footer {
     transform: scale(1.04) !important;
   }
 }
+/* ══════════════════════════════════════════════════════════
+   CARRUSEL DE PROMOCIONES — PEGAR AL FINAL DE style.css
+   ══════════════════════════════════════════════════════════ */
+
+.promos-section {
+  background: var(--blue-bg);
+  padding: 64px 0 70px;
+  overflow: hidden;
+}
+
+/* ── ENCABEZADO ──────────────────────────────────────────── */
+
+.promos-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.promos-header h2 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(30px, 4.4vw, 52px);
+  font-weight: 800;
+  color: var(--navy);
+  text-transform: uppercase;
+  line-height: 1.02;
+  letter-spacing: 0.5px;
+}
+
+.promos-header h2 span {
+  color: var(--blue-mid);
+}
+
+/* ── CARRUSEL ────────────────────────────────────────────── */
+
+.promos-marquee {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Degradados en las orillas para que entren y salgan suave */
+.promos-marquee::before,
+.promos-marquee::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 120px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.promos-marquee::before {
+  left: 0;
+  background: linear-gradient(to right, var(--blue-bg), rgba(240, 247, 253, 0));
+}
+
+.promos-marquee::after {
+  right: 0;
+  background: linear-gradient(to left, var(--blue-bg), rgba(240, 247, 253, 0));
+}
+
+.promos-track {
+  display: flex;
+  gap: 24px;
+  width: max-content;
+  padding: 10px 0;
+  animation: promosScroll 45s linear infinite;
+}
+
+.promos-marquee:hover .promos-track {
+  animation-play-state: paused;
+}
+
+/* El recorrido es -50% porque las imágenes están duplicadas.
+   Si agregas o quitas promociones, duplica siempre el grupo
+   completo en el HTML y esto sigue funcionando solo. */
+@keyframes promosScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(calc(-50% - 12px)); }
+}
+
+/* ── TARJETA ─────────────────────────────────────────────── */
+
+.promo-card {
+  flex-shrink: 0;
+  width: 320px;
+  aspect-ratio: 1 / 1;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: 0 10px 28px rgba(13, 43, 78, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.promo-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 22px 46px rgba(13, 43, 78, 0.16);
+}
+
+.promo-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── RESPONSIVE ──────────────────────────────────────────── */
+
+@media (max-width: 960px) {
+  .promo-card {
+    width: 270px;
+  }
+
+  .promos-marquee::before,
+  .promos-marquee::after {
+    width: 70px;
+  }
+}
+
+@media (max-width: 640px) {
+  .promos-section {
+    padding: 48px 0 52px;
+  }
+
+  .promos-header {
+    margin-bottom: 28px;
+  }
+
+  .promos-track {
+    gap: 16px;
+    animation-duration: 36s;
+  }
+
+  @keyframes promosScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(calc(-50% - 8px)); }
+  }
+
+  .promo-card {
+    width: 230px;
+    border-radius: 16px;
+  }
+
+  .promos-marquee::before,
+  .promos-marquee::after {
+    width: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promos-track {
+    animation: none;
+  }
+
+  .promos-marquee {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+  .promo-card {
+    scroll-snap-align: center;
+  }
+}

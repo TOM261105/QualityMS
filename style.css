@@ -6183,3 +6183,384 @@ footer {
     width: 78px !important;
   }
 }
+
+/* ───────────────────────────────────────────────────────────
+   QUALITY MS — PALETA OFICIAL DE IDENTIDAD VISUAL
+   Mantiene navbar y footer blancos
+   ─────────────────────────────────────────────────────────── */
+
+:root {
+  /* Colores oficiales */
+  --navy: #07538A;
+  --blue: #07538A;
+  --blue-mid: #6CA7DA;
+  --blue-light: #91BDE3;
+  --blue-pale: #DAE9F6;
+  --blue-bg: #F4F9FD;
+
+  /* Tintas oficiales */
+  --qms-primary: #07538A;
+  --qms-primary-80: #457EA7;
+  --qms-primary-60: #83A9C4;
+  --qms-primary-30: #C1D4E2;
+
+  --qms-secondary: #6CA7DA;
+  --qms-secondary-80: #91BDE3;
+  --qms-secondary-60: #B6D3EC;
+  --qms-secondary-30: #DAE9F6;
+
+  /* Textos y bordes */
+  --text: #1C2B3A;
+  --muted: #457EA7;
+  --border: #C1D4E2;
+  --white: #ffffff;
+}
+
+/* Fondos generales más limpios */
+body {
+  background: #ffffff;
+  color: var(--text);
+}
+
+.about-section,
+.soporte-section,
+.dist-section,
+.equipo-section,
+.contact-section,
+.category-page,
+.all-products-page,
+.product-list-page,
+.single-product-page {
+  background: linear-gradient(180deg, #ffffff 0%, var(--blue-bg) 100%) !important;
+}
+
+/* Títulos principales */
+.section-header h2,
+.product-list-header h1,
+.product-list-header h2,
+.categories-title-block h3,
+.contact-location-title,
+.form-block-wide h3,
+.single-product-info h1,
+.single-product-empty h1,
+.mant-card h1,
+.mant-popup-card h2 {
+  color: var(--qms-primary) !important;
+}
+
+/* Acentos */
+.eyebrow,
+.section-header h2 span,
+.categories-title-block span,
+.about-heading .hash,
+.dist-hero h1 span,
+.dist-rule span,
+.mant-eyebrow,
+.shopify-product-category,
+.pc-cat {
+  color: var(--qms-secondary) !important;
+}
+
+/* Líneas decorativas */
+.about-divider,
+.quote-toast-progress {
+  background: var(--qms-secondary) !important;
+}
+
+/* Textos secundarios */
+.section-header p,
+.about-text-card p,
+.shopify-product-body p,
+.product-list-header p,
+.contact-intro-note,
+.contact-form-note,
+.cart-note,
+.cart-security-note,
+.single-product-description,
+.footer-address p {
+  color: var(--qms-primary-80) !important;
+}
+
+/* Cards */
+.service-card,
+.product-card,
+.shopify-product-card,
+.single-product-card,
+.all-products-group,
+.contact-location-card,
+.contact-address-card,
+.bigin-form-box,
+.quote-preview-box,
+.mant-card,
+.purchase-security-card {
+  border-color: var(--qms-primary-30) !important;
+  box-shadow: 0 16px 42px rgba(7, 83, 138, 0.10) !important;
+}
+
+/* Fondos suaves de cards e íconos */
+.svc-icon,
+.valor-icon,
+.contact-address-icon,
+.cart-close-btn,
+.medical-btn-outline,
+.purchase-security-list,
+.single-product-data div,
+.shopify-product-img,
+.pc-img,
+.quote-preview-box textarea {
+  background: var(--qms-secondary-30) !important;
+}
+
+/* Botones principales */
+.btn-primary,
+.checkout-btn,
+.cart-open-btn,
+.form-submit,
+.product-action.quote,
+.store-toolbar-btn.primary,
+.pagination-btn,
+.mant-btn.primary,
+.purchase-security-btn,
+.contact-address-actions .primary {
+  background: var(--qms-primary) !important;
+  border-color: var(--qms-primary) !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:hover,
+.checkout-btn:hover,
+.cart-open-btn:hover,
+.form-submit:hover,
+.product-action.quote:hover,
+.store-toolbar-btn.primary:hover,
+.pagination-btn:hover:not(:disabled),
+.mant-btn.primary:hover,
+.purchase-security-btn:hover,
+.contact-address-actions .primary:hover {
+  background: var(--qms-secondary) !important;
+  border-color: var(--qms-secondary) !important;
+  color: #ffffff !important;
+}
+
+/* Botones secundarios */
+.btn-outline,
+.store-toolbar-btn.outline,
+.mant-btn.ghost,
+.contact-address-actions .secondary {
+  color: var(--qms-primary) !important;
+  border-color: var(--qms-primary) !important;
+  background: transparent !important;
+}
+
+.btn-outline:hover,
+.store-toolbar-btn.outline:hover,
+.mant-btn.ghost:hover,
+.contact-address-actions .secondary:hover {
+  background: var(--qms-primary) !important;
+  color: #ffffff !important;
+}
+
+/* Links */
+a,
+.card-link,
+.group-link,
+.btn-card,
+.back-link,
+.contact-map-link,
+.contact-form-note a {
+  color: var(--qms-secondary);
+}
+
+a:hover,
+.card-link:hover,
+.group-link:hover,
+.btn-card:hover,
+.back-link:hover,
+.contact-map-link:hover,
+.contact-form-note a:hover {
+  color: var(--qms-primary);
+}
+
+/* Sección valores en azul oficial */
+.valores-section {
+  background: var(--qms-primary) !important;
+}
+
+.valores-header h2 span {
+  color: var(--qms-secondary) !important;
+}
+
+.valor-card {
+  border-color: rgba(218, 233, 246, 0.22) !important;
+}
+
+.valor-card:hover {
+  border-color: rgba(108, 167, 218, 0.55) !important;
+}
+
+/* Misión / visión / objetivos */
+.arch-label {
+  background: var(--qms-primary) !important;
+}
+
+.arch-card:hover .arch-label,
+.arch-card.active .arch-label {
+  background: var(--qms-secondary) !important;
+}
+
+.arch-content p,
+.arch-content strong,
+.arch-content-list strong,
+.arch-content-list li {
+  color: var(--qms-primary) !important;
+}
+
+/* Tablas/listas de productos */
+.product-list-table thead {
+  background: var(--qms-primary) !important;
+}
+
+.product-list-table tbody tr:hover {
+  background: var(--qms-secondary-30) !important;
+}
+
+/* Carrito */
+.cart-total,
+.cart-header h3,
+.cart-item-info h4 {
+  color: var(--qms-primary) !important;
+}
+
+.cart-item img {
+  background: var(--qms-secondary-30) !important;
+}
+
+/* Toast / avisos */
+.quote-toast {
+  border-left-color: var(--qms-secondary) !important;
+}
+
+.quote-toast-content strong {
+  color: var(--qms-primary) !important;
+}
+
+/* ───────────────────────────────────────────────────────────
+   NO TOCAR: NAVBAR BLANCA
+   ─────────────────────────────────────────────────────────── */
+
+.topbar {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1px solid rgba(7, 83, 138, 0.10) !important;
+  box-shadow: 0 8px 28px rgba(7, 83, 138, 0.08) !important;
+}
+
+.nav-links a {
+  color: var(--qms-primary) !important;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background: var(--qms-secondary-30) !important;
+  color: var(--qms-primary) !important;
+}
+
+.nav-links a.cta {
+  background: var(--qms-primary) !important;
+  color: #ffffff !important;
+}
+
+.nav-links a.cta:hover,
+.nav-links a.cta.active {
+  background: var(--qms-secondary) !important;
+  color: #ffffff !important;
+}
+
+.lang-btn {
+  color: var(--qms-primary) !important;
+  border-color: rgba(7, 83, 138, 0.24) !important;
+}
+
+.lang-btn:hover {
+  background: var(--qms-secondary-30) !important;
+  color: var(--qms-primary) !important;
+}
+
+/* Cuando queda solo el logo al hacer scroll */
+.topbar.nav-logo-only {
+  background: transparent !important;
+  border-bottom-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.topbar.nav-logo-only .nav-logo {
+  background: rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 12px 34px rgba(7, 83, 138, 0.16) !important;
+}
+
+/* ───────────────────────────────────────────────────────────
+   NO TOCAR: FOOTER BLANCO
+   ─────────────────────────────────────────────────────────── */
+
+.site-footer,
+footer {
+  background: #ffffff !important;
+  border-top: 1px solid rgba(7, 83, 138, 0.10) !important;
+  box-shadow: 0 -10px 34px rgba(7, 83, 138, 0.05) !important;
+}
+
+.footer-inner,
+.footer-inner.footer-inner-expanded {
+  border-bottom-color: rgba(7, 83, 138, 0.10) !important;
+}
+
+.footer-col h4 {
+  color: var(--qms-primary) !important;
+}
+
+.footer-email,
+.phones-list a,
+.footer-index a,
+.footer-bottom-privacy,
+.footer-bottom p {
+  color: var(--qms-primary-80) !important;
+}
+
+.footer-email:hover,
+.phones-list a:hover,
+.footer-index a:hover,
+.footer-bottom-privacy:hover {
+  color: var(--qms-primary) !important;
+}
+
+.footer-email svg,
+.footer-address svg {
+  stroke: var(--qms-secondary) !important;
+}
+
+.social-btn {
+  background: var(--qms-secondary-30) !important;
+  border-color: var(--qms-primary-30) !important;
+}
+
+.social-btn svg {
+  stroke: var(--qms-primary) !important;
+}
+
+.social-btn:hover {
+  background: var(--qms-primary) !important;
+  border-color: var(--qms-primary) !important;
+}
+
+.social-btn:hover svg {
+  stroke: #ffffff !important;
+}
+
+.footer-bottom-privacy {
+  background: var(--qms-secondary-30) !important;
+  border-color: var(--qms-primary-30) !important;
+}
+
+.footer-bottom-privacy:hover {
+  background: var(--qms-primary) !important;
+  color: #ffffff !important;
+}

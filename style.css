@@ -6604,3 +6604,114 @@ footer {
     max-height: 68px !important;
   }
 }
+
+/* =====================================================
+   AJUSTE FINAL DE IMÁGENES — CATEGORÍAS Y PRODUCTOS
+   ===================================================== */
+
+/* ---------- CATEGORÍAS / COLECCIONES ---------- */
+
+.products-grid .product-card .pc-img,
+.equipo-section .product-card .pc-img {
+  height: 250px !important;
+  background: #ffffff !important;
+  padding: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  border-bottom: 1px solid rgba(108, 167, 218, 0.25) !important;
+}
+
+.products-grid .product-card .pc-img img,
+.equipo-section .product-card .pc-img img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 82% !important;
+  max-height: 150px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  display: block !important;
+  transform: none !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+
+/* ---------- PRODUCTOS EN CATEGORÍA Y CATÁLOGO ---------- */
+
+.shopify-products-grid .shopify-product-card .shopify-product-img,
+.all-products-row .shopify-product-card .shopify-product-img,
+.shopify-product-card .shopify-product-img {
+  height: 250px !important;
+  background: #ffffff !important;
+  padding: 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+  position: relative !important;
+  border-bottom: 1px solid rgba(108, 167, 218, 0.25) !important;
+}
+
+.shopify-products-grid .shopify-product-card .shopify-product-img img,
+.all-products-row .shopify-product-card .shopify-product-img img,
+.shopify-product-card .shopify-product-img img {
+  width: auto !important;
+  height: auto !important;
+  max-width: 82% !important;
+  max-height: 180px !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  display: block !important;
+  transform: scale(1.08) !important;
+  filter: none !important;
+  opacity: 1 !important;
+  mix-blend-mode: normal !important;
+}
+
+
+/* ---------- ETIQUETA BAJO COTIZACIÓN ---------- */
+
+.shopify-product-status {
+  position: absolute !important;
+  top: 16px !important;
+  right: 16px !important;
+  z-index: 5 !important;
+}
+
+
+/* ---------- CARDS MÁS LIMPIAS ---------- */
+
+.shopify-product-card,
+.product-card {
+  overflow: hidden !important;
+}
+
+
+/* ---------- RESPONSIVE ---------- */
+
+@media (max-width: 640px) {
+  .products-grid .product-card .pc-img,
+  .equipo-section .product-card .pc-img,
+  .shopify-products-grid .shopify-product-card .shopify-product-img,
+  .all-products-row .shopify-product-card .shopify-product-img,
+  .shopify-product-card .shopify-product-img {
+    height: 215px !important;
+    padding: 20px !important;
+  }
+
+  .products-grid .product-card .pc-img img,
+  .equipo-section .product-card .pc-img img {
+    max-width: 86% !important;
+    max-height: 130px !important;
+  }
+
+  .shopify-products-grid .shopify-product-card .shopify-product-img img,
+  .all-products-row .shopify-product-card .shopify-product-img img,
+  .shopify-product-card .shopify-product-img img {
+    max-width: 86% !important;
+    max-height: 155px !important;
+    transform: scale(1.04) !important;
+  }
+}

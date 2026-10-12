@@ -91,6 +91,16 @@ function getDisplayDescription(description) {
     .replace("Sin descripción disponible.", "No description available.");
 }
 
+function getListPreviewDescription(product) {
+  const description =
+    product?.shortDescription ||
+    product?.descripcionCorta ||
+    product?.description ||
+    "";
+
+  return getDisplayDescription(description);
+}
+
 /* ── UTILIDADES ───────────────────────────────────────────── */
 
 function getSelectedCategoryFromUrl() {
@@ -238,7 +248,7 @@ function renderProductList(products) {
           <strong>${product.title || getListText("Producto sin nombre", "Unnamed product")}</strong>
         </td>
 
-        <td>${getDisplayDescription(product.description)}</td>
+        <td>${getListPreviewDescription(product)}</td>
 
         <td>
           <strong>${getListText("Bajo cotización", "Quote required")}</strong>
@@ -319,6 +329,7 @@ async function loadProductPage(cursor = null, pageNumber = 1, shouldScroll = fal
           ${product.categoryName || ""}
           ${product.category || ""}
           ${product.title || ""}
+          ${product.shortDescription || ""}
           ${product.description || ""}
         `.toLowerCase();
 

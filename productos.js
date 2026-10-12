@@ -6,6 +6,25 @@ const allProductsSearch = document.getElementById("allProductsSearch");
 let allStoreProducts = [];
 let allStoreCollections = [];
 
+function stripProductHTML(value) {
+  const temp = document.createElement("div");
+  temp.innerHTML = String(value || "");
+  return temp.textContent.trim();
+}
+
+function getProductPreviewDescription(product) {
+  const shortDescription =
+    product?.shortDescription ||
+    product?.descripcionCorta ||
+    "";
+
+  if (String(shortDescription).trim()) {
+    return stripProductHTML(shortDescription);
+  }
+
+  return stripProductHTML(product?.description) || "Sin descripción disponible.";
+}
+
 function renderProductCard(product) {
   return `
     <article class="shopify-product-card">
@@ -26,7 +45,7 @@ function renderProductCard(product) {
 
         <h4>${product.title}</h4>
 
-        <p>${product.description || "Sin descripción disponible."}</p>
+        <p>${getProductPreviewDescription(product)}</p>
 
         <div class="shopify-product-footer">
           <strong>Bajo cotización</strong>
@@ -120,6 +139,7 @@ function filterAllProducts() {
   const filteredProducts = allStoreProducts.filter(product => {
     const searchableText = `
       ${product.title || ""}
+      ${product.shortDescription || ""}
       ${product.description || ""}
       ${product.categoryName || ""}
       ${product.category || ""}

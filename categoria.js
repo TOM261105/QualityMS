@@ -13,6 +13,25 @@ function getSelectedCategory() {
   return params.get("cat") || "diagnostico";
 }
 
+function stripProductHTML(value) {
+  const temp = document.createElement("div");
+  temp.innerHTML = String(value || "");
+  return temp.textContent.trim();
+}
+
+function getProductPreviewDescription(product) {
+  const shortDescription =
+    product?.shortDescription ||
+    product?.descripcionCorta ||
+    "";
+
+  if (String(shortDescription).trim()) {
+    return stripProductHTML(shortDescription);
+  }
+
+  return stripProductHTML(product?.description) || "Sin descripción disponible.";
+}
+
 function renderCategoryHeader(collection) {
   if (categoryEyebrow) categoryEyebrow.textContent = "Catálogo";
   if (categoryTitle) categoryTitle.textContent = collection?.title || "Productos";
@@ -55,7 +74,7 @@ function renderCategoryProducts(products) {
 
           <h4>${product.title}</h4>
 
-          <p>${product.description || "Sin descripción disponible."}</p>
+          <p>${getProductPreviewDescription(product)}</p>
 
           <div class="shopify-product-footer">
             <strong>Bajo cotización</strong>
@@ -84,6 +103,7 @@ function filterCategoryProducts() {
   const filteredProducts = currentCategoryProducts.filter(product => {
     const searchableText = `
       ${product.title || ""}
+      ${product.shortDescription || ""}
       ${product.description || ""}
       ${product.categoryName || ""}
     `.toLowerCase();

@@ -227,3 +227,41 @@ cartOverlay?.addEventListener("click", closeCart);
 checkoutBtn?.addEventListener("click", requestQuoteFromCart);
 
 renderCart();
+
+function lockPageScrollForCart() {
+  document.body.classList.add("cart-is-open");
+  document.documentElement.classList.add("cart-is-open");
+}
+
+function unlockPageScrollForCart() {
+  document.body.classList.remove("cart-is-open");
+  document.documentElement.classList.remove("cart-is-open");
+}
+
+const cartObserver = new MutationObserver(() => {
+  const cartDrawer = document.getElementById("cartDrawer");
+
+  if (!cartDrawer) return;
+
+  const isOpen =
+    cartDrawer.classList.contains("open") ||
+    cartDrawer.classList.contains("active") ||
+    cartDrawer.classList.contains("is-open");
+
+  if (isOpen) {
+    lockPageScrollForCart();
+  } else {
+    unlockPageScrollForCart();
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const cartDrawer = document.getElementById("cartDrawer");
+
+  if (cartDrawer) {
+    cartObserver.observe(cartDrawer, {
+      attributes: true,
+      attributeFilter: ["class"]
+    });
+  }
+});

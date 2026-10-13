@@ -428,3 +428,376 @@ window.getStoreText = function getStoreText(key) {
   const lang = localStorage.getItem("siteLang") || "es";
   return window.STORE_TEXTS?.[lang]?.[key] || window.STORE_TEXTS?.es?.[key] || key;
 };
+
+/* =====================================================
+   PARCHE EXTRA — TRADUCE TABLAS, POPUPS Y TEXTOS DINÁMICOS
+   ===================================================== */
+
+(function () {
+  function getLang() {
+    return localStorage.getItem("siteLang") || "es";
+  }
+
+  function stripHTML(value) {
+    const temp = document.createElement("div");
+    temp.innerHTML = String(value || "");
+    return temp.textContent || temp.innerText || "";
+  }
+
+  function normalizeText(value) {
+    return String(value || "")
+      .toLowerCase()
+      .replace(/\s+/g, " ")
+      .replace(/[®™]/g, "")
+      .trim();
+  }
+
+  function getTranslationByVisibleName(name, lang) {
+    if (!window.PRODUCT_TRANSLATIONS) return null;
+
+    const cleanName = normalizeText(name);
+
+    for (const handle in window.PRODUCT_TRANSLATIONS) {
+      const item = window.PRODUCT_TRANSLATIONS[handle];
+
+      const esTitle = normalizeText(item?.es?.title || "");
+      const enTitle = normalizeText(item?.en?.title || "");
+      const handleText = normalizeText(handle || "");
+
+      if (
+        cleanName === esTitle ||
+        cleanName === enTitle ||
+        cleanName === handleText
+      ) {
+        return item[lang] || item.es || null;
+      }
+    }
+
+    return null;
+  }
+
+  function replaceTextInElement(element, esText, enText) {
+    if (!element) return;
+
+    const lang = getLang();
+    const current = element.textContent.trim();
+
+    if (lang === "en" && current === esText) {
+      element.textContent = enText;
+    }
+
+    if (lang === "es" && current === enText) {
+      element.textContent = esText;
+    }
+  }
+
+  function translateSimpleTexts() {
+    const lang = getLang();
+
+    const dictionary = {
+      es: {
+        "PURCHASE SECURITY NOTICE": "AVISO DE SEGURIDAD DE COMPRA",
+        "For your security, Quality Medical Service only communicates through its official channels.": "Por tu seguridad, Quality Medical Service únicamente se comunica por medio de sus canales oficiales.",
+        "Official email:": "Correo oficial:",
+        "Official phone numbers:": "Teléfonos oficiales:",
+        "No payments are requested to personal accounts.": "No se solicitan pagos a cuentas personales.",
+        "No charges are made outside Shopify secure checkout or a formal quote issued by the company.": "No se realizan cobros fuera del checkout seguro de Shopify o de una cotización formal emitida por la empresa.",
+        "Be cautious of external links, unverified messages, or payment requests through unofficial channels.": "Desconfía de enlaces externos, mensajes no verificados o solicitudes de pago por medios no oficiales.",
+        "Got it": "Entendido",
+
+        "SUPPLIER": "PROVEEDOR",
+        "NAME": "NOMBRE",
+        "DESCRIPTION": "DESCRIPCIÓN",
+        "PRICE": "PRECIO",
+        "ACTIONS": "ACCIONES",
+
+        "Supplier": "Proveedor",
+        "Name": "Nombre",
+        "Description": "Descripción",
+        "Price": "Precio",
+        "Actions": "Acciones",
+
+        "Quote required": "Cotización requerida",
+        "More information": "Más información",
+        "Add to quote": "Agregar a cotización",
+
+        "← Back to category": "← Volver a categoría",
+        "← Back to product list": "← Volver a lista de productos",
+        "← Back to catalog": "← Volver al catálogo",
+        "← Back to store": "← Volver a tienda",
+
+        "Availability": "Disponibilidad",
+        "Mode": "Modalidad",
+        "Available for quote": "Disponible para cotización",
+        "Quote only": "Bajo cotización",
+        "Add to quote": "Agregar a cotización",
+        "Quote this product": "Cotizar este producto"
+      },
+
+      en: {
+        "AVISO DE SEGURIDAD DE COMPRA": "PURCHASE SECURITY NOTICE",
+        "Por tu seguridad, Quality Medical Service únicamente se comunica por medio de sus canales oficiales.": "For your security, Quality Medical Service only communicates through its official channels.",
+        "Correo oficial:": "Official email:",
+        "Teléfonos oficiales:": "Official phone numbers:",
+        "No se solicitan pagos a cuentas personales.": "No payments are requested to personal accounts.",
+        "No se realizan cobros fuera del checkout seguro de Shopify o de una cotización formal emitida por la empresa.": "No charges are made outside Shopify secure checkout or a formal quote issued by the company.",
+        "Desconfía de enlaces externos, mensajes no verificados o solicitudes de pago por medios no oficiales.": "Be cautious of external links, unverified messages, or payment requests through unofficial channels.",
+        "Entendido": "Got it",
+
+        "PROVEEDOR": "SUPPLIER",
+        "NOMBRE": "NAME",
+        "DESCRIPCIÓN": "DESCRIPTION",
+        "PRECIO": "PRICE",
+        "ACCIONES": "ACTIONS",
+
+        "Proveedor": "Supplier",
+        "Nombre": "Name",
+        "Descripción": "Description",
+        "Precio": "Price",
+        "Acciones": "Actions",
+
+        "Cotización requerida": "Quote required",
+        "Más información": "More information",
+        "Agregar a cotización": "Add to quote",
+
+        "← Volver a categoría": "← Back to category",
+        "← Volver a lista de productos": "← Back to product list",
+        "← Volver al catálogo": "← Back to catalog",
+        "← Volver a tienda": "← Back to store",
+
+        "Disponibilidad": "Availability",
+        "Modalidad": "Mode",
+        "Disponible para cotización": "Available for quote",
+        "Bajo cotización": "Quote only",
+        "Cotizar este producto": "Quote this product"
+      }
+    };
+
+    const texts = dictionary[lang] || dictionary.es;
+
+    document.querySelectorAll("body *").forEach(element => {
+      if (
+        element.children.length > 0 ||
+        ["SCRIPT", "STYLE", "SVG", "PATH"].includes(element.tagName)
+      ) {
+        return;
+      }
+
+      const current = element.textContent.trim();
+
+      if (texts[current]) {
+        element.textContent = texts[current];
+      }
+    });
+  }
+
+  function translateProductTableRows() {
+    const lang = getLang();
+
+    document.querySelectorAll("table tbody tr").forEach(row => {
+      const cells = row.querySelectorAll("td");
+
+      if (cells.length < 3) return;
+
+      const nameCell = cells[1];
+      const descriptionCell = cells[2];
+
+      const translation = getTranslationByVisibleName(nameCell.textContent, lang);
+
+      if (!translation) return;
+
+      if (translation.title) {
+        nameCell.textContent = translation.title;
+      }
+
+      if (translation.shortDescription) {
+        descriptionCell.textContent = stripHTML(translation.shortDescription);
+      }
+    });
+  }
+
+  function translateProductCards() {
+    const lang = getLang();
+
+    document.querySelectorAll(".shopify-product-card, .product-card").forEach(card => {
+      const titleElement =
+        card.querySelector("h1") ||
+        card.querySelector("h2") ||
+        card.querySelector("h3") ||
+        card.querySelector(".product-title") ||
+        card.querySelector(".shopify-product-title");
+
+      if (!titleElement) return;
+
+      const translation = getTranslationByVisibleName(titleElement.textContent, lang);
+
+      if (!translation) return;
+
+      titleElement.textContent = translation.title || titleElement.textContent;
+
+      const descElement =
+        card.querySelector(".product-description") ||
+        card.querySelector(".shopify-product-description") ||
+        card.querySelector("p");
+
+      if (descElement && translation.shortDescription) {
+        descElement.textContent = stripHTML(translation.shortDescription);
+      }
+    });
+  }
+
+  function translateSingleProductPage() {
+    const lang = getLang();
+
+    const singleContainer = document.querySelector(".single-product-info");
+    if (!singleContainer) return;
+
+    const titleElement = singleContainer.querySelector("h1");
+    if (!titleElement) return;
+
+    const translation = getTranslationByVisibleName(titleElement.textContent, lang);
+
+    if (!translation) return;
+
+    titleElement.textContent = translation.title || titleElement.textContent;
+
+    const descriptionElement = singleContainer.querySelector(".single-product-description");
+
+    if (descriptionElement && translation.description) {
+      descriptionElement.innerHTML = translation.description;
+    }
+  }
+
+  function translateBackLink() {
+    const lang = getLang();
+    const backLink = document.getElementById("productBackLink");
+
+    if (!backLink) return;
+
+    const href = backLink.getAttribute("href") || "";
+
+    if (lang === "en") {
+      if (href.includes("categoria.html")) backLink.textContent = "← Back to category";
+      else if (href.includes("lista-productos.html")) backLink.textContent = "← Back to product list";
+      else if (href.includes("productos.html")) backLink.textContent = "← Back to catalog";
+      else if (href.includes("tienda.html")) backLink.textContent = "← Back to store";
+    } else {
+      if (href.includes("categoria.html")) backLink.textContent = "← Volver a categoría";
+      else if (href.includes("lista-productos.html")) backLink.textContent = "← Volver a lista de productos";
+      else if (href.includes("productos.html")) backLink.textContent = "← Volver al catálogo";
+      else if (href.includes("tienda.html")) backLink.textContent = "← Volver a tienda";
+    }
+  }
+
+  function translateSecurityPopup() {
+    const lang = getLang();
+    const popup = document.getElementById("purchaseSecurityPopup");
+
+    if (!popup) return;
+
+    if (lang === "en") {
+      popup.querySelector("h1, h2") && (popup.querySelector("h1, h2").textContent = "PURCHASE SECURITY NOTICE");
+
+      popup.querySelectorAll("p").forEach(p => {
+        const text = p.textContent.trim();
+
+        if (text.includes("Por tu seguridad")) {
+          p.textContent = "For your security, Quality Medical Service only communicates through its official channels.";
+        }
+
+        if (text.includes("No se solicitan pagos")) {
+          p.textContent = "No payments are requested to personal accounts.";
+        }
+
+        if (text.includes("No se realizan cobros")) {
+          p.textContent = "No charges are made outside Shopify secure checkout or a formal quote issued by the company.";
+        }
+
+        if (text.includes("Desconfía de enlaces")) {
+          p.textContent = "Be cautious of external links, unverified messages, or payment requests through unofficial channels.";
+        }
+      });
+
+      popup.querySelectorAll("strong").forEach(strong => {
+        if (strong.textContent.trim() === "Correo oficial:") {
+          strong.textContent = "Official email:";
+        }
+
+        if (strong.textContent.trim() === "Teléfonos oficiales:") {
+          strong.textContent = "Official phone numbers:";
+        }
+      });
+
+      const okButton = document.getElementById("purchaseSecurityOk");
+      if (okButton) okButton.textContent = "Got it";
+    }
+
+    if (lang === "es") {
+      popup.querySelector("h1, h2") && (popup.querySelector("h1, h2").textContent = "AVISO DE SEGURIDAD DE COMPRA");
+
+      popup.querySelectorAll("p").forEach(p => {
+        const text = p.textContent.trim();
+
+        if (text.includes("For your security")) {
+          p.textContent = "Por tu seguridad, Quality Medical Service únicamente se comunica por medio de sus canales oficiales.";
+        }
+
+        if (text.includes("No payments are requested")) {
+          p.textContent = "No se solicitan pagos a cuentas personales.";
+        }
+
+        if (text.includes("No charges are made")) {
+          p.textContent = "No se realizan cobros fuera del checkout seguro de Shopify o de una cotización formal emitida por la empresa.";
+        }
+
+        if (text.includes("Be cautious")) {
+          p.textContent = "Desconfía de enlaces externos, mensajes no verificados o solicitudes de pago por medios no oficiales.";
+        }
+      });
+
+      popup.querySelectorAll("strong").forEach(strong => {
+        if (strong.textContent.trim() === "Official email:") {
+          strong.textContent = "Correo oficial:";
+        }
+
+        if (strong.textContent.trim() === "Official phone numbers:") {
+          strong.textContent = "Teléfonos oficiales:";
+        }
+      });
+
+      const okButton = document.getElementById("purchaseSecurityOk");
+      if (okButton) okButton.textContent = "Entendido";
+    }
+  }
+
+  function applyStoreTranslations() {
+    translateSimpleTexts();
+    translateProductTableRows();
+    translateProductCards();
+    translateSingleProductPage();
+    translateBackLink();
+    translateSecurityPopup();
+  }
+
+  window.applyStoreTranslations = applyStoreTranslations;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    applyStoreTranslations();
+
+    setTimeout(applyStoreTranslations, 300);
+    setTimeout(applyStoreTranslations, 800);
+    setTimeout(applyStoreTranslations, 1500);
+  });
+
+  window.addEventListener("load", () => {
+    applyStoreTranslations();
+
+    setTimeout(applyStoreTranslations, 500);
+    setTimeout(applyStoreTranslations, 1200);
+  });
+
+  document.addEventListener("click", () => {
+    setTimeout(applyStoreTranslations, 250);
+    setTimeout(applyStoreTranslations, 900);
+  });
+})();

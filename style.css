@@ -7391,3 +7391,78 @@ footer {
     max-height: calc(100svh - 105px) !important;
   }
 }
+
+/* =====================================================
+   CARRITO — TACHE SIEMPRE VISIBLE
+   ===================================================== */
+
+/* Fondo oscuro del carrito */
+.cart-overlay {
+  z-index: 999990 !important;
+}
+
+/* Carrito lateral encima de logos/botones flotantes */
+.cart-drawer {
+  z-index: 1000000 !important;
+}
+
+/* Header del carrito fijo arriba */
+.cart-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000001 !important;
+  background: #ffffff !important;
+}
+
+/* Tache para cerrar carrito */
+.cart-close-btn {
+  position: relative !important;
+  z-index: 1000002 !important;
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(7, 83, 138, 0.18) !important;
+  border-radius: 999px !important;
+  color: #07538A !important;
+  font-size: 26px !important;
+  line-height: 1 !important;
+}
+
+/* Por si algún logo/botón flotante estaba encima */
+.whatsapp-float,
+.whatsapp-btn,
+.whatsapp-button,
+.floating-whatsapp,
+.floating-btn,
+.float-btn,
+.floating-logo,
+.logo-floating,
+.chat-widget,
+.sidekick-widget {
+  z-index: 9999 !important;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .cart-drawer {
+    z-index: 1000000 !important;
+  }
+
+  .cart-header {
+    padding-top: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .cart-close-btn {
+    width: 44px !important;
+    height: 44px !important;
+    min-width: 44px !important;
+    min-height: 44px !important;
+    font-size: 28px !important;
+  }
+}

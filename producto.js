@@ -332,6 +332,10 @@ function renderSingleProduct(product) {
     return;
   }
 
+  product = window.getTranslatedProductForCurrentLang
+    ? window.getTranslatedProductForCurrentLang(product)
+    : product;
+  
   selectedSingleProduct = product;
   updateProductMetaTags(product);
 

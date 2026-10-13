@@ -7521,3 +7521,318 @@ footer {
     max-height: 285px !important;
   }
 }
+
+/* =====================================================
+   HERO AJUSTADO FINAL
+   - Desktop: no se corta abajo
+   - Fondo blanco
+   - Sin sombra/overlay extra
+   ===================================================== */
+
+/* Quitar overlays o capas encima del hero si existen */
+.hero::before,
+.hero::after {
+  display: none !important;
+  content: none !important;
+  background: none !important;
+}
+
+/* HERO GENERAL */
+.hero {
+  background-color: #ffffff !important;
+  background-repeat: no-repeat !important;
+}
+
+/* DESKTOP */
+@media (min-width: 901px) {
+  .hero {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+
+    /* un poco más de altura para que no se corte abajo */
+    min-height: calc(100svh - 96px) !important;
+    height: calc(100svh - 96px) !important;
+
+    /* para que entre completa */
+    background-size: contain !important;
+    background-position: center center !important;
+    background-color: #ffffff !important;
+  }
+}
+
+/* LAPTOP / TABLET GRANDE */
+@media (min-width: 641px) and (max-width: 900px) {
+  .hero {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    min-height: 520px !important;
+    height: 65vw !important;
+    max-height: 700px !important;
+
+    background-size: contain !important;
+    background-position: center center !important;
+    background-color: #ffffff !important;
+  }
+}
+
+/* CELULAR */
+@media (max-width: 640px) {
+  .hero {
+    margin-top: 142px !important;
+    padding-top: 0 !important;
+
+    /* menos espacio vacío abajo */
+    height: auto !important;
+    min-height: 0 !important;
+    aspect-ratio: 1 / 1.05 !important;
+
+    background-size: contain !important;
+    background-position: center top !important;
+    background-color: #ffffff !important;
+  }
+}
+
+/* CELULAR MUY CHICO */
+@media (max-width: 380px) {
+  .hero {
+    aspect-ratio: 1 / 1 !important;
+  }
+}
+
+/* =====================================================
+   CARRITO MOBILE — SCROLL Y ACOMODO FINAL
+   ===================================================== */
+
+@media (max-width: 640px) {
+  /* Overlay detrás del carrito */
+  .cart-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999990 !important;
+    background: rgba(7, 83, 138, 0.35) !important;
+  }
+
+  /* Carrito como panel completo en móvil */
+  .cart-drawer {
+    position: fixed !important;
+    top: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100svh !important;
+    max-height: 100svh !important;
+
+    z-index: 1000000 !important;
+    background: #ffffff !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    overflow: hidden !important;
+    transform: translateX(100%) !important;
+  }
+
+  .cart-drawer.open,
+  .cart-drawer.active,
+  .cart-drawer.is-open {
+    transform: translateX(0) !important;
+  }
+
+  /* Encabezado fijo arriba */
+  .cart-header {
+    flex: 0 0 auto !important;
+    position: relative !important;
+    top: auto !important;
+
+    height: auto !important;
+    min-height: 76px !important;
+    padding: 22px 18px 14px !important;
+
+    background: #ffffff !important;
+    border-bottom: 1px solid rgba(108, 167, 218, 0.35) !important;
+
+    z-index: 1000002 !important;
+  }
+
+  .cart-header h3 {
+    font-size: 22px !important;
+    margin: 0 !important;
+  }
+
+  /* Tache visible */
+  .cart-close-btn {
+    position: absolute !important;
+    top: 18px !important;
+    right: 16px !important;
+
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    background: #ffffff !important;
+    border: 1px solid rgba(7, 83, 138, 0.22) !important;
+    border-radius: 999px !important;
+
+    color: #07538A !important;
+    font-size: 28px !important;
+    line-height: 1 !important;
+
+    z-index: 1000003 !important;
+  }
+
+  /* Lista de productos con scroll */
+  .cart-items {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+
+    padding: 14px 14px 10px !important;
+
+    -webkit-overflow-scrolling: touch !important;
+    overscroll-behavior: contain !important;
+    touch-action: pan-y !important;
+  }
+
+  /* Cada producto más compacto */
+  .cart-item {
+    display: grid !important;
+    grid-template-columns: 58px 1fr 28px !important;
+    gap: 10px !important;
+    align-items: center !important;
+
+    padding: 12px 0 !important;
+    border-bottom: 1px solid rgba(108, 167, 218, 0.3) !important;
+  }
+
+  .cart-item-img,
+  .cart-item-image {
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    background: #f3f8fc !important;
+  }
+
+  .cart-item-img img,
+  .cart-item-image img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  .cart-item-info,
+  .cart-item-content {
+    min-width: 0 !important;
+  }
+
+  .cart-item h4,
+  .cart-item-title {
+    font-size: 13px !important;
+    line-height: 1.2 !important;
+    margin: 0 0 4px !important;
+  }
+
+  .cart-item p,
+  .cart-item small {
+    font-size: 11px !important;
+    line-height: 1.25 !important;
+    margin: 0 !important;
+  }
+
+  .cart-remove,
+  .cart-item-remove,
+  .remove-cart-item {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  /* Footer fijo abajo, pero sin tapar la lista */
+  .cart-footer {
+    flex: 0 0 auto !important;
+    position: relative !important;
+    bottom: auto !important;
+
+    background: #ffffff !important;
+    border-top: 1px solid rgba(108, 167, 218, 0.35) !important;
+
+    padding: 16px 14px calc(16px + env(safe-area-inset-bottom)) !important;
+    z-index: 1000002 !important;
+  }
+
+  .cart-total {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .cart-total span {
+    font-size: 13px !important;
+  }
+
+  .cart-total strong {
+    font-size: 14px !important;
+  }
+
+  .checkout-btn {
+    width: 100% !important;
+    min-height: 44px !important;
+    font-size: 13px !important;
+    border-radius: 9px !important;
+  }
+
+  .cart-security-note,
+  .cart-note {
+    font-size: 9.5px !important;
+    line-height: 1.35 !important;
+    margin: 10px 0 0 !important;
+    text-align: center !important;
+  }
+}
+
+
+/* Celulares muy chicos */
+@media (max-width: 390px) {
+  .cart-header {
+    min-height: 70px !important;
+    padding: 18px 16px 12px !important;
+  }
+
+  .cart-header h3 {
+    font-size: 20px !important;
+  }
+
+  .cart-close-btn {
+    top: 14px !important;
+    right: 14px !important;
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .cart-items {
+    padding: 10px 12px !important;
+  }
+
+  .cart-footer {
+    padding: 14px 12px calc(14px + env(safe-area-inset-bottom)) !important;
+  }
+
+  .cart-security-note,
+  .cart-note {
+    font-size: 9px !important;
+  }
+}

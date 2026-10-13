@@ -471,12 +471,11 @@ function updatePurchaseSecurityTexts() {
 
   const t = text[lang] || text.es;
 
-  const title = popup.querySelector("h1, h2");
+  const title = popup.querySelector(".purchase-security-card h1, .purchase-security-card h2, h1, h2");
   if (title) title.textContent = t.title;
 
   const intro =
     popup.querySelector(".purchase-security-card > p") ||
-    popup.querySelector(".purchase-security-modal > p") ||
     popup.querySelector("h1 + p") ||
     popup.querySelector("h2 + p");
 
@@ -484,10 +483,9 @@ function updatePurchaseSecurityTexts() {
 
   const infoBox =
     popup.querySelector(".purchase-security-info") ||
-    popup.querySelector(".security-info") ||
-    Array.from(popup.querySelectorAll("div")).find(box => {
-      return box.textContent.includes("contacto@qualityms.com.mx");
-    });
+    popup.querySelector(".purchase-security-box") ||
+    popup.querySelector(".purchase-security-content") ||
+    popup.querySelector(".purchase-security-card div:nth-of-type(2)");
 
   if (infoBox) {
     infoBox.innerHTML = `
@@ -502,7 +500,6 @@ function updatePurchaseSecurityTexts() {
   const okButton = document.getElementById("purchaseSecurityOk");
   if (okButton) okButton.textContent = t.button;
 }
-
 function showPurchaseSecurityNotice() {
   if (tiendaEnMantenimiento) return;
   if (!isPurchaseSecurityPage()) return;

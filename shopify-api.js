@@ -203,53 +203,75 @@ function mapShopifyProduct(product) {
   const firstVariant = product.variants?.edges?.[0]?.node || null;
   const firstCollection = getProductMainCollection(product);
 
-  const categoryInfo = getProductCategoryInfo(product);
-  const brand = detectProductBrand(product.title, firstCollection?.title, product.vendor);
-  const cleanTitle = cleanShopifyProductTitle(product.title, brand);
+  const brand = detectProductBrand(product.title, firstCollection?.title);
+  const cleanTitleEs = cleanShopifyProductTitle(product.title, brand);
 
-  const rawDescriptionHTML =
+  const rawDescriptionHTMLEs =
     product.descriptionHtml ||
     product.description ||
     "";
 
-  const rawDescriptionText =
+  const rawDescriptionTextEs =
     product.description ||
     stripShopifyHTML(product.descriptionHtml) ||
     "";
 
-  const cleanDescriptionHTML = addBrandToProductDescription(rawDescriptionHTML, brand);
-  const cleanDescriptionText = addBrandToProductDescription(rawDescriptionText, brand);
+  const cleanDescriptionHTMLEs = addBrandToProductDescription(rawDescriptionHTMLEs, brand);
+  const cleanDescriptionTextEs = addBrandToProductDescription(rawDescriptionTextEs, brand);
 
-  const shortDescription =
+  const shortDescriptionEs =
     product.shortDescription?.value ||
     product.descripcionCorta?.value ||
     "";
+
+  const lang = localStorage.getItem("siteLang") || "es";
+
+  const translation = window.getProductTranslation
+    ? window.getProductTranslation(product.handle, lang)
+    : null;
+
+  const titleFinal =
+    translation?.title ||
+    cleanTitleEs;
+
+  const shortDescriptionFinal =
+    translation?.shortDescription ||
+    shortDescriptionEs;
+
+  const descriptionFinal =
+    translation?.description ||
+    cleanDescriptionHTMLEs ||
+    cleanDescriptionTextEs ||
+    (lang === "en" ? "No description available." : "Sin descripción disponible.");
 
   return {
     id: product.id,
     handle: product.handle,
     originalTitle: product.title,
-    title: cleanTitle,
 
-    vendor: product.vendor || "",
-    productType: product.productType || "",
+    title: titleFinal,
+    titleEs: cleanTitleEs,
+    titleEn: window.getProductTranslation?.(product.handle, "en")?.title || cleanTitleEs,
 
-    category: categoryInfo.handle,
-    categoryName: categoryInfo.title,
+    category: firstCollection?.handle || "general",
+    categoryName: firstCollection?.title || "General",
 
     price: 0,
-    priceGeneral: "Bajo cotización",
-    priceDistributor: "Cotizar con ejecutivo",
-    priceText: "Bajo cotización",
+    priceGeneral: lang === "en" ? "Quote only" : "Bajo cotización",
+    priceDistributor: lang === "en" ? "Quote with an advisor" : "Cotizar con ejecutivo",
+    priceText: lang === "en" ? "Quote only" : "Bajo cotización",
 
     image: product.featuredImage?.url || "assets/diagnostico.png",
-    imageAlt: product.featuredImage?.altText || cleanTitle,
+    imageAlt: product.featuredImage?.altText || titleFinal,
 
-    description: cleanDescriptionHTML || cleanDescriptionText || "Sin descripción disponible.",
-    descriptionHtml: cleanDescriptionHTML || cleanDescriptionText || "Sin descripción disponible.",
-    shortDescription: shortDescription,
+    description: descriptionFinal,
+    descriptionHtml: descriptionFinal,
 
-    availability: "Disponible para cotización",
+    shortDescription: shortDescriptionFinal,
+    shortDescriptionEs: shortDescriptionEs,
+    shortDescriptionEn: window.getProductTranslation?.(product.handle, "en")?.shortDescription || shortDescriptionEs,
+
+    availability: lang === "en" ? "Available for quote" : "Disponible para cotización",
     type: "cotizacion",
     variantId: firstVariant?.id || null
   };

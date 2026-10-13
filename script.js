@@ -440,11 +440,76 @@ function isPurchaseSecurityPage() {
   return storePages.includes(currentPage);
 }
 
+function updatePurchaseSecurityTexts() {
+  const popup = document.getElementById("purchaseSecurityPopup");
+  if (!popup) return;
+
+  const lang = localStorage.getItem("siteLang") || "es";
+
+  const text = {
+    es: {
+      title: "AVISO DE SEGURIDAD DE COMPRA",
+      intro: "Por tu seguridad, Quality Medical Service únicamente se comunica por medio de sus canales oficiales.",
+      emailLabel: "Correo oficial:",
+      phoneLabel: "Teléfonos oficiales:",
+      line1: "No se solicitan pagos a cuentas personales.",
+      line2: "No se realizan cobros fuera del checkout seguro de Shopify o de una cotización formal emitida por la empresa.",
+      line3: "Desconfía de enlaces externos, mensajes no verificados o solicitudes de pago por medios no oficiales.",
+      button: "Entendido"
+    },
+    en: {
+      title: "PURCHASE SECURITY NOTICE",
+      intro: "For your security, Quality Medical Service only communicates through its official channels.",
+      emailLabel: "Official email:",
+      phoneLabel: "Official phone numbers:",
+      line1: "No payments are requested to personal accounts.",
+      line2: "No charges are made outside Shopify secure checkout or a formal quote issued by the company.",
+      line3: "Be cautious of external links, unverified messages, or payment requests through unofficial channels.",
+      button: "Got it"
+    }
+  };
+
+  const t = text[lang] || text.es;
+
+  const title = popup.querySelector("h1, h2");
+  if (title) title.textContent = t.title;
+
+  const intro =
+    popup.querySelector(".purchase-security-card > p") ||
+    popup.querySelector(".purchase-security-modal > p") ||
+    popup.querySelector("h1 + p") ||
+    popup.querySelector("h2 + p");
+
+  if (intro) intro.textContent = t.intro;
+
+  const infoBox =
+    popup.querySelector(".purchase-security-info") ||
+    popup.querySelector(".security-info") ||
+    Array.from(popup.querySelectorAll("div")).find(box => {
+      return box.textContent.includes("contacto@qualityms.com.mx");
+    });
+
+  if (infoBox) {
+    infoBox.innerHTML = `
+      <p><strong>${t.emailLabel}</strong> contacto@qualityms.com.mx</p>
+      <p><strong>${t.phoneLabel}</strong> 55-55-14-78-15, 55-55-33-33-73, 55-55-12-01-02, 55-55-11-55-76</p>
+      <p>${t.line1}</p>
+      <p>${t.line2}</p>
+      <p>${t.line3}</p>
+    `;
+  }
+
+  const okButton = document.getElementById("purchaseSecurityOk");
+  if (okButton) okButton.textContent = t.button;
+}
+
 function showPurchaseSecurityNotice() {
   if (tiendaEnMantenimiento) return;
   if (!isPurchaseSecurityPage()) return;
   if (!purchaseSecurityPopup) return;
   if (purchaseSecurityShownThisLoad) return;
+
+  updatePurchaseSecurityTexts();
 
   purchaseSecurityShownThisLoad = true;
   purchaseSecurityPopup.classList.add("active");
@@ -666,19 +731,33 @@ function showQuoteTemporaryNotice() {
 
   if (!storePages.includes(currentPage)) return;
 
+  const lang = localStorage.getItem("siteLang") || "es";
+
+  const text = {
+    es: {
+      close: "Cerrar aviso",
+      title: "Productos bajo cotización",
+      body: "Por el momento, todos los productos se venden bajo cotización. Agrega los productos que te interesen y nuestro equipo te contactará."
+    },
+    en: {
+      close: "Close notice",
+      title: "Products to quote",
+      body: "For now, all products are sold by quote. Add the products you are interested in and our team will contact you."
+    }
+  };
+
+  const t = text[lang] || text.es;
+
   setTimeout(() => {
     const notice = document.createElement("div");
     notice.className = "quote-toast";
 
     notice.innerHTML = `
-      <button class="quote-toast-close" type="button" aria-label="Cerrar aviso">×</button>
+      <button class="quote-toast-close" type="button" aria-label="${t.close}">×</button>
 
       <div class="quote-toast-content">
-        <strong>Productos bajo cotización</strong>
-        <p>
-          Por el momento, todos los productos se venden bajo cotización.
-          Agrega los productos que te interesen y nuestro equipo te contactará.
-        </p>
+        <strong>${t.title}</strong>
+        <p>${t.body}</p>
       </div>
 
       <div class="quote-toast-progress"></div>

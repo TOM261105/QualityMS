@@ -227,17 +227,36 @@ function mapShopifyProduct(product) {
 
   const lang = localStorage.getItem("siteLang") || "es";
 
-  const translation = window.getProductTranslation
-    ? window.getProductTranslation(product.handle, lang)
-    : null;
+  const baseProductForTranslation = {
+    id: product.id,
+    handle: product.handle,
+    title: cleanTitleEs,
+    originalTitle: product.title
+  };
 
-  const translationEs = window.getProductTranslation
-    ? window.getProductTranslation(product.handle, "es")
-    : null;
+  const translation = window.getProductTranslationByProduct
+    ? window.getProductTranslationByProduct(baseProductForTranslation, lang)
+    : (
+      window.getProductTranslation
+        ? window.getProductTranslation(product.handle, lang)
+        : null
+    );
 
-  const translationEn = window.getProductTranslation
-    ? window.getProductTranslation(product.handle, "en")
-    : null;
+  const translationEs = window.getProductTranslationByProduct
+    ? window.getProductTranslationByProduct(baseProductForTranslation, "es")
+    : (
+      window.getProductTranslation
+        ? window.getProductTranslation(product.handle, "es")
+        : null
+    );
+
+  const translationEn = window.getProductTranslationByProduct
+    ? window.getProductTranslationByProduct(baseProductForTranslation, "en")
+    : (
+      window.getProductTranslation
+        ? window.getProductTranslation(product.handle, "en")
+        : null
+    );
 
   const titleFinal =
     translation?.title ||

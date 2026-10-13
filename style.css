@@ -7330,3 +7330,64 @@ footer {
     max-height: 285px !important;
   }
 }
+
+/* =====================================================
+   POPUP SEGURIDAD DE COMPRA — ENCIMA DE NAVBAR
+   ===================================================== */
+
+.purchase-security-popup {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999999 !important;
+  background: rgba(7, 83, 138, 0.45) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  padding: 24px 18px !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+}
+
+.purchase-security-popup.active,
+.purchase-security-popup.show,
+.purchase-security-popup.is-open {
+  display: flex !important;
+}
+
+.purchase-security-card {
+  position: relative !important;
+  z-index: 10000000 !important;
+  margin-top: 90px !important;
+  max-width: 560px !important;
+  width: 100% !important;
+}
+
+/* Asegura que navbar y carrito queden detrás del popup */
+.topbar {
+  z-index: 9999 !important;
+}
+
+.cart-drawer,
+.cart-overlay {
+  z-index: 9998 !important;
+}
+
+/* MOBILE */
+@media (max-width: 640px) {
+  .purchase-security-popup {
+    padding: 22px 18px !important;
+    align-items: flex-start !important;
+  }
+
+  .purchase-security-card {
+    margin-top: 78px !important;
+    max-height: calc(100svh - 120px) !important;
+    overflow-y: auto !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .purchase-security-card {
+    margin-top: 70px !important;
+    max-height: calc(100svh - 105px) !important;
+  }
+}

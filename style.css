@@ -8357,12 +8357,12 @@ body.home-page .hero-logo {
 /* COMPUTADORA */
 @media (min-width: 901px) {
   body.home-page .hero {
-    margin-top: 92px !important;
+    margin-top: 112px !important;
     overflow: hidden !important;
   }
 
   body.home-page .hero-image {
-    margin-top: -115px !important;
+    margin-top: -145px !important;
     width: 100% !important;
     height: auto !important;
     display: block !important;

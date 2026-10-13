@@ -7263,3 +7263,70 @@ footer {
     height: 455px !important;
   }
 }
+
+/* =====================================================
+   SOLO AJUSTE MOBILE — HERO SIN ESPACIO + POPUP ENCIMA
+   ===================================================== */
+
+@media (max-width: 640px) {
+  /* HERO PRINCIPAL: quitar espacio sobrante abajo */
+  .hero {
+    margin-top: 142px !important;
+    padding-top: 0 !important;
+    min-height: 0 !important;
+    height: calc(100vw * 0.80) !important;
+    max-height: 315px !important;
+    background-size: 100% auto !important;
+    background-position: center top !important;
+    background-repeat: no-repeat !important;
+    background-color: #ffffff !important;
+  }
+
+  .hero::before,
+  .hero::after {
+    display: none !important;
+  }
+
+  /* POPUP ENCIMA DE LA NAVBAR */
+  .medical-popup {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999999 !important;
+    background: rgba(7, 83, 138, 0.45) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
+    padding: 24px 18px !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+  }
+
+  .medical-popup-card {
+    position: relative !important;
+    z-index: 10000000 !important;
+    margin-top: 70px !important;
+  }
+
+  /* Asegura que la navbar quede atrás del popup */
+  .topbar {
+    z-index: 9999 !important;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero {
+    margin-top: 142px !important;
+    height: calc(100vw * 0.80) !important;
+    max-height: 300px !important;
+  }
+
+  .medical-popup-card {
+    margin-top: 62px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero {
+    height: calc(100vw * 0.82) !important;
+    max-height: 285px !important;
+  }
+}

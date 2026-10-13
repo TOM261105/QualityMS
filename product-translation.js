@@ -1335,3 +1335,83 @@ window.getProductTranslationByProduct = function getProductTranslationByProduct(
 
   return null;
 };
+
+/* =====================================================
+   FUNCIÓN FINAL PARA APLICAR TRADUCCIÓN A CUALQUIER PRODUCTO
+   ===================================================== */
+
+window.getTranslatedProductForCurrentLang = function getTranslatedProductForCurrentLang(product) {
+  if (!product) return product;
+
+  const lang = localStorage.getItem("siteLang") || "es";
+
+  function normalizeText(value) {
+    return String(value || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[®™]/g, "")
+      .replace(/\b(welch allyn|hillrom|hill-rom|midmark|seca|baxter|bovie|huntleigh|mortara|ritter)\b/g, "")
+      .replace(/[^a-z0-9]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function findTranslation(product) {
+    if (!window.PRODUCT_TRANSLATIONS) return null;
+
+    const productCandidates = [
+      product.handle,
+      product.id,
+      product.title,
+      product.originalTitle,
+      product.titleEs,
+      product.titleEn
+    ]
+      .map(normalizeText)
+      .filter(Boolean);
+
+    for (const handle in window.PRODUCT_TRANSLATIONS) {
+      const item = window.PRODUCT_TRANSLATIONS[handle];
+
+      const translationCandidates = [
+        handle,
+        item?.es?.title,
+        item?.en?.title
+      ]
+        .map(normalizeText)
+        .filter(Boolean);
+
+      const matched = productCandidates.some(productText => {
+        return translationCandidates.some(translationText => {
+          return (
+            productText === translationText ||
+            productText.includes(translationText) ||
+            translationText.includes(productText)
+          );
+        });
+      });
+
+      if (matched) {
+        return item[lang] || item.es || null;
+      }
+    }
+
+    return null;
+  }
+
+  const translation = findTranslation(product);
+
+  if (!translation) return product;
+
+  return {
+    ...product,
+    title: translation.title || product.title,
+    description: translation.description || product.description,
+    descriptionHtml: translation.description || product.descriptionHtml || product.description,
+    shortDescription: translation.shortDescription || product.shortDescription,
+    priceText: lang === "en" ? "Quote only" : "Bajo cotización",
+    priceGeneral: lang === "en" ? "Quote only" : "Bajo cotización",
+    availability: lang === "en" ? "Available for quote" : "Disponible para cotización"
+  };
+};

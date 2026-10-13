@@ -7466,3 +7466,58 @@ footer {
     font-size: 28px !important;
   }
 }
+
+/* =====================================================
+   HERO FINAL — DESKTOP COMPLETO + MOBILE COMPACTO
+   ===================================================== */
+
+/* DESKTOP / COMPUTADORA */
+@media (min-width: 901px) {
+  .hero {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    min-height: calc(100svh - 112px) !important;
+    height: calc(100svh - 112px) !important;
+
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-color: #ffffff !important;
+  }
+}
+
+/* LAPTOPS MÁS CHICAS / PANTALLAS INTERMEDIAS */
+@media (min-width: 901px) and (max-width: 1250px) {
+  .hero {
+    min-height: calc(100svh - 112px) !important;
+    height: calc(100svh - 112px) !important;
+
+    background-size: contain !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    background-color: #ffffff !important;
+  }
+}
+
+/* CELULAR — mantiene el ajuste compacto */
+@media (max-width: 640px) {
+  .hero {
+    margin-top: 142px !important;
+    padding-top: 0 !important;
+    min-height: 0 !important;
+    height: calc(100vw * 0.80) !important;
+    max-height: 300px !important;
+
+    background-size: 100% auto !important;
+    background-position: center top !important;
+    background-repeat: no-repeat !important;
+    background-color: #ffffff !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero {
+    height: calc(100vw * 0.82) !important;
+    max-height: 285px !important;
+  }
+}

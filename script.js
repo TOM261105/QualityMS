@@ -888,3 +888,20 @@ function setupGlobalNavbarLogoFade() {
 }
 
 document.addEventListener("DOMContentLoaded", setupGlobalNavbarLogoFade);
+
+window.addEventListener("pageshow", () => {
+  const cartDrawer = document.getElementById("cartDrawer");
+
+  const cartIsActuallyOpen =
+    cartDrawer &&
+    (
+      cartDrawer.classList.contains("open") ||
+      cartDrawer.classList.contains("active") ||
+      cartDrawer.classList.contains("is-open")
+    );
+
+  if (!cartIsActuallyOpen) {
+    document.body.classList.remove("cart-is-open");
+    document.documentElement.classList.remove("cart-is-open");
+  }
+});

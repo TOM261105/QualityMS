@@ -8485,3 +8485,62 @@ body.home-page .hero-logo {
     content: none !important;
   }
 }
+
+/* ── LOGOS DE PROVEEDORES EN TIENDA ───────────────────────── */
+
+.supplier-logo-wrap {
+  width: 120px;
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.supplier-logo-img {
+  max-width: 115px;
+  max-height: 42px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.supplier-name-text {
+  font-weight: 700;
+  color: var(--blue-main);
+}
+
+.supplier-logo-cell {
+  vertical-align: middle;
+}
+
+.category-supplier-logo,
+.collection-supplier-logo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.category-supplier-logo .supplier-logo-img,
+.collection-supplier-logo .supplier-logo-img {
+  max-width: 180px;
+  max-height: 70px;
+}
+
+@media (max-width: 640px) {
+  .supplier-logo-wrap {
+    width: 95px;
+    min-height: 36px;
+  }
+
+  .supplier-logo-img {
+    max-width: 90px;
+    max-height: 36px;
+  }
+
+  .category-supplier-logo .supplier-logo-img,
+  .collection-supplier-logo .supplier-logo-img {
+    max-width: 150px;
+    max-height: 58px;
+  }
+}

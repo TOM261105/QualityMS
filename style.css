@@ -8349,3 +8349,44 @@ body.home-page .hero-logo {
     margin-top: 138px !important;
   }
 }
+
+/* =====================================================
+   HERO HOME — QUITAR ESPACIO SUPERIOR SIN CORTAR DOCTOR
+   ===================================================== */
+
+/* COMPUTADORA */
+@media (min-width: 901px) {
+  body.home-page .hero {
+    margin-top: 112px !important;
+    overflow: hidden !important;
+  }
+
+  body.home-page .hero-image {
+    margin-top: -85px !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+  }
+}
+
+/* PANTALLAS INTERMEDIAS */
+@media (min-width: 641px) and (max-width: 900px) {
+  body.home-page .hero-image {
+    margin-top: -55px !important;
+  }
+}
+
+/* CELULAR */
+@media (max-width: 640px) {
+  body.home-page .hero {
+    margin-top: 142px !important;
+    overflow: hidden !important;
+  }
+
+  body.home-page .hero-image {
+    margin-top: -18px !important;
+    width: 100% !important;
+    height: auto !important;
+    display: block !important;
+  }
+}

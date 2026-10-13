@@ -77,6 +77,20 @@ if (langToggle) {
     const newLang = currentLang === "es" ? "en" : "es";
 
     setLanguage(newLang);
+
+    const currentPage = window.location.pathname.split("/").pop() || "index.html";
+
+    const storePages = [
+      "tienda.html",
+      "categoria.html",
+      "productos.html",
+      "lista-productos.html",
+      "producto.html"
+    ];
+
+    if (storePages.includes(currentPage)) {
+      window.location.reload();
+    }
   });
 }
 

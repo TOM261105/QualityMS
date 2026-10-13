@@ -5,10 +5,12 @@ const dynamicCategoryCount = document.getElementById("dynamicCategoryCount");
 
 let currentStoreCollections = [];
 
+/* ── IDIOMA ACTUAL ───────────────────────────────────────── */
+
 function getCurrentStoreLanguage() {
   const storedLang =
-    localStorage.getItem("qmsLang") ||
     localStorage.getItem("siteLang") ||
+    localStorage.getItem("qmsLang") ||
     localStorage.getItem("language") ||
     localStorage.getItem("lang") ||
     localStorage.getItem("currentLang") ||
@@ -40,12 +42,14 @@ function getStoreText(es, en) {
   return getCurrentStoreLanguage() === "en" ? en : es;
 }
 
+/* ── TRADUCCIÓN DE CATEGORÍAS ────────────────────────────── */
+
 function translateCategoryTitle(title) {
   const currentLang = getCurrentStoreLanguage();
 
   if (!title) return "General";
 
-  let translated = title;
+  let translated = String(title);
 
   const replacementsToEnglish = [
     ["Audiología y timpanometría", "Audiology and tympanometry"],
@@ -59,7 +63,8 @@ function translateCategoryTitle(title) {
     ["Mujer", "Women’s health"],
     ["Especialidades", "Specialties"],
     ["Bienestar", "Wellness"],
-    ["Nutrición", "Nutrition"]
+    ["Nutrición", "Nutrition"],
+    ["General", "General"]
   ];
 
   const replacementsToSpanish = [
@@ -74,7 +79,8 @@ function translateCategoryTitle(title) {
     ["Women’s health", "Mujer"],
     ["Specialties", "Especialidades"],
     ["Wellness", "Bienestar"],
-    ["Nutrition", "Nutrición"]
+    ["Nutrition", "Nutrición"],
+    ["General", "General"]
   ];
 
   const replacements = currentLang === "en" ? replacementsToEnglish : replacementsToSpanish;
@@ -95,12 +101,14 @@ function translateCategoryDescription(description) {
       : "Explora los productos disponibles en esta categoría.";
   }
 
-  let translated = description;
+  let translated = String(description);
 
   const replacementsToEnglish = [
     ["Explora los productos disponibles en esta categoría.", "Explore the products available in this category."],
     ["Explora los productos disponibles en esta categoría", "Explore the products available in this category"],
     ["Explora los productos disponibles", "Explore the available products"],
+    ["Productos de", "Products from"],
+    ["productos de", "products from"],
     ["en esta categoría", "in this category"],
     ["productos disponibles", "available products"],
     ["categoría", "category"]
@@ -110,6 +118,8 @@ function translateCategoryDescription(description) {
     ["Explore the products available in this category.", "Explora los productos disponibles en esta categoría."],
     ["Explore the products available in this category", "Explora los productos disponibles en esta categoría"],
     ["Explore the available products", "Explora los productos disponibles"],
+    ["Products from", "Productos de"],
+    ["products from", "productos de"],
     ["in this category", "en esta categoría"],
     ["available products", "productos disponibles"],
     ["category", "categoría"]
@@ -124,11 +134,15 @@ function translateCategoryDescription(description) {
   return translated;
 }
 
+/* ── PRODUCTOS DEMO ──────────────────────────────────────── */
+
 function countDemoProductsByCategory(handle) {
   if (typeof DEMO_PRODUCTS === "undefined") return 0;
 
   return DEMO_PRODUCTS.filter(product => product.category === handle).length;
 }
+
+/* ── RENDER DE CATEGORÍAS ────────────────────────────────── */
 
 function renderCategories(collections) {
   if (!dynamicCategoriesGrid) return;
@@ -149,7 +163,11 @@ function renderCategories(collections) {
   }
 
   dynamicCategoriesGrid.innerHTML = collections.map(collection => {
-    const productCount = isShopifyReady()
+    const shopifyReady =
+      typeof isShopifyReady === "function" &&
+      isShopifyReady();
+
+    const productCount = shopifyReady
       ? getStoreText("Ver productos", "View products")
       : `+${countDemoProductsByCategory(collection.handle)} ${getStoreText("productos", "products")}`;
 
@@ -187,6 +205,8 @@ function renderCategories(collections) {
   makeCategoryCardsClickable();
 }
 
+/* ── CLIC EN TARJETAS ────────────────────────────────────── */
+
 function makeCategoryCardsClickable() {
   document.querySelectorAll(".equipo-section .product-card").forEach(card => {
     const href = card.dataset.href;
@@ -210,6 +230,8 @@ function makeCategoryCardsClickable() {
   });
 }
 
+/* ── CARGA DE CATEGORÍAS ─────────────────────────────────── */
+
 async function loadStoreCategories() {
   if (!dynamicCategoriesGrid) return;
 
@@ -224,14 +246,27 @@ async function loadStoreCategories() {
     renderCategories(collections);
   } catch (error) {
     console.error(error);
-    renderCategories(getDemoCollections());
+
+    if (typeof getDemoCollections === "function") {
+      renderCategories(getDemoCollections());
+    } else {
+      renderCategories([]);
+    }
   }
 }
+
+/* ── CAMBIO DE IDIOMA ────────────────────────────────────── */
 
 document.getElementById("langToggle")?.addEventListener("click", () => {
   setTimeout(() => {
     renderCategories(currentStoreCollections);
   }, 250);
+
+  setTimeout(() => {
+    renderCategories(currentStoreCollections);
+  }, 700);
 });
+
+/* ── INICIAR ─────────────────────────────────────────────── */
 
 loadStoreCategories();

@@ -8544,3 +8544,71 @@ body.home-page .hero-logo {
     max-height: 58px;
   }
 }
+
+/* ── CENTRAR LOGOS DE PROVEEDOR EN CATEGORÍA ───────────────── */
+
+/* Centra el bloque completo del header de categoría */
+.category-header,
+.category-hero,
+.category-title-block,
+.category-page-header {
+  text-align: center !important;
+}
+
+/* Centra específicamente el título donde aparece el logo */
+#categoryTitle {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Centra el contenedor del logo grande */
+#categoryTitle .supplier-logo-wrap,
+.supplier-logo-large {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 12px auto 18px auto !important;
+}
+
+/* Tamaño del logo grande del proveedor */
+#categoryTitle .supplier-logo-img,
+.supplier-logo-large .supplier-logo-img {
+  display: block !important;
+  max-width: 260px !important;
+  max-height: 90px !important;
+  width: auto !important;
+  height: auto !important;
+  object-fit: contain !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Centra el texto de catálogo y descripción */
+#categoryEyebrow,
+#categoryDescription {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Centra el buscador un poco mejor */
+#productSearch {
+  display: block !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  #categoryTitle .supplier-logo-img,
+  .supplier-logo-large .supplier-logo-img {
+    max-width: 210px !important;
+    max-height: 75px !important;
+  }
+}

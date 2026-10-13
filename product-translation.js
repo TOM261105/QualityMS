@@ -801,3 +801,475 @@ window.getStoreText = function getStoreText(key) {
     setTimeout(applyStoreTranslations, 900);
   });
 })();
+
+/* =====================================================
+   PARCHE FINAL FUERTE — TRADUCCIÓN DINÁMICA TIENDA
+   Pegar al FINAL de product-translations.js
+   ===================================================== */
+
+(function () {
+  let isApplyingTranslations = false;
+
+  function getLang() {
+    return localStorage.getItem("siteLang") || "es";
+  }
+
+  function cleanText(value) {
+    return String(value || "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function stripHTML(value) {
+    const temp = document.createElement("div");
+    temp.innerHTML = String(value || "");
+    return temp.textContent || temp.innerText || "";
+  }
+
+  function normalize(value) {
+    return String(value || "")
+      .toLowerCase()
+      .replace(/[®™]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  function getTranslationByName(name, lang) {
+    if (!window.PRODUCT_TRANSLATIONS) return null;
+
+    const cleanName = normalize(name);
+
+    for (const handle in window.PRODUCT_TRANSLATIONS) {
+      const item = window.PRODUCT_TRANSLATIONS[handle];
+
+      const esTitle = normalize(item?.es?.title || "");
+      const enTitle = normalize(item?.en?.title || "");
+      const handleText = normalize(handle || "");
+
+      if (
+        cleanName === esTitle ||
+        cleanName === enTitle ||
+        cleanName === handleText
+      ) {
+        return item[lang] || item.es || null;
+      }
+    }
+
+    return null;
+  }
+
+  function translateExactText(element, es, en) {
+    if (!element) return;
+
+    const lang = getLang();
+    const current = cleanText(element.textContent);
+
+    if (lang === "en" && current === es) {
+      element.textContent = en;
+    }
+
+    if (lang === "es" && current === en) {
+      element.textContent = es;
+    }
+  }
+
+  function translateIncludes(element, es, en) {
+    if (!element) return;
+
+    const lang = getLang();
+    const current = cleanText(element.textContent);
+
+    if (lang === "en" && current.includes(es)) {
+      element.textContent = current.replace(es, en);
+    }
+
+    if (lang === "es" && current.includes(en)) {
+      element.textContent = current.replace(en, es);
+    }
+  }
+
+  function translateGeneralTexts() {
+    const lang = getLang();
+
+    const dictionary = {
+      es: {
+        "Products to quote": "Productos a cotizar",
+        "PRODUCT LIST": "LISTA DE PRODUCTOS",
+        "FULL CATALOG": "CATÁLOGO COMPLETO",
+        "View all available products and request a personalized quote.": "Explora todos los productos disponibles y solicita una cotización personalizada.",
+        "Search product...": "Buscar producto...",
+
+        "SUPPLIER": "PROVEEDOR",
+        "NAME": "NOMBRE",
+        "DESCRIPTION": "DESCRIPCIÓN",
+        "PRICE": "PRECIO",
+        "ACTIONS": "ACCIONES",
+
+        "Quote required": "Cotización requerida",
+        "More information": "Ver más información",
+        "Add to quote": "Agregar a cotización",
+
+        "Quote only": "Bajo cotización",
+        "Available for quote": "Disponible para cotización",
+        "Availability": "Disponibilidad",
+        "Mode": "Modalidad",
+        "Add to quote": "Agregar a cotización",
+        "Quote this product": "Cotizar este producto",
+
+        "AVAILABILITYLABEL": "Disponibilidad",
+        "MODALITYLABEL": "Modalidad",
+
+        "← Back to category": "← Volver a categoría",
+        "← Back to product list": "← Volver a lista de productos",
+        "← Back to catalog": "← Volver al catálogo",
+        "← Back to store": "← Volver a tienda"
+      },
+
+      en: {
+        "Productos a cotizar": "Products to quote",
+        "LISTA DE PRODUCTOS": "PRODUCT LIST",
+        "CATÁLOGO COMPLETO": "FULL CATALOG",
+        "Explora todos los productos disponibles y solicita una cotización personalizada.": "View all available products and request a personalized quote.",
+        "Buscar producto...": "Search product...",
+
+        "PROVEEDOR": "SUPPLIER",
+        "NOMBRE": "NAME",
+        "DESCRIPCIÓN": "DESCRIPTION",
+        "PRECIO": "PRICE",
+        "ACCIONES": "ACTIONS",
+
+        "Cotización requerida": "Quote required",
+        "Ver más información": "More information",
+        "Más información": "More information",
+        "Agregar a cotización": "Add to quote",
+
+        "Bajo cotización": "Quote only",
+        "Disponible para cotización": "Available for quote",
+        "Disponibilidad": "Availability",
+        "Modalidad": "Mode",
+        "Cotizar este producto": "Quote this product",
+
+        "AVAILABILITYLABEL": "Availability",
+        "MODALITYLABEL": "Mode",
+
+        "← Volver a categoría": "← Back to category",
+        "← Volver a lista de productos": "← Back to product list",
+        "← Volver al catálogo": "← Back to catalog",
+        "← Volver a tienda": "← Back to store"
+      }
+    };
+
+    const texts = dictionary[lang] || dictionary.es;
+
+    document.querySelectorAll("body *").forEach(element => {
+      if (
+        element.children.length > 0 ||
+        ["SCRIPT", "STYLE", "SVG", "PATH", "IMG"].includes(element.tagName)
+      ) {
+        return;
+      }
+
+      const current = cleanText(element.textContent);
+
+      if (texts[current]) {
+        element.textContent = texts[current];
+      }
+    });
+
+    document.querySelectorAll("input[placeholder], textarea[placeholder]").forEach(input => {
+      const current = input.getAttribute("placeholder");
+      if (texts[current]) {
+        input.setAttribute("placeholder", texts[current]);
+      }
+    });
+  }
+
+  function translateQuoteToast() {
+    const lang = getLang();
+
+    document.querySelectorAll(".quote-toast").forEach(toast => {
+      const title = toast.querySelector("strong");
+      const text = toast.querySelector("p");
+      const close = toast.querySelector(".quote-toast-close");
+
+      if (lang === "en") {
+        if (title) title.textContent = "Products to quote";
+        if (text) {
+          text.textContent = "For now, all products are sold by quote. Add the products you are interested in and our team will contact you.";
+        }
+        if (close) close.setAttribute("aria-label", "Close notice");
+      } else {
+        if (title) title.textContent = "Productos bajo cotización";
+        if (text) {
+          text.textContent = "Por el momento, todos los productos se venden bajo cotización. Agrega los productos que te interesen y nuestro equipo te contactará.";
+        }
+        if (close) close.setAttribute("aria-label", "Cerrar aviso");
+      }
+    });
+  }
+
+  function translateSecurityPopup() {
+    const lang = getLang();
+    const popup = document.getElementById("purchaseSecurityPopup");
+
+    if (!popup) return;
+
+    const title = popup.querySelector("h1, h2");
+    const intro = popup.querySelector(".purchase-security-card > p, .purchase-security-modal > p, h1 + p, h2 + p");
+    const okButton = document.getElementById("purchaseSecurityOk");
+
+    if (lang === "en") {
+      if (title) title.textContent = "PURCHASE SECURITY NOTICE";
+      if (intro) {
+        intro.textContent = "For your security, Quality Medical Service only communicates through its official channels.";
+      }
+
+      popup.querySelectorAll("strong").forEach(strong => {
+        const text = cleanText(strong.textContent);
+
+        if (text.includes("Correo oficial")) strong.textContent = "Official email:";
+        if (text.includes("Teléfonos oficiales")) strong.textContent = "Official phone numbers:";
+      });
+
+      popup.querySelectorAll("p, div, span").forEach(el => {
+        if (el.children.length > 1) return;
+
+        const text = cleanText(el.textContent);
+
+        if (text === "No se solicitan pagos a cuentas personales.") {
+          el.textContent = "No payments are requested to personal accounts.";
+        }
+
+        if (text === "No se realizan cobros fuera del checkout seguro de Shopify o de una cotización formal emitida por la empresa.") {
+          el.textContent = "No charges are made outside Shopify secure checkout or a formal quote issued by the company.";
+        }
+
+        if (text === "Desconfía de enlaces externos, mensajes no verificados o solicitudes de pago por medios no oficiales.") {
+          el.textContent = "Be cautious of external links, unverified messages, or payment requests through unofficial channels.";
+        }
+      });
+
+      if (okButton) okButton.textContent = "Got it";
+    } else {
+      if (title) title.textContent = "AVISO DE SEGURIDAD DE COMPRA";
+      if (intro) {
+        intro.textContent = "Por tu seguridad, Quality Medical Service únicamente se comunica por medio de sus canales oficiales.";
+      }
+
+      popup.querySelectorAll("strong").forEach(strong => {
+        const text = cleanText(strong.textContent);
+
+        if (text.includes("Official email")) strong.textContent = "Correo oficial:";
+        if (text.includes("Official phone numbers")) strong.textContent = "Teléfonos oficiales:";
+      });
+
+      popup.querySelectorAll("p, div, span").forEach(el => {
+        if (el.children.length > 1) return;
+
+        const text = cleanText(el.textContent);
+
+        if (text === "No payments are requested to personal accounts.") {
+          el.textContent = "No se solicitan pagos a cuentas personales.";
+        }
+
+        if (text === "No charges are made outside Shopify secure checkout or a formal quote issued by the company.") {
+          el.textContent = "No se realizan cobros fuera del checkout seguro de Shopify o de una cotización formal emitida por la empresa.";
+        }
+
+        if (text === "Be cautious of external links, unverified messages, or payment requests through unofficial channels.") {
+          el.textContent = "Desconfía de enlaces externos, mensajes no verificados o solicitudes de pago por medios no oficiales.";
+        }
+      });
+
+      if (okButton) okButton.textContent = "Entendido";
+    }
+  }
+
+  function translateProductCards() {
+    const lang = getLang();
+
+    document.querySelectorAll(".shopify-product-card, .product-card").forEach(card => {
+      const titleElement =
+        card.querySelector("h1") ||
+        card.querySelector("h2") ||
+        card.querySelector("h3") ||
+        card.querySelector(".shopify-product-title") ||
+        card.querySelector(".product-title");
+
+      if (!titleElement) return;
+
+      const translation = getTranslationByName(titleElement.textContent, lang);
+      if (!translation) return;
+
+      titleElement.textContent = translation.title;
+
+      const descriptionElement =
+        card.querySelector(".shopify-product-description") ||
+        card.querySelector(".product-description") ||
+        card.querySelector("p");
+
+      if (descriptionElement && translation.shortDescription) {
+        descriptionElement.textContent = stripHTML(translation.shortDescription);
+      }
+
+      card.querySelectorAll("span, strong, button, a").forEach(el => {
+        translateExactText(el, "Bajo cotización", "Quote only");
+        translateExactText(el, "Ver más información", "More information");
+        translateExactText(el, "Agregar a cotización", "Add to quote");
+      });
+    });
+  }
+
+  function translateProductTable() {
+    const lang = getLang();
+
+    document.querySelectorAll("table tbody tr").forEach(row => {
+      const cells = row.querySelectorAll("td");
+      if (cells.length < 3) return;
+
+      const nameCell = cells[1];
+      const descCell = cells[2];
+      const priceCell = cells[3];
+
+      const translation = getTranslationByName(nameCell.textContent, lang);
+      if (!translation) return;
+
+      nameCell.textContent = translation.title;
+
+      if (translation.shortDescription) {
+        descCell.textContent = stripHTML(translation.shortDescription);
+      }
+
+      if (priceCell) {
+        priceCell.textContent = lang === "en" ? "Quote required" : "Cotización requerida";
+      }
+
+      row.querySelectorAll("button, a").forEach(button => {
+        translateExactText(button, "Ver más información", "More information");
+        translateExactText(button, "Agregar a cotización", "Add to quote");
+      });
+    });
+  }
+
+  function translateSingleProduct() {
+    const lang = getLang();
+
+    const container = document.querySelector(".single-product-info");
+    if (!container) return;
+
+    const title = container.querySelector("h1");
+    if (!title) return;
+
+    const translation = getTranslationByName(title.textContent, lang);
+    if (!translation) return;
+
+    title.textContent = translation.title;
+
+    const description = container.querySelector(".single-product-description");
+
+    if (description && translation.description) {
+      description.innerHTML = translation.description;
+    }
+
+    const dataBlocks = container.querySelectorAll(".single-product-data > div");
+
+    if (dataBlocks[0]) {
+      const label = dataBlocks[0].querySelector("span");
+      const value = dataBlocks[0].querySelector("strong");
+
+      if (label) label.textContent = lang === "en" ? "Availability" : "Disponibilidad";
+      if (value) value.textContent = lang === "en" ? "Available for quote" : "Disponible para cotización";
+    }
+
+    if (dataBlocks[1]) {
+      const label = dataBlocks[1].querySelector("span");
+      const value = dataBlocks[1].querySelector("strong");
+
+      if (label) label.textContent = lang === "en" ? "Mode" : "Modalidad";
+      if (value) value.textContent = lang === "en" ? "Quote only" : "Bajo cotización";
+    }
+
+    container.querySelectorAll("button, a").forEach(button => {
+      translateExactText(button, "Agregar a cotización", "Add to quote");
+      translateExactText(button, "Cotizar este producto", "Quote this product");
+    });
+  }
+
+  function translateBackLinks() {
+    const lang = getLang();
+
+    document.querySelectorAll("a").forEach(link => {
+      const text = cleanText(link.textContent);
+      const href = link.getAttribute("href") || "";
+
+      if (
+        text.includes("Volver") ||
+        text.includes("Back")
+      ) {
+        if (href.includes("categoria.html")) {
+          link.textContent = lang === "en" ? "← Back to category" : "← Volver a categoría";
+        } else if (href.includes("lista-productos.html")) {
+          link.textContent = lang === "en" ? "← Back to product list" : "← Volver a lista de productos";
+        } else if (href.includes("productos.html")) {
+          link.textContent = lang === "en" ? "← Back to catalog" : "← Volver al catálogo";
+        } else if (href.includes("tienda.html")) {
+          link.textContent = lang === "en" ? "← Back to store" : "← Volver a tienda";
+        }
+      }
+    });
+  }
+
+  function applyFinalStoreTranslations() {
+    if (isApplyingTranslations) return;
+
+    isApplyingTranslations = true;
+
+    try {
+      translateGeneralTexts();
+      translateQuoteToast();
+      translateSecurityPopup();
+      translateProductCards();
+      translateProductTable();
+      translateSingleProduct();
+      translateBackLinks();
+    } finally {
+      isApplyingTranslations = false;
+    }
+  }
+
+  window.applyFinalStoreTranslations = applyFinalStoreTranslations;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    applyFinalStoreTranslations();
+
+    setTimeout(applyFinalStoreTranslations, 300);
+    setTimeout(applyFinalStoreTranslations, 800);
+    setTimeout(applyFinalStoreTranslations, 1500);
+    setTimeout(applyFinalStoreTranslations, 2500);
+  });
+
+  window.addEventListener("load", () => {
+    applyFinalStoreTranslations();
+
+    setTimeout(applyFinalStoreTranslations, 500);
+    setTimeout(applyFinalStoreTranslations, 1200);
+    setTimeout(applyFinalStoreTranslations, 2500);
+  });
+
+  document.addEventListener("click", () => {
+    setTimeout(applyFinalStoreTranslations, 100);
+    setTimeout(applyFinalStoreTranslations, 400);
+    setTimeout(applyFinalStoreTranslations, 1000);
+  });
+
+  const observer = new MutationObserver(() => {
+    clearTimeout(window.__qmsTranslateTimer);
+    window.__qmsTranslateTimer = setTimeout(applyFinalStoreTranslations, 120);
+  });
+
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+})();

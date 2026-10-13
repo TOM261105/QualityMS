@@ -202,8 +202,9 @@ function mapShopifyCollection(collection) {
 function mapShopifyProduct(product) {
   const firstVariant = product.variants?.edges?.[0]?.node || null;
   const firstCollection = getProductMainCollection(product);
+  const categoryInfo = getProductCategoryInfo(product);
 
-  const brand = detectProductBrand(product.title, firstCollection?.title);
+  const brand = detectProductBrand(product.title, firstCollection?.title, product.vendor);
   const cleanTitleEs = cleanShopifyProductTitle(product.title, brand);
 
   const rawDescriptionHTMLEs =
@@ -230,13 +231,22 @@ function mapShopifyProduct(product) {
     ? window.getProductTranslation(product.handle, lang)
     : null;
 
+  const translationEs = window.getProductTranslation
+    ? window.getProductTranslation(product.handle, "es")
+    : null;
+
+  const translationEn = window.getProductTranslation
+    ? window.getProductTranslation(product.handle, "en")
+    : null;
+
   const titleFinal =
     translation?.title ||
     cleanTitleEs;
 
   const shortDescriptionFinal =
     translation?.shortDescription ||
-    shortDescriptionEs;
+    shortDescriptionEs ||
+    "";
 
   const descriptionFinal =
     translation?.description ||
@@ -244,17 +254,29 @@ function mapShopifyProduct(product) {
     cleanDescriptionTextEs ||
     (lang === "en" ? "No description available." : "Sin descripción disponible.");
 
+  const descriptionEs =
+    translationEs?.description ||
+    cleanDescriptionHTMLEs ||
+    cleanDescriptionTextEs ||
+    "Sin descripción disponible.";
+
+  const descriptionEn =
+    translationEn?.description ||
+    cleanDescriptionHTMLEs ||
+    cleanDescriptionTextEs ||
+    "No description available.";
+
   return {
     id: product.id,
     handle: product.handle,
     originalTitle: product.title,
 
     title: titleFinal,
-    titleEs: cleanTitleEs,
-    titleEn: window.getProductTranslation?.(product.handle, "en")?.title || cleanTitleEs,
+    titleEs: translationEs?.title || cleanTitleEs,
+    titleEn: translationEn?.title || cleanTitleEs,
 
-    category: firstCollection?.handle || "general",
-    categoryName: firstCollection?.title || "General",
+    category: categoryInfo.handle,
+    categoryName: categoryInfo.title,
 
     price: 0,
     priceGeneral: lang === "en" ? "Quote only" : "Bajo cotización",
@@ -268,15 +290,18 @@ function mapShopifyProduct(product) {
     descriptionHtml: descriptionFinal,
 
     shortDescription: shortDescriptionFinal,
-    shortDescriptionEs: shortDescriptionEs,
-    shortDescriptionEn: window.getProductTranslation?.(product.handle, "en")?.shortDescription || shortDescriptionEs,
+
+    descriptionEs,
+    descriptionEn,
+
+    shortDescriptionEs: translationEs?.shortDescription || shortDescriptionEs,
+    shortDescriptionEn: translationEn?.shortDescription || shortDescriptionEs,
 
     availability: lang === "en" ? "Available for quote" : "Disponible para cotización",
     type: "cotizacion",
     variantId: firstVariant?.id || null
   };
 }
-
 function buildCollectionsFromProducts(products) {
   const categoryMap = new Map();
 

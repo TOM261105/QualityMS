@@ -1273,3 +1273,65 @@ window.getStoreText = function getStoreText(key) {
     characterData: true
   });
 })();
+
+/* =====================================================
+   BUSCADOR FLEXIBLE DE TRADUCCIONES
+   Corrige cuando el handle de Shopify no coincide exacto
+   ===================================================== */
+
+window.getProductTranslationByProduct = function getProductTranslationByProduct(product, lang) {
+  const selectedLang = String(lang || localStorage.getItem("siteLang") || "es").trim();
+
+  if (!product || !window.PRODUCT_TRANSLATIONS) return null;
+
+  function normalizeText(value) {
+    return String(value || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[®™]/g, "")
+      .replace(/\b(welch allyn|hillrom|hill-rom|midmark|seca|baxter|bovie|huntleigh|mortara|ritter)\b/g, "")
+      .replace(/[^a-z0-9]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+  }
+
+  const candidates = [
+    product.handle,
+    product.id,
+    product.title,
+    product.originalTitle,
+    product.titleEs,
+    product.titleEn
+  ]
+    .map(normalizeText)
+    .filter(Boolean);
+
+  for (const handle in window.PRODUCT_TRANSLATIONS) {
+    const item = window.PRODUCT_TRANSLATIONS[handle];
+
+    const possibleMatches = [
+      handle,
+      item?.es?.title,
+      item?.en?.title
+    ]
+      .map(normalizeText)
+      .filter(Boolean);
+
+    const found = candidates.some(candidate => {
+      return possibleMatches.some(match => {
+        return (
+          candidate === match ||
+          candidate.includes(match) ||
+          match.includes(candidate)
+        );
+      });
+    });
+
+    if (found) {
+      return item[selectedLang] || item.es || null;
+    }
+  }
+
+  return null;
+};

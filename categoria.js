@@ -11,16 +11,17 @@ let currentCategoryProducts = [];
 /* ── LOGOS DE PROVEEDORES ───────────────────────── */
 
 const SUPPLIER_LOGOS = {
-  "midmark": "assets/distribuidores/midmark.png",
-  "baxter": "assets/distribuidores/baxter.png",
-  "seca": "assets/distribuidores/seca.png",
-  "welch allyn": "assets/distribuidores/welch-allyn.png",
-  "welch-allyn": "assets/distribuidores/welch-allyn.png",
-  "hillrom": "assets/distribuidores/hillrom.png",
-  "hill-rom": "assets/distribuidores/hillrom.png",
-  "bovie": "assets/distribuidores/bovie.png",
-  "huntleigh": "assets/distribuidores/huntleigh.png",
-  "mortara": "assets/distribuidores/mortara.png"
+  "bovie": "assets/distribuidores/Bovie.webp",
+  "huntleigh": "assets/distribuidores/HUNTLEIGH.webp",
+  "litman": "assets/distribuidores/Litman.webp",
+  "littmann": "assets/distribuidores/Litman.webp",
+  "logotipos": "assets/distribuidores/Logotipos.webp",
+  "midmark": "assets/distribuidores/Midmark.webp",
+  "miltex": "assets/distribuidores/Miltex.webp",
+  "mortara": "assets/distribuidores/Mortara.webp",
+  "schiller": "assets/distribuidores/Schiller.webp",
+  "wallach": "assets/distribuidores/WALLACH.webp",
+  "seca": "assets/distribuidores/seca.webp"
 };
 
 function normalizeSupplierName(value) {

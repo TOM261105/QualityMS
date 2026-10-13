@@ -318,12 +318,15 @@ document.addEventListener("click", event => {
 function renderSingleProduct(product) {
   if (!singleProductContainer) return;
 
+  const t = key => window.getStoreText ? window.getStoreText(key) : key;
+  const lang = localStorage.getItem("siteLang") || "es";
+
   if (!product) {
     singleProductContainer.innerHTML = `
       <div class="single-product-empty">
-        <h1>Producto no encontrado</h1>
-        <p>El producto que buscas no está disponible o fue eliminado.</p>
-        <a href="lista-productos.html" class="btn-primary">Volver a productos</a>
+        <h1>${t("productNotFoundTitle")}</h1>
+        <p>${t("productNotFoundText")}</p>
+        <a href="lista-productos.html" class="btn-primary">${t("backToProducts")}</a>
       </div>
     `;
     return;
@@ -337,6 +340,9 @@ function renderSingleProduct(product) {
   const productDescriptionHTML = getSafeProductDescriptionHTML(product);
   const cleanImage = escapeHTML(product.image || "assets/preview-qms.png");
   const cleanImageAlt = escapeHTML(product.imageAlt || product.title || "Producto médico");
+
+  const availabilityText = escapeHTML(product.availability || t("availabilityValue"));
+  const quoteText = escapeHTML(product.priceText || t("quoteOnly"));
 
   singleProductContainer.innerHTML = `
     <section class="single-product-card">
@@ -360,31 +366,31 @@ function renderSingleProduct(product) {
 
         <div class="single-product-data">
           <div>
-            <span>Disponibilidad</span>
-            <strong>Disponible para cotización</strong>
+            <span>${t("availabilityLabel")}</span>
+            <strong>${availabilityText}</strong>
           </div>
 
           <div>
-            <span>Modalidad</span>
-            <strong>Bajo cotización</strong>
+            <span>${t("modalityLabel")}</span>
+            <strong>${quoteText}</strong>
           </div>
         </div>
 
         <div class="single-product-actions">
           <button class="btn-primary" type="button" data-single-add-cart>
-            Agregar a cotización
+            ${t("addToQuote")}
           </button>
 
           <button class="btn-outline" type="button" data-single-quote>
-            Cotizar este producto
+            ${t("quoteProduct")}
           </button>
 
           <button 
             class="btn-outline product-share-btn product-share-icon-btn" 
             type="button" 
             data-single-share
-            aria-label="Compartir producto"
-            title="Compartir producto">
+            aria-label="${t("shareProduct")}"
+            title="${t("shareProduct")}">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="18" cy="5" r="3"></circle>
               <circle cx="6" cy="12" r="3"></circle>

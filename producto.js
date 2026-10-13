@@ -144,19 +144,24 @@ function setMetaContent(selector, value) {
 
 /* ── LINK PARA COMPARTIR PRODUCTO ─────────────────────────── */
 
+/* =====================================================
+   LINK PARA COMPARTIR PRODUCTO CON PREVIEW DE WHATSAPP
+   ===================================================== */
+
 function getProductShareUrl(product) {
-  const url = new URL(window.location.href);
+  const handle = product && product.handle ? String(product.handle).trim() : "";
 
-  url.search = "";
-  url.hash = "";
-
-  if (product && product.handle) {
-    url.searchParams.set("handle", product.handle);
-  } else if (product && product.id) {
-    url.searchParams.set("id", product.id);
+  if (!handle) {
+    const url = new URL(window.location.href);
+    url.search = "";
+    url.hash = "";
+    return url.toString();
   }
 
-  return url.toString();
+  const isGithubPages = window.location.hostname.includes("github.io");
+  const basePath = isGithubPages ? "/QualityMS" : "";
+
+  return `${window.location.origin}${basePath}/productos/${encodeURIComponent(handle)}.html`;
 }
 
 function updateProductMetaTags(product) {

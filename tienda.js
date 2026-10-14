@@ -8,18 +8,25 @@ let currentStoreCollections = [];
 /* ── IDIOMA ACTUAL ───────────────────────────────────────── */
 
 function getCurrentStoreLanguage() {
-  const storedLang =
-    localStorage.getItem("siteLang") ||
-    localStorage.getItem("qmsLang") ||
-    localStorage.getItem("language") ||
-    localStorage.getItem("lang") ||
-    localStorage.getItem("currentLang") ||
-    "";
+  const possibleValues = [
+    localStorage.getItem("siteLang"),
+    localStorage.getItem("qmsLang"),
+    localStorage.getItem("language"),
+    localStorage.getItem("lang"),
+    localStorage.getItem("currentLang")
+  ];
 
-  const cleanStoredLang = String(storedLang).toLowerCase().trim();
+  for (const value of possibleValues) {
+    const cleanValue = String(value || "").toLowerCase().trim();
 
-  if (cleanStoredLang === "en" || cleanStoredLang === "english") return "en";
-  if (cleanStoredLang === "es" || cleanStoredLang === "spanish" || cleanStoredLang === "español") return "es";
+    if (cleanValue === "en" || cleanValue === "english") return "en";
+    if (cleanValue === "es" || cleanValue === "spanish" || cleanValue === "español") return "es";
+  }
+
+  const htmlLang = String(document.documentElement.lang || "").toLowerCase().trim();
+
+  if (htmlLang.startsWith("en")) return "en";
+  if (htmlLang.startsWith("es")) return "es";
 
   const visualCatalogBtn = document.querySelector('a[href="productos.html"]')?.textContent.trim().toLowerCase() || "";
   const productListBtn = document.querySelector('a[href="lista-productos.html"]')?.textContent.trim().toLowerCase() || "";
@@ -38,8 +45,38 @@ function getCurrentStoreLanguage() {
   return "es";
 }
 
-function getStoreText(es, en) {
+function syncStoreLanguage() {
+  const lang = getCurrentStoreLanguage();
+
+  localStorage.setItem("siteLang", lang);
+  document.documentElement.lang = lang;
+
+  return lang;
+}
+
+/*
+  Importante:
+  No usamos el nombre getStoreText aquí porque ese nombre ya lo usa
+  product-translations.js para textos de productos.
+*/
+function getStorePageText(es, en) {
   return getCurrentStoreLanguage() === "en" ? en : es;
+}
+
+/* ── UTILIDADES ───────────────────────────────────────── */
+
+function escapeHTML(value) {
+  return String(value || "").replace(/[&<>"']/g, char => {
+    const chars = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    };
+
+    return chars[char];
+  });
 }
 
 /* ── TRADUCCIÓN DE CATEGORÍAS ────────────────────────────── */
@@ -145,6 +182,8 @@ function countDemoProductsByCategory(handle) {
 /* ── RENDER DE CATEGORÍAS ────────────────────────────────── */
 
 function renderCategories(collections) {
+  syncStoreLanguage();
+
   if (!dynamicCategoriesGrid) return;
 
   currentStoreCollections = collections || [];
@@ -152,7 +191,7 @@ function renderCategories(collections) {
   if (!collections || collections.length === 0) {
     dynamicCategoriesGrid.innerHTML = `
       <div class="empty-products">
-        ${getStoreText("No hay categorías disponibles.", "No categories available.")}
+        ${getStorePageText("No hay categorías disponibles.", "No categories available.")}
       </div>
     `;
     return;
@@ -168,8 +207,8 @@ function renderCategories(collections) {
       isShopifyReady();
 
     const productCount = shopifyReady
-      ? getStoreText("Ver productos", "View products")
-      : `+${countDemoProductsByCategory(collection.handle)} ${getStoreText("productos", "products")}`;
+      ? getStorePageText("Ver productos", "View products")
+      : `+${countDemoProductsByCategory(collection.handle)} ${getStorePageText("productos", "products")}`;
 
     const categoryUrl = `categoria.html?cat=${encodeURIComponent(collection.handle)}`;
     const categoryTitle = translateCategoryTitle(collection.title);
@@ -179,23 +218,23 @@ function renderCategories(collections) {
       <article class="product-card" data-href="${categoryUrl}">
         <div class="pc-img">
           <img 
-            src="${collection.image || "assets/product-placeholder.png"}" 
-            alt="${collection.altText || categoryTitle}"
+            src="${escapeHTML(collection.image || "assets/product-placeholder.png")}" 
+            alt="${escapeHTML(collection.altText || categoryTitle)}"
             loading="lazy"
             decoding="async"
           >
         </div>
 
         <div class="pc-body">
-          <h3>${categoryTitle}</h3>
-          <p>${categoryDescription}</p>
+          <h3>${escapeHTML(categoryTitle)}</h3>
+          <p>${escapeHTML(categoryDescription)}</p>
         </div>
 
         <div class="pc-footer">
           <span class="pc-count">${productCount}</span>
 
           <a href="${categoryUrl}" class="btn-card">
-            ${getStoreText("Ver catálogo →", "View catalog →")}
+            ${getStorePageText("Ver catálogo →", "View catalog →")}
           </a>
         </div>
       </article>
@@ -203,6 +242,16 @@ function renderCategories(collections) {
   }).join("");
 
   makeCategoryCardsClickable();
+
+  setTimeout(() => {
+    if (typeof window.applyFinalStoreTranslations === "function") {
+      window.applyFinalStoreTranslations();
+    }
+
+    if (typeof window.applyStoreTranslations === "function") {
+      window.applyStoreTranslations();
+    }
+  }, 100);
 }
 
 /* ── CLIC EN TARJETAS ────────────────────────────────────── */
@@ -233,11 +282,13 @@ function makeCategoryCardsClickable() {
 /* ── CARGA DE CATEGORÍAS ─────────────────────────────────── */
 
 async function loadStoreCategories() {
+  syncStoreLanguage();
+
   if (!dynamicCategoriesGrid) return;
 
   dynamicCategoriesGrid.innerHTML = `
     <div class="empty-products">
-      ${getStoreText("Cargando categorías...", "Loading categories...")}
+      ${getStorePageText("Cargando categorías...", "Loading categories...")}
     </div>
   `;
 
@@ -259,10 +310,12 @@ async function loadStoreCategories() {
 
 document.getElementById("langToggle")?.addEventListener("click", () => {
   setTimeout(() => {
+    syncStoreLanguage();
     renderCategories(currentStoreCollections);
   }, 250);
 
   setTimeout(() => {
+    syncStoreLanguage();
     renderCategories(currentStoreCollections);
   }, 700);
 });

@@ -16,35 +16,31 @@ const PRODUCTS_PER_PAGE = 50;
 /* ── IDIOMA ───────────────────────────────────────────────── */
 
 function getCurrentSiteLanguage() {
-  const storedLang =
-    localStorage.getItem("qmsLang") ||
-    localStorage.getItem("siteLang") ||
-    localStorage.getItem("language") ||
-    localStorage.getItem("lang") ||
-    localStorage.getItem("currentLang") ||
-    "";
+  const siteLang = localStorage.getItem("siteLang");
+  const qmsLang = localStorage.getItem("qmsLang");
+  const language = localStorage.getItem("language");
+  const lang = localStorage.getItem("lang");
+  const currentLang = localStorage.getItem("currentLang");
 
-  const cleanStoredLang = String(storedLang).toLowerCase().trim();
+  const possibleLangs = [
+    siteLang,
+    qmsLang,
+    language,
+    lang,
+    currentLang
+  ];
 
-  if (cleanStoredLang === "en" || cleanStoredLang === "english") return "en";
-  if (cleanStoredLang === "es" || cleanStoredLang === "spanish" || cleanStoredLang === "español") return "es";
+  for (const value of possibleLangs) {
+    const cleanValue = String(value || "").toLowerCase().trim();
+
+    if (cleanValue === "en" || cleanValue === "english") return "en";
+    if (cleanValue === "es" || cleanValue === "spanish" || cleanValue === "español") return "es";
+  }
 
   const htmlLang = String(document.documentElement.lang || "").toLowerCase().trim();
 
   if (htmlLang.startsWith("en")) return "en";
   if (htmlLang.startsWith("es")) return "es";
-
-  const pageText = document.body.innerText.toLowerCase();
-  const searchPlaceholder = productListSearch?.placeholder?.toLowerCase() || "";
-
-  if (
-    pageText.includes("product list") ||
-    pageText.includes("products to quote") ||
-    pageText.includes("request quote") ||
-    searchPlaceholder.includes("search")
-  ) {
-    return "en";
-  }
 
   return "es";
 }
@@ -81,24 +77,59 @@ function translateCategoryText(text) {
   return translated;
 }
 
-function getDisplayDescription(description) {
-  const cleaned = cleanProductDescription(description);
+/* ── TRADUCCIÓN DE PRODUCTOS ───────────────────────────────── */
 
-  if (getCurrentSiteLanguage() !== "en") return cleaned;
+function getTranslatedProduct(product) {
+  if (!product) return product;
 
-  return cleaned
-    .replace(/^Marca:/i, "Brand:")
-    .replace("Sin descripción disponible.", "No description available.");
-}
+  const lang = getCurrentSiteLanguage();
 
-function getListPreviewDescription(product) {
-  const description =
-    product?.shortDescription ||
-    product?.descripcionCorta ||
-    product?.description ||
-    "";
+  /*
+    Esta línea es importante:
+    product-translations.js usa localStorage.siteLang,
+    entonces lo mantenemos sincronizado.
+  */
+  localStorage.setItem("siteLang", lang);
 
-  return getDisplayDescription(description);
+  if (typeof window.getTranslatedProductForCurrentLang === "function") {
+    return window.getTranslatedProductForCurrentLang(product);
+  }
+
+  if (typeof window.getProductTranslationByProduct === "function") {
+    const translation = window.getProductTranslationByProduct(product, lang);
+
+    if (translation) {
+      return {
+        ...product,
+        title: translation.title || product.title,
+        shortDescription: translation.shortDescription || product.shortDescription,
+        description: translation.description || product.description,
+        descriptionHtml: translation.description || product.descriptionHtml || product.description,
+        priceText: lang === "en" ? "Quote only" : "Bajo cotización",
+        priceGeneral: lang === "en" ? "Quote only" : "Bajo cotización",
+        availability: lang === "en" ? "Available for quote" : "Disponible para cotización"
+      };
+    }
+  }
+
+  if (typeof window.getProductTranslation === "function") {
+    const translation = window.getProductTranslation(product.handle, lang);
+
+    if (translation) {
+      return {
+        ...product,
+        title: translation.title || product.title,
+        shortDescription: translation.shortDescription || product.shortDescription,
+        description: translation.description || product.description,
+        descriptionHtml: translation.description || product.descriptionHtml || product.description,
+        priceText: lang === "en" ? "Quote only" : "Bajo cotización",
+        priceGeneral: lang === "en" ? "Quote only" : "Bajo cotización",
+        availability: lang === "en" ? "Available for quote" : "Disponible para cotización"
+      };
+    }
+  }
+
+  return product;
 }
 
 /* ── UTILIDADES ───────────────────────────────────────────── */
@@ -134,6 +165,47 @@ function cleanProductDescription(description) {
 
   return cleaned || getListText("Sin descripción disponible.", "No description available.");
 }
+
+function getDisplayDescription(description) {
+  const cleaned = cleanProductDescription(description);
+
+  if (getCurrentSiteLanguage() !== "en") return cleaned;
+
+  return cleaned
+    .replace(/^Marca:/i, "Brand:")
+    .replace("Sin descripción disponible.", "No description available.");
+}
+
+function getListPreviewDescription(product) {
+  const translatedProduct = getTranslatedProduct(product);
+
+  const description =
+    translatedProduct?.shortDescription ||
+    translatedProduct?.descripcionCorta ||
+    translatedProduct?.description ||
+    translatedProduct?.descriptionHtml ||
+    "";
+
+  return getDisplayDescription(description);
+}
+
+function refreshExtraTranslationPatches() {
+  setTimeout(() => {
+    if (typeof window.applyFinalStoreTranslations === "function") {
+      window.applyFinalStoreTranslations();
+    }
+
+    if (typeof window.applyStoreTranslations === "function") {
+      window.applyStoreTranslations();
+    }
+
+    if (typeof window.translateVisibleProductDescriptions === "function") {
+      window.translateVisibleProductDescriptions();
+    }
+  }, 80);
+}
+
+/* ── ESTADOS ──────────────────────────────────────────────── */
 
 function renderLoadingState() {
   if (!productListBody) return;
@@ -229,15 +301,21 @@ function renderPaginationControls() {
 function renderProductList(products) {
   if (!productListBody) return;
 
+  /*
+    Guardamos los productos originales.
+    La traducción se aplica solo al pintar.
+  */
   currentProductList = products || [];
 
   if (!currentProductList.length) {
     renderEmptyState();
     renderPaginationControls();
+    refreshExtraTranslationPatches();
     return;
   }
 
-  productListBody.innerHTML = currentProductList.map(product => {
+  productListBody.innerHTML = currentProductList.map(originalProduct => {
+    const product = getTranslatedProduct(originalProduct);
     const backUrl = "lista-productos.html" + window.location.search;
 
     return `
@@ -248,7 +326,7 @@ function renderProductList(products) {
           <strong>${product.title || getListText("Producto sin nombre", "Unnamed product")}</strong>
         </td>
 
-        <td>${getListPreviewDescription(product)}</td>
+        <td>${getListPreviewDescription(originalProduct)}</td>
 
         <td>
           <strong>${getListText("Bajo cotización", "Quote required")}</strong>
@@ -256,11 +334,11 @@ function renderProductList(products) {
 
         <td>
           <div class="product-list-actions">
-            <a href="${getProductDetailUrl(product, backUrl)}" class="product-action light">
+            <a href="${getProductDetailUrl(originalProduct, backUrl)}" class="product-action light">
               ${getListText("Ver más información", "More information")}
             </a>
 
-            <button class="product-action" data-add-id="${product.id}">
+            <button class="product-action" data-add-id="${originalProduct.id}">
               ${getListText("Agregar a cotización", "Add to quote")}
             </button>
           </div>
@@ -270,6 +348,7 @@ function renderProductList(products) {
   }).join("");
 
   renderPaginationControls();
+  refreshExtraTranslationPatches();
 }
 
 /* ── CARGA REAL DE 50 PRODUCTOS ──────────────────────────── */
@@ -325,12 +404,14 @@ async function loadProductPage(cursor = null, pageNumber = 1, shouldScroll = fal
       const term = currentSearchTerm.toLowerCase();
 
       demoProducts = demoProducts.filter(product => {
+        const translatedProduct = getTranslatedProduct(product);
+
         const text = `
-          ${product.categoryName || ""}
-          ${product.category || ""}
-          ${product.title || ""}
-          ${product.shortDescription || ""}
-          ${product.description || ""}
+          ${translatedProduct.categoryName || ""}
+          ${translatedProduct.category || ""}
+          ${translatedProduct.title || ""}
+          ${translatedProduct.shortDescription || ""}
+          ${translatedProduct.description || ""}
         `.toLowerCase();
 
         return text.includes(term);
@@ -409,12 +490,14 @@ if (productListBody) {
     if (!addButton) return;
 
     const productId = addButton.getAttribute("data-add-id");
-    const product = currentProductList.find(item => item.id === productId);
+    const originalProduct = currentProductList.find(item => item.id === productId);
 
-    if (!product) return;
+    if (!originalProduct) return;
+
+    const translatedProduct = getTranslatedProduct(originalProduct);
 
     if (typeof addToCart === "function") {
-      addToCart(product);
+      addToCart(translatedProduct);
     }
   });
 }
@@ -425,6 +508,10 @@ document.getElementById("langToggle")?.addEventListener("click", () => {
   setTimeout(() => {
     renderProductList(currentProductList);
   }, 250);
+
+  setTimeout(() => {
+    renderProductList(currentProductList);
+  }, 700);
 });
 
 /* ── INICIO ───────────────────────────────────────────────── */

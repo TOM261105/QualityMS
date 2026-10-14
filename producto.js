@@ -5,14 +5,98 @@ const productBackLink = document.getElementById("productBackLink");
 
 let selectedSingleProduct = null;
 
+/* ── IDIOMA ───────────────────────────────────────────────── */
+
+function getCurrentProductLanguage() {
+  const possibleValues = [
+    localStorage.getItem("siteLang"),
+    localStorage.getItem("qmsLang"),
+    localStorage.getItem("language"),
+    localStorage.getItem("lang"),
+    localStorage.getItem("currentLang")
+  ];
+
+  for (const value of possibleValues) {
+    const cleanValue = String(value || "").toLowerCase().trim();
+
+    if (cleanValue === "en" || cleanValue === "english") return "en";
+    if (cleanValue === "es" || cleanValue === "spanish" || cleanValue === "español") return "es";
+  }
+
+  const htmlLang = String(document.documentElement.lang || "").toLowerCase().trim();
+
+  if (htmlLang.startsWith("en")) return "en";
+  if (htmlLang.startsWith("es")) return "es";
+
+  return "es";
+}
+
+function syncProductLanguage() {
+  const lang = getCurrentProductLanguage();
+
+  localStorage.setItem("siteLang", lang);
+  document.documentElement.lang = lang;
+
+  return lang;
+}
+
+function getProductText(es, en) {
+  return getCurrentProductLanguage() === "en" ? en : es;
+}
+
+function getStoreProductText(key) {
+  if (typeof window.getStoreText === "function") {
+    return window.getStoreText(key);
+  }
+
+  const lang = getCurrentProductLanguage();
+
+  const texts = {
+    es: {
+      availabilityLabel: "Disponibilidad",
+      modalityLabel: "Modalidad",
+      availabilityValue: "Disponible para cotización",
+      quoteOnly: "Bajo cotización",
+      addToQuote: "Agregar a cotización",
+      quoteProduct: "Cotizar este producto",
+      productNotFoundTitle: "Producto no encontrado",
+      productNotFoundText: "El producto que buscas no está disponible o fue eliminado.",
+      backToProducts: "Volver a productos",
+      loadingProduct: "Cargando producto...",
+      shareProduct: "Compartir producto",
+      noDescription: "Sin descripción disponible."
+    },
+    en: {
+      availabilityLabel: "Availability",
+      modalityLabel: "Mode",
+      availabilityValue: "Available for quote",
+      quoteOnly: "Quote only",
+      addToQuote: "Add to quote",
+      quoteProduct: "Quote this product",
+      productNotFoundTitle: "Product not found",
+      productNotFoundText: "The product you are looking for is not available or has been removed.",
+      backToProducts: "Back to products",
+      loadingProduct: "Loading product...",
+      shareProduct: "Share product",
+      noDescription: "No description available."
+    }
+  };
+
+  return texts[lang]?.[key] || texts.es[key] || key;
+}
+
+/* ── REGRESAR ─────────────────────────────────────────────── */
+
 function setupProductBackLink() {
   if (!productBackLink) return;
+
+  const lang = syncProductLanguage();
 
   const params = new URLSearchParams(window.location.search);
   const backUrl = params.get("back");
 
   let fallbackUrl = "lista-productos.html";
-  let backText = "← Volver a lista de productos";
+  let backText = lang === "en" ? "← Back to product list" : "← Volver a lista de productos";
 
   if (backUrl) {
     const decodedBackUrl = decodeURIComponent(backUrl);
@@ -31,10 +115,21 @@ function setupProductBackLink() {
     }
   }
 
-  if (fallbackUrl.startsWith("categoria.html")) backText = "← Volver a categoría";
-  if (fallbackUrl.startsWith("lista-productos.html")) backText = "← Volver a lista de productos";
-  if (fallbackUrl.startsWith("productos.html")) backText = "← Volver al catálogo";
-  if (fallbackUrl.startsWith("tienda.html")) backText = "← Volver a tienda";
+  if (fallbackUrl.startsWith("categoria.html")) {
+    backText = lang === "en" ? "← Back to category" : "← Volver a categoría";
+  }
+
+  if (fallbackUrl.startsWith("lista-productos.html")) {
+    backText = lang === "en" ? "← Back to product list" : "← Volver a lista de productos";
+  }
+
+  if (fallbackUrl.startsWith("productos.html")) {
+    backText = lang === "en" ? "← Back to catalog" : "← Volver al catálogo";
+  }
+
+  if (fallbackUrl.startsWith("tienda.html")) {
+    backText = lang === "en" ? "← Back to store" : "← Volver a tienda";
+  }
 
   productBackLink.href = fallbackUrl;
   productBackLink.textContent = backText;
@@ -48,6 +143,8 @@ function setupProductBackLink() {
     }
   });
 }
+
+/* ── PRODUCTO SELECCIONADO ───────────────────────────────── */
 
 function getSelectedProductReference() {
   const params = new URLSearchParams(window.location.search);
@@ -102,6 +199,114 @@ function stripHTML(value) {
   return temp.textContent || temp.innerText || "";
 }
 
+function normalizeProductText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[®™]/g, "")
+    .replace(/\b(welch allyn|hillrom|hill-rom|midmark|seca|baxter|bovie|huntleigh|mortara|ritter)\b/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function getTranslatedSingleProduct(product) {
+  if (!product) return product;
+
+  const lang = syncProductLanguage();
+
+  if (typeof window.getTranslatedProductForCurrentLang === "function") {
+    return window.getTranslatedProductForCurrentLang(product);
+  }
+
+  if (typeof window.getProductTranslationByProduct === "function") {
+    const translation = window.getProductTranslationByProduct(product, lang);
+
+    if (translation) {
+      return {
+        ...product,
+        title: translation.title || product.title,
+        shortDescription: translation.shortDescription || product.shortDescription,
+        description: translation.description || product.description,
+        descriptionHtml: translation.description || product.descriptionHtml || product.description,
+        priceText: lang === "en" ? "Quote only" : "Bajo cotización",
+        priceGeneral: lang === "en" ? "Quote only" : "Bajo cotización",
+        availability: lang === "en" ? "Available for quote" : "Disponible para cotización"
+      };
+    }
+  }
+
+  if (typeof window.getProductTranslation === "function") {
+    const translation = window.getProductTranslation(product.handle, lang);
+
+    if (translation) {
+      return {
+        ...product,
+        title: translation.title || product.title,
+        shortDescription: translation.shortDescription || product.shortDescription,
+        description: translation.description || product.description,
+        descriptionHtml: translation.description || product.descriptionHtml || product.description,
+        priceText: lang === "en" ? "Quote only" : "Bajo cotización",
+        priceGeneral: lang === "en" ? "Quote only" : "Bajo cotización",
+        availability: lang === "en" ? "Available for quote" : "Disponible para cotización"
+      };
+    }
+  }
+
+  if (window.PRODUCT_TRANSLATIONS) {
+    const productCandidates = [
+      product.handle,
+      product.id,
+      product.title,
+      product.originalTitle,
+      product.titleEs,
+      product.titleEn
+    ]
+      .map(normalizeProductText)
+      .filter(Boolean);
+
+    for (const handle in window.PRODUCT_TRANSLATIONS) {
+      const item = window.PRODUCT_TRANSLATIONS[handle];
+
+      const translationCandidates = [
+        handle,
+        item?.es?.title,
+        item?.en?.title
+      ]
+        .map(normalizeProductText)
+        .filter(Boolean);
+
+      const matched = productCandidates.some(productText => {
+        return translationCandidates.some(translationText => {
+          return (
+            productText === translationText ||
+            productText.includes(translationText) ||
+            translationText.includes(productText)
+          );
+        });
+      });
+
+      if (matched) {
+        const translation = item[lang] || item.es;
+
+        return {
+          ...product,
+          title: translation.title || product.title,
+          shortDescription: translation.shortDescription || product.shortDescription,
+          description: translation.description || product.description,
+          descriptionHtml: translation.description || product.descriptionHtml || product.description,
+          priceText: lang === "en" ? "Quote only" : "Bajo cotización",
+          priceGeneral: lang === "en" ? "Quote only" : "Bajo cotización",
+          availability: lang === "en" ? "Available for quote" : "Disponible para cotización"
+        };
+      }
+    }
+  }
+
+  return product;
+}
+
 function getSafeProductDescriptionHTML(product) {
   const rawDescription =
     product?.descriptionHtml ||
@@ -109,7 +314,7 @@ function getSafeProductDescriptionHTML(product) {
     "";
 
   if (!String(rawDescription).trim()) {
-    return "<p>Sin descripción disponible.</p>";
+    return `<p>${getStoreProductText("noDescription")}</p>`;
   }
 
   const temp = document.createElement("div");
@@ -142,11 +347,7 @@ function setMetaContent(selector, value) {
   }
 }
 
-/* ── LINK PARA COMPARTIR PRODUCTO ─────────────────────────── */
-
-/* =====================================================
-   LINK PARA COMPARTIR PRODUCTO CON PREVIEW DE WHATSAPP
-   ===================================================== */
+/* ── LINK PARA COMPARTIR PRODUCTO CON PREVIEW DE WHATSAPP ─── */
 
 function getProductShareUrl(product) {
   const handle = product && product.handle ? String(product.handle).trim() : "";
@@ -172,8 +373,12 @@ function updateProductMetaTags(product) {
   const cleanDescription = stripHTML(
     product.shortDescription ||
     product.description ||
-    "Producto médico disponible bajo cotización en Quality Medical Service."
+    getProductText(
+      "Producto médico disponible bajo cotización en Quality Medical Service.",
+      "Medical product available by quote at Quality Medical Service."
+    )
   );
+
   const shortDescription = cleanDescription.length > 155
     ? cleanDescription.substring(0, 152).trim() + "..."
     : cleanDescription;
@@ -236,21 +441,25 @@ async function copyProductLink(product) {
 
   try {
     await navigator.clipboard.writeText(shareUrl);
-    showShareFeedback("Enlace copiado");
+    showShareFeedback(getProductText("Enlace copiado", "Link copied"));
   } catch (error) {
-    prompt("Copia este enlace:", shareUrl);
+    prompt(getProductText("Copia este enlace:", "Copy this link:"), shareUrl);
   }
 }
 
 async function shareProduct(product) {
   if (!product) {
-    alert("No se encontró el producto.");
+    alert(getProductText("No se encontró el producto.", "Product not found."));
     return;
   }
 
   const shareUrl = getProductShareUrl(product);
   const cleanTitle = stripHTML(product.title || "Producto médico");
-  const shareText = `Mira este producto de Quality Medical Service: ${cleanTitle}`;
+
+  const shareText = getProductText(
+    `Mira este producto de Quality Medical Service: ${cleanTitle}`,
+    `See this product from Quality Medical Service: ${cleanTitle}`
+  );
 
   const shareData = {
     title: `${cleanTitle} | Quality Medical Service`,
@@ -279,7 +488,7 @@ document.addEventListener("click", event => {
 
   if (addButton) {
     if (!selectedSingleProduct) {
-      alert("No se encontró el producto.");
+      alert(getProductText("No se encontró el producto.", "Product not found."));
       return;
     }
 
@@ -292,7 +501,7 @@ document.addEventListener("click", event => {
 
   if (quoteButton) {
     if (!selectedSingleProduct) {
-      alert("No se encontró el producto.");
+      alert(getProductText("No se encontró el producto.", "Product not found."));
       return;
     }
 
@@ -305,7 +514,7 @@ document.addEventListener("click", event => {
 
   if (shareButton) {
     if (!selectedSingleProduct) {
-      alert("No se encontró el producto.");
+      alert(getProductText("No se encontró el producto.", "Product not found."));
       return;
     }
 
@@ -315,38 +524,35 @@ document.addEventListener("click", event => {
 
 /* ── RENDER DEL PRODUCTO ─────────────────────────────────── */
 
-function renderSingleProduct(product) {
+function renderSingleProduct(originalProduct) {
   if (!singleProductContainer) return;
 
-  const t = key => window.getStoreText ? window.getStoreText(key) : key;
-  const lang = localStorage.getItem("siteLang") || "es";
+  syncProductLanguage();
 
-  if (!product) {
+  if (!originalProduct) {
     singleProductContainer.innerHTML = `
       <div class="single-product-empty">
-        <h1>${t("productNotFoundTitle")}</h1>
-        <p>${t("productNotFoundText")}</p>
-        <a href="lista-productos.html" class="btn-primary">${t("backToProducts")}</a>
+        <h1>${getStoreProductText("productNotFoundTitle")}</h1>
+        <p>${getStoreProductText("productNotFoundText")}</p>
+        <a href="lista-productos.html" class="btn-primary">${getStoreProductText("backToProducts")}</a>
       </div>
     `;
     return;
   }
 
-  product = window.getTranslatedProductForCurrentLang
-    ? window.getTranslatedProductForCurrentLang(product)
-    : product;
-  
+  const product = getTranslatedSingleProduct(originalProduct);
+
   selectedSingleProduct = product;
   updateProductMetaTags(product);
 
-  const cleanTitle = escapeHTML(product.title || "Producto médico");
+  const cleanTitle = escapeHTML(product.title || getProductText("Producto médico", "Medical product"));
   const cleanCategory = escapeHTML(product.categoryName || product.category || "General");
   const productDescriptionHTML = getSafeProductDescriptionHTML(product);
   const cleanImage = escapeHTML(product.image || "assets/preview-qms.png");
-  const cleanImageAlt = escapeHTML(product.imageAlt || product.title || "Producto médico");
+  const cleanImageAlt = escapeHTML(product.imageAlt || product.title || getProductText("Producto médico", "Medical product"));
 
-  const availabilityText = escapeHTML(product.availability || t("availabilityValue"));
-  const quoteText = escapeHTML(product.priceText || t("quoteOnly"));
+  const availabilityText = escapeHTML(product.availability || getStoreProductText("availabilityValue"));
+  const quoteText = escapeHTML(product.priceText || getStoreProductText("quoteOnly"));
 
   singleProductContainer.innerHTML = `
     <section class="single-product-card">
@@ -370,31 +576,31 @@ function renderSingleProduct(product) {
 
         <div class="single-product-data">
           <div>
-            <span>${t("availabilityLabel")}</span>
+            <span>${getStoreProductText("availabilityLabel")}</span>
             <strong>${availabilityText}</strong>
           </div>
 
           <div>
-            <span>${t("modalityLabel")}</span>
+            <span>${getStoreProductText("modalityLabel")}</span>
             <strong>${quoteText}</strong>
           </div>
         </div>
 
         <div class="single-product-actions">
           <button class="btn-primary" type="button" data-single-add-cart>
-            ${t("addToQuote")}
+            ${getStoreProductText("addToQuote")}
           </button>
 
           <button class="btn-outline" type="button" data-single-quote>
-            ${t("quoteProduct")}
+            ${getStoreProductText("quoteProduct")}
           </button>
 
           <button 
             class="btn-outline product-share-btn product-share-icon-btn" 
             type="button" 
             data-single-share
-            aria-label="${t("shareProduct")}"
-            title="${t("shareProduct")}">
+            aria-label="${getStoreProductText("shareProduct")}"
+            title="${getStoreProductText("shareProduct")}">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="18" cy="5" r="3"></circle>
               <circle cx="6" cy="12" r="3"></circle>
@@ -407,15 +613,32 @@ function renderSingleProduct(product) {
       </div>
     </section>
   `;
+
+  setTimeout(() => {
+    if (typeof window.applyFinalStoreTranslations === "function") {
+      window.applyFinalStoreTranslations();
+    }
+
+    if (typeof window.applyStoreTranslations === "function") {
+      window.applyStoreTranslations();
+    }
+
+    if (typeof window.translateVisibleProductDescriptions === "function") {
+      window.translateVisibleProductDescriptions();
+    }
+  }, 100);
 }
 
 /* ── CARGA DEL PRODUCTO ──────────────────────────────────── */
 
 async function loadSingleProductPage() {
+  syncProductLanguage();
+  setupProductBackLink();
+
   if (singleProductContainer) {
     singleProductContainer.innerHTML = `
       <div class="single-product-empty">
-        <p>Cargando producto...</p>
+        <p>${getStoreProductText("loadingProduct")}</p>
       </div>
     `;
   }
@@ -429,5 +652,27 @@ async function loadSingleProductPage() {
   }
 }
 
-setupProductBackLink();
+/* ── CAMBIO DE IDIOMA ─────────────────────────────────────── */
+
+document.getElementById("langToggle")?.addEventListener("click", () => {
+  setTimeout(() => {
+    syncProductLanguage();
+    setupProductBackLink();
+
+    if (selectedSingleProduct) {
+      renderSingleProduct(selectedSingleProduct);
+    } else {
+      loadSingleProductPage();
+    }
+  }, 300);
+
+  setTimeout(() => {
+    if (selectedSingleProduct) {
+      renderSingleProduct(selectedSingleProduct);
+    }
+  }, 800);
+});
+
+/* ── INICIAR ──────────────────────────────────────────────── */
+
 loadSingleProductPage();

@@ -15,7 +15,7 @@ const SUPPLIER_LOGOS = {
   "huntleigh": "assets/distribuidores/HUNTLEIGH.webp",
   "litman": "assets/distribuidores/Litman.webp",
   "littmann": "assets/distribuidores/Litman.webp",
-  "logotipos": "assets/distribuidores/Logotipos.webp",
+  "Baxter": "assets/distribuidores/Logotipos.webp",
   "midmark": "assets/distribuidores/Midmark.webp",
   "miltex": "assets/distribuidores/Miltex.webp",
   "mortara": "assets/distribuidores/Mortara.webp",

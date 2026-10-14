@@ -7,6 +7,7 @@ const categoryProducts = document.getElementById("categoryProducts");
 const productSearch = document.getElementById("productSearch");
 
 let currentCategoryProducts = [];
+let currentCategoryCollection = null;
 
 /* ── LOGOS DE PROVEEDORES ───────────────────────── */
 
@@ -54,19 +55,20 @@ function renderSupplierLogo(value, size = "small") {
   const logo = getSupplierLogo(supplierName);
 
   if (!logo) {
-    return `<span class="supplier-name-text">${supplierName}</span>`;
+    return `<span class="supplier-name-text">${escapeHTML(supplierName)}</span>`;
   }
 
   return `
     <span class="supplier-logo-wrap supplier-logo-${size}">
       <img 
         src="${logo}" 
-        alt="${supplierName}" 
+        alt="${escapeHTML(supplierName)}" 
         class="supplier-logo-img"
         loading="lazy"
         decoding="async"
-        onerror="this.closest('.supplier-logo-wrap').outerHTML='<span class=&quot;supplier-name-text&quot;>${supplierName}</span>';"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';"
       >
+      <span class="supplier-name-text supplier-logo-fallback">${escapeHTML(supplierName)}</span>
     </span>
   `;
 }
@@ -81,7 +83,7 @@ function injectSupplierLogoStyles() {
     .supplier-logo-wrap {
       display: inline-flex;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: center;
       vertical-align: middle;
     }
 
@@ -90,6 +92,10 @@ function injectSupplierLogoStyles() {
       width: auto;
       height: auto;
       object-fit: contain;
+    }
+
+    .supplier-logo-fallback {
+      display: none;
     }
 
     .supplier-logo-small {
@@ -105,12 +111,15 @@ function injectSupplierLogoStyles() {
     .supplier-logo-large {
       width: 100%;
       min-height: 78px;
-      margin: 8px 0 10px;
+      margin: 8px auto 10px;
+      justify-content: center;
     }
 
     .supplier-logo-large .supplier-logo-img {
       max-width: 260px;
       max-height: 82px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .supplier-name-text {
@@ -120,8 +129,20 @@ function injectSupplierLogoStyles() {
       text-transform: uppercase;
     }
 
+    #categoryTitle {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
     .shopify-product-category .supplier-logo-wrap {
       margin-bottom: 2px;
+    }
+
+    .shopify-product-description {
+      display: block;
     }
 
     @media (max-width: 640px) {
@@ -143,23 +164,61 @@ function injectSupplierLogoStyles() {
 /* ── IDIOMA / TEXTOS ───────────────────────── */
 
 function getCurrentCategoryLanguage() {
-  const lang =
-    localStorage.getItem("siteLang") ||
-    localStorage.getItem("qmsLang") ||
-    localStorage.getItem("language") ||
-    localStorage.getItem("lang") ||
-    "es";
+  const possibleValues = [
+    localStorage.getItem("siteLang"),
+    localStorage.getItem("qmsLang"),
+    localStorage.getItem("language"),
+    localStorage.getItem("lang"),
+    localStorage.getItem("currentLang")
+  ];
 
-  return String(lang).toLowerCase().trim() === "en" ? "en" : "es";
+  for (const value of possibleValues) {
+    const cleanValue = String(value || "").toLowerCase().trim();
+
+    if (cleanValue === "en" || cleanValue === "english") return "en";
+    if (cleanValue === "es" || cleanValue === "spanish" || cleanValue === "español") return "es";
+  }
+
+  const htmlLang = String(document.documentElement.lang || "").toLowerCase().trim();
+
+  if (htmlLang.startsWith("en")) return "en";
+  if (htmlLang.startsWith("es")) return "es";
+
+  return "es";
+}
+
+function syncCategoryLanguage() {
+  const lang = getCurrentCategoryLanguage();
+
+  localStorage.setItem("siteLang", lang);
+  document.documentElement.lang = lang;
+
+  return lang;
 }
 
 function getCategoryText(es, en) {
   return getCurrentCategoryLanguage() === "en" ? en : es;
 }
 
+/* ── UTILIDADES ───────────────────────── */
+
 function getSelectedCategory() {
   const params = new URLSearchParams(window.location.search);
   return params.get("cat") || "diagnostico";
+}
+
+function escapeHTML(value) {
+  return String(value || "").replace(/[&<>"']/g, char => {
+    const chars = {
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    };
+
+    return chars[char];
+  });
 }
 
 function stripProductHTML(value) {
@@ -168,12 +227,111 @@ function stripProductHTML(value) {
   return temp.textContent.trim();
 }
 
+function normalizeProductText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[®™]/g, "")
+    .replace(/\b(welch allyn|hillrom|hill-rom|midmark|seca|baxter|bovie|huntleigh|mortara|ritter)\b/g, "")
+    .replace(/[^a-z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/* ── TRADUCCIÓN DE PRODUCTOS ───────────────────────── */
+
 function getTranslatedProduct(product) {
-  if (
-    product &&
-    typeof window.getTranslatedProductForCurrentLang === "function"
-  ) {
+  if (!product) return product;
+
+  const lang = syncCategoryLanguage();
+
+  if (typeof window.getTranslatedProductForCurrentLang === "function") {
     return window.getTranslatedProductForCurrentLang(product);
+  }
+
+  if (typeof window.getProductTranslationByProduct === "function") {
+    const translation = window.getProductTranslationByProduct(product, lang);
+
+    if (translation) {
+      return {
+        ...product,
+        title: translation.title || product.title,
+        shortDescription: translation.shortDescription || product.shortDescription,
+        description: translation.description || product.description,
+        descriptionHtml: translation.description || product.descriptionHtml || product.description,
+        priceText: lang === "en" ? "Quote only" : "Bajo cotización",
+        priceGeneral: lang === "en" ? "Quote only" : "Bajo cotización",
+        availability: lang === "en" ? "Available for quote" : "Disponible para cotización"
+      };
+    }
+  }
+
+  if (typeof window.getProductTranslation === "function") {
+    const translation = window.getProductTranslation(product.handle, lang);
+
+    if (translation) {
+      return {
+        ...product,
+        title: translation.title || product.title,
+        shortDescription: translation.shortDescription || product.shortDescription,
+        description: translation.description || product.description,
+        descriptionHtml: translation.description || product.descriptionHtml || product.description,
+        priceText: lang === "en" ? "Quote only" : "Bajo cotización",
+        priceGeneral: lang === "en" ? "Quote only" : "Bajo cotización",
+        availability: lang === "en" ? "Available for quote" : "Disponible para cotización"
+      };
+    }
+  }
+
+  if (window.PRODUCT_TRANSLATIONS) {
+    const productCandidates = [
+      product.handle,
+      product.id,
+      product.title,
+      product.originalTitle,
+      product.titleEs,
+      product.titleEn
+    ]
+      .map(normalizeProductText)
+      .filter(Boolean);
+
+    for (const handle in window.PRODUCT_TRANSLATIONS) {
+      const item = window.PRODUCT_TRANSLATIONS[handle];
+
+      const translationCandidates = [
+        handle,
+        item?.es?.title,
+        item?.en?.title
+      ]
+        .map(normalizeProductText)
+        .filter(Boolean);
+
+      const matched = productCandidates.some(productText => {
+        return translationCandidates.some(translationText => {
+          return (
+            productText === translationText ||
+            productText.includes(translationText) ||
+            translationText.includes(productText)
+          );
+        });
+      });
+
+      if (matched) {
+        const translation = item[lang] || item.es;
+
+        return {
+          ...product,
+          title: translation.title || product.title,
+          shortDescription: translation.shortDescription || product.shortDescription,
+          description: translation.description || product.description,
+          descriptionHtml: translation.description || product.descriptionHtml || product.description,
+          priceText: lang === "en" ? "Quote only" : "Bajo cotización",
+          priceGeneral: lang === "en" ? "Quote only" : "Bajo cotización",
+          availability: lang === "en" ? "Available for quote" : "Disponible para cotización"
+        };
+      }
+    }
   }
 
   return product;
@@ -182,25 +340,46 @@ function getTranslatedProduct(product) {
 function getProductPreviewDescription(product) {
   const translatedProduct = getTranslatedProduct(product);
 
-  const shortDescription =
+  const description =
     translatedProduct?.shortDescription ||
     translatedProduct?.descripcionCorta ||
+    translatedProduct?.description ||
+    translatedProduct?.descriptionHtml ||
     "";
 
-  if (String(shortDescription).trim()) {
-    return stripProductHTML(shortDescription);
+  if (String(description).trim()) {
+    return stripProductHTML(description);
   }
 
-  return stripProductHTML(translatedProduct?.description) || getCategoryText(
+  return getCategoryText(
     "Sin descripción disponible.",
     "No description available."
   );
 }
 
+function refreshCategoryTranslationPatches() {
+  setTimeout(() => {
+    if (typeof window.applyFinalStoreTranslations === "function") {
+      window.applyFinalStoreTranslations();
+    }
+
+    if (typeof window.applyStoreTranslations === "function") {
+      window.applyStoreTranslations();
+    }
+
+    if (typeof window.translateVisibleProductDescriptions === "function") {
+      window.translateVisibleProductDescriptions();
+    }
+  }, 100);
+}
+
 /* ── HEADER DE CATEGORÍA ───────────────────────── */
 
 function renderCategoryHeader(collection) {
+  syncCategoryLanguage();
+
   const collectionTitle = collection?.title || "Productos";
+
   const collectionDescription =
     collection?.description ||
     getCategoryText(
@@ -230,6 +409,8 @@ function renderCategoryHeader(collection) {
 /* ── RENDER DE PRODUCTOS ───────────────────────── */
 
 function renderCategoryProducts(products) {
+  syncCategoryLanguage();
+
   if (!categoryProducts) return;
 
   if (!products || products.length === 0) {
@@ -241,6 +422,8 @@ function renderCategoryProducts(products) {
         )}
       </div>
     `;
+
+    refreshCategoryTranslationPatches();
     return;
   }
 
@@ -258,8 +441,8 @@ function renderCategoryProducts(products) {
           </span>
 
           <img 
-            src="${product.image}" 
-            alt="${product.imageAlt || product.title}"
+            src="${escapeHTML(product.image || "assets/preview-qms.png")}" 
+            alt="${escapeHTML(product.imageAlt || product.title || "Producto médico")}"
             loading="lazy"
             decoding="async"
           >
@@ -270,9 +453,11 @@ function renderCategoryProducts(products) {
             ${renderSupplierLogo(supplierName, "small")}
           </p>
 
-          <h4>${product.title}</h4>
+          <h4 class="shopify-product-title">${escapeHTML(product.title || getCategoryText("Producto sin nombre", "Unnamed product"))}</h4>
 
-          <p>${getProductPreviewDescription(product)}</p>
+          <p class="shopify-product-description">
+            ${escapeHTML(getProductPreviewDescription(originalProduct))}
+          </p>
 
           <div class="shopify-product-footer">
             <strong>${getCategoryText("Bajo cotización", "Quote only")}</strong>
@@ -291,6 +476,8 @@ function renderCategoryProducts(products) {
       </article>
     `;
   }).join("");
+
+  refreshCategoryTranslationPatches();
 }
 
 /* ── BUSCADOR ───────────────────────── */
@@ -307,6 +494,7 @@ function filterCategoryProducts() {
       ${translatedProduct.title || ""}
       ${translatedProduct.shortDescription || ""}
       ${translatedProduct.description || ""}
+      ${translatedProduct.descriptionHtml || ""}
       ${translatedProduct.categoryName || ""}
       ${translatedProduct.category || ""}
     `.toLowerCase();
@@ -330,11 +518,11 @@ if (categoryProducts) {
     if (!addButton) return;
 
     const productId = addButton.getAttribute("data-add-id");
-    const product = currentCategoryProducts.find(item => item.id === productId);
+    const originalProduct = currentCategoryProducts.find(item => item.id === productId);
 
-    if (!product) return;
+    if (!originalProduct) return;
 
-    const translatedProduct = getTranslatedProduct(product);
+    const translatedProduct = getTranslatedProduct(originalProduct);
 
     if (typeof addToCart === "function") {
       addToCart(translatedProduct);
@@ -346,6 +534,7 @@ if (categoryProducts) {
 
 async function loadCategoryPage() {
   injectSupplierLogoStyles();
+  syncCategoryLanguage();
 
   if (categoryProducts) {
     categoryProducts.innerHTML = `
@@ -359,7 +548,9 @@ async function loadCategoryPage() {
     const selectedCategory = getSelectedCategory();
     const { collection, products } = await getStoreCollectionWithProducts(selectedCategory);
 
-    renderCategoryHeader(collection);
+    currentCategoryCollection = collection || null;
+    renderCategoryHeader(currentCategoryCollection);
+
     currentCategoryProducts = products || [];
     renderCategoryProducts(currentCategoryProducts);
   } catch (error) {
@@ -369,7 +560,9 @@ async function loadCategoryPage() {
     const fallbackCollection = getDemoCollections().find(item => item.handle === selectedCategory);
     const fallbackProducts = getDemoProducts().filter(product => product.category === selectedCategory);
 
-    renderCategoryHeader(fallbackCollection);
+    currentCategoryCollection = fallbackCollection || null;
+    renderCategoryHeader(currentCategoryCollection);
+
     currentCategoryProducts = fallbackProducts || [];
     renderCategoryProducts(currentCategoryProducts);
   }
@@ -379,13 +572,16 @@ async function loadCategoryPage() {
 
 document.getElementById("langToggle")?.addEventListener("click", () => {
   setTimeout(() => {
-    renderCategoryHeader({
-      title: currentCategoryProducts?.[0]?.categoryName || currentCategoryProducts?.[0]?.category || "Productos",
-      description: categoryDescription?.textContent || ""
-    });
-
+    syncCategoryLanguage();
+    renderCategoryHeader(currentCategoryCollection);
     renderCategoryProducts(currentCategoryProducts);
   }, 300);
+
+  setTimeout(() => {
+    syncCategoryLanguage();
+    renderCategoryHeader(currentCategoryCollection);
+    renderCategoryProducts(currentCategoryProducts);
+  }, 800);
 });
 
 /* ── INICIAR ───────────────────────── */

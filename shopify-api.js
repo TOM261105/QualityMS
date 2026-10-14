@@ -5,8 +5,11 @@
    - Productos desde Shopify Products
    - Descripción larga desde Shopify descriptionHtml
    - Descripción corta desde metafield custom.descripcion_corta
+   - Traducciones reales desde Shopify Translate & Adapt
    - Checkout desde Shopify Cart
 ──────────────────────────────────────────────────── */
+
+/* ── CONFIGURACIÓN / IDIOMA ───────────────────────────────── */
 
 function isShopifyReady() {
   return (
@@ -18,6 +21,77 @@ function isShopifyReady() {
     !SHOPIFY_CONFIG.storefrontAccessToken.includes("TU_STOREFRONT")
   );
 }
+
+function getCurrentShopifySiteLanguage() {
+  const possibleValues = [
+    localStorage.getItem("siteLang"),
+    localStorage.getItem("qmsLang"),
+    localStorage.getItem("language"),
+    localStorage.getItem("lang"),
+    localStorage.getItem("currentLang")
+  ];
+
+  for (const value of possibleValues) {
+    const cleanValue = String(value || "").toLowerCase().trim();
+
+    if (cleanValue === "en" || cleanValue === "english") return "en";
+    if (cleanValue === "es" || cleanValue === "spanish" || cleanValue === "español") return "es";
+  }
+
+  const htmlLang = String(document.documentElement.lang || "").toLowerCase().trim();
+
+  if (htmlLang.startsWith("en")) return "en";
+  if (htmlLang.startsWith("es")) return "es";
+
+  return "es";
+}
+
+function getShopifyLanguageCode() {
+  return getCurrentShopifySiteLanguage() === "en" ? "EN" : "ES";
+}
+
+function syncShopifySiteLanguage() {
+  const lang = getCurrentShopifySiteLanguage();
+
+  localStorage.setItem("siteLang", lang);
+  document.documentElement.lang = lang;
+
+  return lang;
+}
+
+function isShopifyStorePage() {
+  const page = window.location.pathname.split("/").pop() || "index.html";
+
+  return [
+    "tienda.html",
+    "categoria.html",
+    "productos.html",
+    "lista-productos.html",
+    "producto.html"
+  ].includes(page);
+}
+
+/*
+  Cuando cambias de ES a EN, la página debe volver a pedir los productos a Shopify.
+  Si no recargamos, se queda usando los productos que ya había cargado en el idioma anterior.
+*/
+document.addEventListener("DOMContentLoaded", () => {
+  const langToggle = document.getElementById("langToggle");
+
+  if (!langToggle || langToggle.dataset.shopifyLangReload === "true") return;
+
+  langToggle.dataset.shopifyLangReload = "true";
+
+  langToggle.addEventListener("click", () => {
+    if (!isShopifyStorePage()) return;
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 550);
+  });
+});
+
+/* ── REQUEST GENERAL ─────────────────────────────────────── */
 
 async function shopifyRequest(query, variables = {}) {
   if (!isShopifyReady()) {
@@ -48,6 +122,8 @@ async function shopifyRequest(query, variables = {}) {
   return result.data;
 }
 
+/* ── HELPERS ───────────────────────────────────── */
+
 function normalizePriceNumber(price) {
   if (!price || !price.amount) return 0;
   return Number(price.amount) || 0;
@@ -56,8 +132,6 @@ function normalizePriceNumber(price) {
 function getProductMainCollection(product) {
   return product.collections?.edges?.[0]?.node || null;
 }
-
-/* ── HELPERS ───────────────────────────────────── */
 
 function escapeRegExp(value) {
   return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -80,6 +154,54 @@ function handleizeCategory(value) {
     .replace(/^-+|-+$/g, "");
 
   return clean || "general";
+}
+
+function truncateText(value, maxLength = 230) {
+  const text = stripShopifyHTML(value);
+
+  if (!text) return "";
+
+  if (text.length <= maxLength) return text;
+
+  return text.substring(0, maxLength).trim() + "...";
+}
+
+function looksProbablySpanish(value) {
+  const text = String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, " ");
+
+  if (!text.trim()) return false;
+
+  const spanishSignals = [
+    " para ",
+    " con ",
+    " disenado",
+    " disenada",
+    " cuenta ",
+    " incluye ",
+    " permite ",
+    " paciente ",
+    " medico ",
+    " clinico ",
+    " exploracion ",
+    " consulta ",
+    " solicita ",
+    " cotiza ",
+    " producto ",
+    " productos ",
+    " disponible ",
+    " disponibles "
+  ];
+
+  let score = 0;
+
+  spanishSignals.forEach(signal => {
+    if (` ${text} `.includes(signal)) score += 1;
+  });
+
+  return score >= 2;
 }
 
 /* ── LIMPIEZA DE MARCAS EN TÍTULOS ───────────────────────── */
@@ -146,7 +268,11 @@ function cleanShopifyProductTitle(title, brand) {
 }
 
 function addBrandToProductDescription(description, brand) {
-  const cleanDescription = String(description || "Sin descripción disponible.").trim();
+  const lang = getCurrentShopifySiteLanguage();
+  const cleanDescription = String(
+    description ||
+    (lang === "en" ? "No description available." : "Sin descripción disponible.")
+  ).trim();
 
   if (!brand) return cleanDescription;
 
@@ -156,7 +282,13 @@ function addBrandToProductDescription(description, brand) {
     return cleanDescription;
   }
 
-  return `Marca: ${brand}. ${cleanDescription}`;
+  const brandLabel = lang === "en" ? "Brand" : "Marca";
+
+  if (cleanDescription.startsWith("<")) {
+    return `<p>${brandLabel}: ${brand}.</p>${cleanDescription}`;
+  }
+
+  return `${brandLabel}: ${brand}. ${cleanDescription}`;
 }
 
 function getProductCategoryInfo(product) {
@@ -189,110 +321,72 @@ function getProductCategoryInfo(product) {
 /* ── MAPS ───────────────────────────────────── */
 
 function mapShopifyCollection(collection) {
+  const lang = getCurrentShopifySiteLanguage();
+
   return {
     id: collection.id,
     handle: collection.handle,
     title: collection.title,
-    description: collection.description || "Explora los productos disponibles en esta categoría.",
+    description:
+      collection.description ||
+      (lang === "en"
+        ? "Explore the products available in this category."
+        : "Explora los productos disponibles en esta categoría."),
     image: collection.image?.url || "assets/diagnostico.png",
     altText: collection.image?.altText || collection.title
   };
 }
 
 function mapShopifyProduct(product) {
+  const lang = getCurrentShopifySiteLanguage();
+
   const firstVariant = product.variants?.edges?.[0]?.node || null;
   const firstCollection = getProductMainCollection(product);
   const categoryInfo = getProductCategoryInfo(product);
 
   const brand = detectProductBrand(product.title, firstCollection?.title, product.vendor);
-  const cleanTitleEs = cleanShopifyProductTitle(product.title, brand);
+  const cleanTitle = cleanShopifyProductTitle(product.title, brand);
 
-  const rawDescriptionHTMLEs =
+  const rawDescriptionHTML =
     product.descriptionHtml ||
     product.description ||
     "";
 
-  const rawDescriptionTextEs =
+  const rawDescriptionText =
     product.description ||
     stripShopifyHTML(product.descriptionHtml) ||
     "";
 
-  const cleanDescriptionHTMLEs = addBrandToProductDescription(rawDescriptionHTMLEs, brand);
-  const cleanDescriptionTextEs = addBrandToProductDescription(rawDescriptionTextEs, brand);
+  const cleanDescriptionHTML = addBrandToProductDescription(rawDescriptionHTML, brand);
+  const cleanDescriptionText = addBrandToProductDescription(rawDescriptionText, brand);
 
-  const shortDescriptionEs =
+  const shopifyShortDescription =
     product.shortDescription?.value ||
     product.descripcionCorta?.value ||
     "";
 
-  const lang = localStorage.getItem("siteLang") || "es";
-
-  const baseProductForTranslation = {
-    id: product.id,
-    handle: product.handle,
-    title: cleanTitleEs,
-    originalTitle: product.title
-  };
-
-  const translation = window.getProductTranslationByProduct
-    ? window.getProductTranslationByProduct(baseProductForTranslation, lang)
-    : (
-      window.getProductTranslation
-        ? window.getProductTranslation(product.handle, lang)
-        : null
-    );
-
-  const translationEs = window.getProductTranslationByProduct
-    ? window.getProductTranslationByProduct(baseProductForTranslation, "es")
-    : (
-      window.getProductTranslation
-        ? window.getProductTranslation(product.handle, "es")
-        : null
-    );
-
-  const translationEn = window.getProductTranslationByProduct
-    ? window.getProductTranslationByProduct(baseProductForTranslation, "en")
-    : (
-      window.getProductTranslation
-        ? window.getProductTranslation(product.handle, "en")
-        : null
-    );
-
-  const titleFinal =
-    translation?.title ||
-    cleanTitleEs;
-
-  const shortDescriptionFinal =
-    translation?.shortDescription ||
-    shortDescriptionEs ||
-    "";
+  /*
+    Si el idioma está en inglés pero el metafield de descripción corta sigue en español,
+    usamos un resumen de la descripción larga traducida de Shopify.
+  */
+  const shortDescription =
+    lang === "en" && looksProbablySpanish(shopifyShortDescription)
+      ? truncateText(cleanDescriptionHTML, 230)
+      : shopifyShortDescription;
 
   const descriptionFinal =
-    translation?.description ||
-    cleanDescriptionHTMLEs ||
-    cleanDescriptionTextEs ||
+    cleanDescriptionHTML ||
+    cleanDescriptionText ||
     (lang === "en" ? "No description available." : "Sin descripción disponible.");
-
-  const descriptionEs =
-    translationEs?.description ||
-    cleanDescriptionHTMLEs ||
-    cleanDescriptionTextEs ||
-    "Sin descripción disponible.";
-
-  const descriptionEn =
-    translationEn?.description ||
-    cleanDescriptionHTMLEs ||
-    cleanDescriptionTextEs ||
-    "No description available.";
 
   return {
     id: product.id,
     handle: product.handle,
     originalTitle: product.title,
 
-    title: titleFinal,
-    titleEs: translationEs?.title || cleanTitleEs,
-    titleEn: translationEn?.title || cleanTitleEs,
+    title: cleanTitle,
+    titleEs: cleanTitle,
+    titleEn: cleanTitle,
 
     category: categoryInfo.handle,
     categoryName: categoryInfo.title,
@@ -303,24 +397,25 @@ function mapShopifyProduct(product) {
     priceText: lang === "en" ? "Quote only" : "Bajo cotización",
 
     image: product.featuredImage?.url || "assets/diagnostico.png",
-    imageAlt: product.featuredImage?.altText || titleFinal,
+    imageAlt: product.featuredImage?.altText || cleanTitle,
 
     description: descriptionFinal,
     descriptionHtml: descriptionFinal,
 
-    shortDescription: shortDescriptionFinal,
+    shortDescription: shortDescription || truncateText(descriptionFinal, 230),
 
-    descriptionEs,
-    descriptionEn,
+    descriptionEs: descriptionFinal,
+    descriptionEn: descriptionFinal,
 
-    shortDescriptionEs: translationEs?.shortDescription || shortDescriptionEs,
-    shortDescriptionEn: translationEn?.shortDescription || shortDescriptionEs,
+    shortDescriptionEs: shortDescription || truncateText(descriptionFinal, 230),
+    shortDescriptionEn: shortDescription || truncateText(descriptionFinal, 230),
 
     availability: lang === "en" ? "Available for quote" : "Disponible para cotización",
     type: "cotizacion",
     variantId: firstVariant?.id || null
   };
 }
+
 function buildCollectionsFromProducts(products) {
   const categoryMap = new Map();
 
@@ -333,7 +428,10 @@ function buildCollectionsFromProducts(products) {
         id: `generated-${handle}`,
         handle,
         title,
-        description: `Productos de ${title}.`,
+        description:
+          getCurrentShopifySiteLanguage() === "en"
+            ? `Products from ${title}.`
+            : `Productos de ${title}.`,
         image: product.image || "assets/diagnostico.png",
         altText: title,
         generatedFromProducts: true
@@ -436,10 +534,14 @@ const PRODUCT_FIELDS = `
 /* ── COLLECTIONS ───────────────────────────────────────── */
 
 async function getStoreCollections() {
+  syncShopifySiteLanguage();
+
   if (!isShopifyReady()) return getDemoCollections();
 
+  const languageCode = getShopifyLanguageCode();
+
   const query = `
-    query GetCollections {
+    query GetCollections @inContext(language: ${languageCode}) {
       collections(first: 100) {
         edges {
           node {
@@ -472,10 +574,14 @@ async function getStoreCollections() {
 /* ── TODOS LOS PRODUCTOS ────────────────────────────────── */
 
 async function getStoreProducts() {
+  syncShopifySiteLanguage();
+
   if (!isShopifyReady()) return getDemoProducts();
 
+  const languageCode = getShopifyLanguageCode();
+
   const query = `
-    query GetProducts($cursor: String) {
+    query GetProducts($cursor: String) @inContext(language: ${languageCode}) {
       products(first: 250, after: $cursor) {
         pageInfo {
           hasNextPage
@@ -511,6 +617,8 @@ async function getStoreProducts() {
 /* ── COLLECTION CON TODOS SUS PRODUCTOS ─────────────────── */
 
 async function getStoreCollectionWithProducts(collectionHandle) {
+  syncShopifySiteLanguage();
+
   if (!isShopifyReady()) {
     const collection = getDemoCollections().find(item => item.handle === collectionHandle) || {
       id: collectionHandle,
@@ -528,8 +636,10 @@ async function getStoreCollectionWithProducts(collectionHandle) {
     };
   }
 
+  const languageCode = getShopifyLanguageCode();
+
   const query = `
-    query GetCollectionProducts($handle: String!, $cursor: String) {
+    query GetCollectionProducts($handle: String!, $cursor: String) @inContext(language: ${languageCode}) {
       collection(handle: $handle) {
         id
         title
@@ -599,7 +709,10 @@ async function getStoreCollectionWithProducts(collectionHandle) {
       id: `generated-${collectionHandle}`,
       handle: collectionHandle,
       title: collectionHandle,
-      description: "Explora los productos disponibles en esta categoría.",
+      description:
+        getCurrentShopifySiteLanguage() === "en"
+          ? "Explore the products available in this category."
+          : "Explora los productos disponibles en esta categoría.",
       image: "assets/diagnostico.png",
       altText: collectionHandle
     };
@@ -617,12 +730,16 @@ async function getStoreCollectionWithProducts(collectionHandle) {
 /* ── PRODUCTO INDIVIDUAL ────────────────────────────────── */
 
 async function getStoreProductByHandle(productHandle) {
+  syncShopifySiteLanguage();
+
   if (!isShopifyReady()) {
     return getDemoProducts().find(product => product.id === productHandle || product.handle === productHandle) || null;
   }
 
+  const languageCode = getShopifyLanguageCode();
+
   const query = `
-    query GetProduct($handle: String!) {
+    query GetProduct($handle: String!) @inContext(language: ${languageCode}) {
       product(handle: $handle) {
         ${PRODUCT_FIELDS}
       }
@@ -641,6 +758,8 @@ async function getStoreProductByHandle(productHandle) {
 /* ── PRODUCTOS POR PÁGINA PARA LISTA ─────────────────────── */
 
 async function getStoreProductsPage(options = {}) {
+  syncShopifySiteLanguage();
+
   const {
     cursor = null,
     limit = 50,
@@ -678,8 +797,10 @@ async function getStoreProductsPage(options = {}) {
     };
   }
 
+  const languageCode = getShopifyLanguageCode();
+
   const query = `
-    query GetProductsPage($cursor: String, $limit: Int!, $searchQuery: String) {
+    query GetProductsPage($cursor: String, $limit: Int!, $searchQuery: String) @inContext(language: ${languageCode}) {
       products(first: $limit, after: $cursor, query: $searchQuery) {
         pageInfo {
           hasNextPage
@@ -707,6 +828,8 @@ async function getStoreProductsPage(options = {}) {
 }
 
 async function getStoreCollectionProductsPage(collectionHandle, options = {}) {
+  syncShopifySiteLanguage();
+
   const {
     cursor = null,
     limit = 50
@@ -728,8 +851,10 @@ async function getStoreCollectionProductsPage(collectionHandle, options = {}) {
     };
   }
 
+  const languageCode = getShopifyLanguageCode();
+
   const query = `
-    query GetCollectionProductsPage($handle: String!, $cursor: String, $limit: Int!) {
+    query GetCollectionProductsPage($handle: String!, $cursor: String, $limit: Int!) @inContext(language: ${languageCode}) {
       collection(handle: $handle) {
         id
         title

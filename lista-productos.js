@@ -301,10 +301,6 @@ function renderPaginationControls() {
 function renderProductList(products) {
   if (!productListBody) return;
 
-  /*
-    Guardamos los productos originales.
-    La traducción se aplica solo al pintar.
-  */
   currentProductList = products || [];
 
   if (!currentProductList.length) {
@@ -314,34 +310,144 @@ function renderProductList(products) {
     return;
   }
 
-  productListBody.innerHTML = currentProductList.map(originalProduct => {
+  productListBody.innerHTML = currentProductList.map((originalProduct, index) => {
     const product = getTranslatedProduct(originalProduct);
     const backUrl = "lista-productos.html" + window.location.search;
 
+    const shortDescription = getListPreviewDescription(originalProduct);
+
+    const detailUrl = getProductDetailUrl(originalProduct, backUrl);
+
     return `
-      <tr>
-        <td>${translateCategoryText(product.categoryName || product.category || "General")}</td>
+      <!-- FILA PRINCIPAL -->
+      <tr class="product-list-main-row">
 
         <td>
-          <strong>${product.title || getListText("Producto sin nombre", "Unnamed product")}</strong>
+          ${translateCategoryText(
+            product.categoryName ||
+            product.category ||
+            "General"
+          )}
         </td>
 
-        <td>${getListPreviewDescription(originalProduct)}</td>
-
         <td>
-          <strong>${getListText("Bajo cotización", "Quote required")}</strong>
+          <strong>
+            ${product.title || getListText(
+              "Producto sin nombre",
+              "Unnamed product"
+            )}
+          </strong>
+        </td>
+
+        <!-- DESCRIPCIÓN NORMAL: SOLO SE OCULTARÁ EN TELÉFONO -->
+        <td class="product-list-description-cell">
+          ${shortDescription}
         </td>
 
         <td>
-          <div class="product-list-actions">
-            <a href="${getProductDetailUrl(originalProduct, backUrl)}" class="product-action light">
-              ${getListText("Ver más información", "More information")}
+          <strong>
+            ${getListText(
+              "Bajo cotización",
+              "Quote required"
+            )}
+          </strong>
+        </td>
+
+        <td class="product-list-actions-cell">
+
+          <!-- BOTONES NORMALES PARA COMPUTADORA -->
+          <div class="product-list-actions product-list-actions-desktop">
+
+            <a
+              href="${detailUrl}"
+              class="product-action light"
+            >
+              ${getListText(
+                "Ver más información",
+                "More information"
+              )}
             </a>
 
-            <button class="product-action" data-add-id="${originalProduct.id}">
-              ${getListText("Agregar a cotización", "Add to quote")}
+            <button
+              type="button"
+              class="product-action"
+              data-add-id="${originalProduct.id}"
+            >
+              ${getListText(
+                "Agregar a cotización",
+                "Add to quote"
+              )}
             </button>
+
           </div>
+
+          <!-- SOLO TELÉFONO -->
+          <button
+            type="button"
+            class="product-list-mobile-toggle"
+            data-mobile-toggle="${index}"
+            aria-expanded="false"
+            aria-label="${getListText(
+              "Mostrar más información",
+              "Show more information"
+            )}"
+          >
+            <span>i</span>
+          </button>
+
+        </td>
+
+      </tr>
+
+      <!-- INFORMACIÓN DESPLEGABLE SOLO PARA TELÉFONO -->
+      <tr
+        class="product-list-mobile-details"
+        data-mobile-details="${index}"
+      >
+        <td colspan="5">
+
+          <div class="product-list-mobile-details-inner">
+
+            <div class="product-list-mobile-description">
+              <strong>
+                ${getListText(
+                  "Descripción",
+                  "Description"
+                )}
+              </strong>
+
+              <p>
+                ${shortDescription}
+              </p>
+            </div>
+
+            <div class="product-list-mobile-real-actions">
+
+              <a
+                href="${detailUrl}"
+                class="product-action light"
+              >
+                ${getListText(
+                  "Ver más información",
+                  "More information"
+                )}
+              </a>
+
+              <button
+                type="button"
+                class="product-action"
+                data-add-id="${originalProduct.id}"
+              >
+                ${getListText(
+                  "Agregar a cotización",
+                  "Add to quote"
+                )}
+              </button>
+
+            </div>
+
+          </div>
+
         </td>
       </tr>
     `;
@@ -485,12 +591,58 @@ document.addEventListener("click", event => {
 
 if (productListBody) {
   productListBody.addEventListener("click", event => {
+
+    /* ── DESPLEGAR INFORMACIÓN EN TELÉFONO ───────────── */
+
+    const mobileToggle = event.target.closest("[data-mobile-toggle]");
+
+    if (mobileToggle) {
+      const index = mobileToggle.getAttribute("data-mobile-toggle");
+
+      const selectedDetails = productListBody.querySelector(
+        `[data-mobile-details="${index}"]`
+      );
+
+      if (!selectedDetails) return;
+
+      const wasOpen = selectedDetails.classList.contains("active");
+
+      /* Cerrar los demás */
+      productListBody
+        .querySelectorAll(".product-list-mobile-details.active")
+        .forEach(row => {
+          row.classList.remove("active");
+        });
+
+      productListBody
+        .querySelectorAll(".product-list-mobile-toggle.active")
+        .forEach(button => {
+          button.classList.remove("active");
+          button.setAttribute("aria-expanded", "false");
+        });
+
+      /* Abrir el seleccionado */
+      if (!wasOpen) {
+        selectedDetails.classList.add("active");
+        mobileToggle.classList.add("active");
+        mobileToggle.setAttribute("aria-expanded", "true");
+      }
+
+      return;
+    }
+
+
+    /* ── AGREGAR PRODUCTO A COTIZACIÓN ─────────────── */
+
     const addButton = event.target.closest("[data-add-id]");
 
     if (!addButton) return;
 
     const productId = addButton.getAttribute("data-add-id");
-    const originalProduct = currentProductList.find(item => item.id === productId);
+
+    const originalProduct = currentProductList.find(
+      item => item.id === productId
+    );
 
     if (!originalProduct) return;
 

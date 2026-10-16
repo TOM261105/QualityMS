@@ -8660,3 +8660,115 @@ body.home-page .hero-logo {
     overflow-x: hidden;
   }
 }
+
+/* ── LISTA DE PRODUCTOS: ACCIONES CON ICONOS SOLO EN TELÉFONO ── */
+
+@media (max-width: 640px) {
+
+  /* Ocultar descripción */
+  .product-list-page .product-list-table th:nth-child(3),
+  .product-list-page .product-list-table td:nth-child(3) {
+    display: none !important;
+  }
+
+  /* Tabla completa dentro de la pantalla */
+  .product-list-page .product-table-wrap {
+    width: 100%;
+    overflow-x: hidden !important;
+  }
+
+  .product-list-page .product-list-table {
+    width: 100% !important;
+    min-width: 0 !important;
+    table-layout: fixed;
+  }
+
+  /* Reparto del espacio */
+  .product-list-page .product-list-table th:nth-child(1),
+  .product-list-page .product-list-table td:nth-child(1) {
+    width: 24%;
+  }
+
+  .product-list-page .product-list-table th:nth-child(2),
+  .product-list-page .product-list-table td:nth-child(2) {
+    width: 27%;
+  }
+
+  .product-list-page .product-list-table th:nth-child(4),
+  .product-list-page .product-list-table td:nth-child(4) {
+    width: 27%;
+  }
+
+  .product-list-page .product-list-table th:nth-child(5),
+  .product-list-page .product-list-table td:nth-child(5) {
+    width: 22%;
+  }
+
+  /* Encabezados */
+  .product-list-page .product-list-table th {
+    padding: 11px 5px !important;
+    font-size: 9px !important;
+    line-height: 1.1;
+    letter-spacing: 0.5px;
+    overflow-wrap: anywhere;
+  }
+
+  /* Celdas */
+  .product-list-page .product-list-table td {
+    padding: 13px 6px !important;
+    font-size: 11px !important;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
+    vertical-align: middle;
+  }
+
+  .product-list-page .product-list-table td strong {
+    font-size: 11px;
+    line-height: 1.25;
+  }
+
+  /* Acciones centradas */
+  .product-list-page .product-list-actions {
+    width: 100% !important;
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* Convertir ambos botones en iconos circulares */
+  .product-list-page .product-list-actions .product-action {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 0 !important;
+    line-height: 1 !important;
+  }
+
+  /* Ver más información */
+  .product-list-page .product-list-actions .product-action.light::before {
+    content: "i";
+    font-size: 16px;
+    font-weight: 900;
+    font-family: Arial, sans-serif;
+    line-height: 1;
+  }
+
+  /* Agregar a cotización */
+  .product-list-page .product-list-actions button.product-action::before {
+    content: "+";
+    font-size: 22px;
+    font-weight: 500;
+    font-family: Arial, sans-serif;
+    line-height: 1;
+  }
+}

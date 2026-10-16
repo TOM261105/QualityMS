@@ -8627,3 +8627,36 @@ body.home-page .hero-logo {
     max-height: 1180px !important;
   }
 }
+
+/* ── OCULTAR DESCRIPCIÓN SOLO EN LISTA DE PRODUCTOS / CELULAR ── */
+
+@media (max-width: 640px) {
+
+  .product-list-page .product-list-table th:nth-child(3),
+  .product-list-page .product-list-table td:nth-child(3) {
+    display: none !important;
+  }
+
+}
+
+/* ── LISTA DE PRODUCTOS SOLO EN TELÉFONO ─────────────────── */
+
+@media (max-width: 640px) {
+
+  /* Ocultar únicamente descripción */
+  .product-list-page .product-list-table th:nth-child(3),
+  .product-list-page .product-list-table td:nth-child(3) {
+    display: none !important;
+  }
+
+  /* Permitir que las demás columnas quepan en pantalla */
+  .product-list-page .product-list-table {
+    min-width: 0 !important;
+    width: 100% !important;
+    table-layout: fixed;
+  }
+
+  .product-list-page .product-table-wrap {
+    overflow-x: hidden;
+  }
+}

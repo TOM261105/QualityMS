@@ -9010,3 +9010,122 @@ body.home-page .hero-logo {
     color: white;
   }
 }
+
+/* ══════════════════════════════════════════════════════════
+   PANTALLAS VERTICALES GRANDES / TABLETS / KIOSCOS
+   NO AFECTA COMPUTADORA HORIZONTAL NI CELULAR
+   ══════════════════════════════════════════════════════════ */
+
+@media (orientation: portrait) and (min-width: 641px) and (max-width: 1200px) {
+
+  /* ── NAVBAR ─────────────────────────────────────────── */
+
+  body {
+    padding-top: 92px !important;
+  }
+
+  .topbar {
+    padding: 0 24px !important;
+  }
+
+  .topbar-inner {
+    min-height: 92px !important;
+    max-width: 100% !important;
+    gap: 16px !important;
+  }
+
+  .nav-logo {
+    width: 155px !important;
+    flex-shrink: 0;
+  }
+
+  .nav-links {
+    gap: 4px !important;
+  }
+
+  .nav-links a {
+    font-size: 12px !important;
+    padding: 8px 10px !important;
+  }
+
+  .lang-btn {
+    font-size: 11px !important;
+    padding: 7px 10px !important;
+  }
+
+
+  /* ── HERO ───────────────────────────────────────────── */
+
+  .hero {
+    width: 100%;
+
+    /*
+      En vertical evitamos que herede una proporción
+      demasiado alta pensada para desktop.
+    */
+    min-height: calc(100svh - 92px) !important;
+
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+  }
+
+
+  /* ── CONTENEDORES GENERALES ─────────────────────────── */
+
+  .container {
+    width: calc(100% - 70px) !important;
+    max-width: 1000px !important;
+  }
+
+
+  /* ── TEXTOS ─────────────────────────────────────────── */
+
+  .section-header h2 {
+    font-size: clamp(36px, 5vw, 52px) !important;
+  }
+
+  .section-header p {
+    font-size: 17px !important;
+    max-width: 700px !important;
+  }
+
+
+  /* ── CARDS ──────────────────────────────────────────── */
+
+  .services-grid,
+  .products-grid,
+  .shopify-products-grid,
+  .valores-grid,
+  .all-products-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+
+  /* ── CONTACTO ───────────────────────────────────────── */
+
+  .contact-grid,
+  .contact-location-clean {
+    grid-template-columns: 1fr !important;
+  }
+
+
+  /* ── PRODUCTO INDIVIDUAL ────────────────────────────── */
+
+  .single-product-card {
+    grid-template-columns: 1fr !important;
+  }
+
+  .single-product-image {
+    min-height: 380px !important;
+  }
+
+
+  /* ── FOOTER ─────────────────────────────────────────── */
+
+  .footer-inner.footer-inner-expanded {
+    grid-template-columns: repeat(2, 1fr) !important;
+    column-gap: 50px !important;
+    row-gap: 40px !important;
+  }
+}
